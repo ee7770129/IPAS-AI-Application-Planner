@@ -13,7 +13,13 @@
       <div class="card-face card-front" ref="frontRef">
         <div class="card-number">{{ card.number }}</div>
         <div class="card-title">{{ card.title }}</div>
-        <div v-if="card.engTitle" class="card-eng">{{ card.engTitle }}</div>
+        <div v-if="card.engTitle" class="card-eng">
+          {{ card.engTitle }}
+          <button class="speak-btn" @click.stop="speak(card.engTitle)" type="button" title="朗讀英文">
+            <span class="material-icons">{{ isSpeaking ? 'volume_up' : 'volume_up' }}</span>
+          </button>
+        </div>
+        <img v-if="card.image" :src="card.image" :alt="card.title" class="card-image" />
         <div class="flip-hint">
           <span class="material-icons">touch_app</span> 點擊翻面
         </div>
@@ -22,7 +28,12 @@
       <!-- 背面：完整解釋 -->
       <div class="card-face card-back" ref="backRef">
         <div class="back-title">{{ card.title }}</div>
-        <div v-if="card.engTitle" class="back-eng">{{ card.engTitle }}</div>
+        <div v-if="card.engTitle" class="back-eng">
+          {{ card.engTitle }}
+          <button class="speak-btn" @click.stop="speak(card.engTitle)" type="button" title="朗讀英文">
+            <span class="material-icons">volume_up</span>
+          </button>
+        </div>
 
         <template v-for="(sec, si) in card.back.sections" :key="si">
           <div class="section-label">
@@ -50,7 +61,7 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, onMounted } from 'vue'
+import { ref, inject, watch, nextTick, onMounted } from 'vue'
 
 const props = defineProps({
   card: { type: Object, required: true }
@@ -60,6 +71,25 @@ const flipped = ref(false)
 const flipperRef = ref(null)
 const frontRef = ref(null)
 const backRef = ref(null)
+const isSpeaking = ref(false)
+
+/** 從 App.vue 取得使用者選定的語音 */
+const getSelectedVoice = inject('getSelectedVoice', () => null)
+
+/** 使用 Web Speech API 朗讀英文 */
+function speak(text) {
+  if (!text || !window.speechSynthesis) return
+  window.speechSynthesis.cancel()
+  const utterance = new SpeechSynthesisUtterance(text)
+  const voice = getSelectedVoice()
+  if (voice) utterance.voice = voice
+  utterance.lang = 'en-US'
+  utterance.rate = 0.9
+  isSpeaking.value = true
+  utterance.onend = () => { isSpeaking.value = false }
+  utterance.onerror = () => { isSpeaking.value = false }
+  window.speechSynthesis.speak(utterance)
+}
 
 /** 將換行符轉為 <br>，並跳脫 HTML */
 function nl2br(str) {
@@ -155,10 +185,43 @@ defineExpose({
   margin-bottom: 8px;
 }
 .card-eng {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-size: 0.9rem;
   color: var(--custard-brown-light);
   opacity: 0.7;
 }
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: var(--custard-cream);
+  color: var(--custard-deep);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+  flex-shrink: 0;
+}
+.speak-btn:hover {
+  background: var(--custard-gold);
+}
+.speak-btn .material-icons {
+  font-size: 16px;
+}
+.card-image {
+  max-width: 120px;
+  max-height: 120px;
+  margin-top: 12px;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
 .flip-hint {
   position: absolute;
   bottom: 14px;
@@ -190,6 +253,9 @@ defineExpose({
   color: var(--custard-amber);
 }
 .back-eng {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.8rem;
   color: var(--custard-brown-light);
   opacity: 0.7;

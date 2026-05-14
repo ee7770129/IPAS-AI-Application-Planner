@@ -36,8 +36,8 @@ defineEmits(['update:modelValue'])
   -webkit-overflow-scrolling: touch;
 }
 .subject-tab {
-  flex-shrink: 0;
-  padding: 10px 20px;
+  flex: 1;
+  padding: 10px 0;
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;

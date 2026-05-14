@@ -42,17 +42,27 @@ D:\IPAS-AI 應用規劃師\
     │
     └── src\
         ├── main.js                    ← Vue 進入點
-        ├── App.vue                    ← 主佈局（組合所有元件 + 鍵盤/觸控事件）
+        ├── App.vue                    ← 主佈局（狀態管理 + 洗牌 + 鍵盤/觸控事件）
         │
         ├── data\
-        │   └── cards.js               ← 卡片資料定義（唯一需要修改的檔案）
+        │   ├── cards.js               ← 主檔（匯入各主題子檔案並組合）
+        │   └── beginner\
+        │       └── subject1\          ← 第一科各主題卡片（新增卡片改這裡）
+        │           ├── ai-tech.js             ← AI 技術與架構（11 張）
+        │           ├── data-processing.js     ← 資料處理與分析（26 張）
+        │           ├── ml-concepts.js         ← 機器學習概念（32 張）
+        │           ├── nn-dl.js               ← 神經網路與深度學習（27 張）
+        │           ├── disc-gen-ai.js         ← 鑑別式AI與生成式AI（2 張）
+        │           ├── ai-governance.js       ← AI 治理與倫理（2 張）
+        │           ├── ai-industry.js         ← AI 產業應用（1 張）
+        │           └── imbalance.js           ← 類別不平衡處理（5 張）
         │
         ├── components\
         │   ├── LevelTabs.vue          ← 級別頁籤（初級 / 中級）
         │   ├── SubjectTabs.vue        ← 科目頁籤
-        │   ├── TopicSelect.vue        ← 主題下拉選單
+        │   ├── TopicSelect.vue        ← 主題下拉選單（含「全部隨機」模式）
         │   ├── FlashCard.vue          ← 翻轉卡片（正面名詞 / 背面解釋）
-        │   └── CardNav.vue            ← 導覽列（上下張按鈕 + 圓點指示器）
+        │   └── CardNav.vue            ← 導覽列（上下張按鈕 + 圓點/計數器）
         │
         └── styles\
             └── variables.css          ← 全域 CSS 變數（粉黃奶奶配色）
@@ -64,9 +74,22 @@ D:\IPAS-AI 應用規劃師\
 App.vue
 ├── LevelTabs.vue          ← v-model: level (beginner/advanced)
 ├── SubjectTabs.vue        ← v-model: subjectIdx
-├── TopicSelect.vue        ← v-model: topicIdx
+├── TopicSelect.vue        ← v-model: topicIdx / emit: reshuffle
 ├── FlashCard.vue          ← props: card / expose: toggle()
 └── CardNav.vue            ← props: current, total / emit: go
+```
+
+### 資料流（含全部隨機模式）
+
+```
+各主題 .js → cards.js（匯入組合）→ App.vue
+                                      │
+                          topicIdx === -1 ?
+                          ├─ 是 → doShuffle() 合併所有主題卡片並洗牌
+                          │        → shuffledCards（帶 _topicLabel 標記）
+                          └─ 否 → currentTopic.cards（原始順序）
+                                      │
+                                  displayCards → FlashCard + CardNav
 ```
 
 ## 卡片製作規則與方向

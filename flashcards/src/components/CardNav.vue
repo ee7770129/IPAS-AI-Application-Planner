@@ -11,7 +11,7 @@
       <span class="material-icons">chevron_left</span>
       <span class="btn-text">上一張</span>
     </button>
-    <div class="dots">
+    <div v-if="total <= 20" class="dots">
       <span
         v-for="i in total"
         :key="i"
@@ -37,6 +37,8 @@ defineEmits(['go'])
 
 <style scoped>
 .nav-bar {
+  position: relative;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;

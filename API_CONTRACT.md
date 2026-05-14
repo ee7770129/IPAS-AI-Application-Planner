@@ -2,7 +2,12 @@
 
 ## 概述
 
-本專案為純前端 SPA（無後端 API），資料全部定義在 `flashcards/src/data/cards.js` 中。本文件定義 cards.js 的資料結構契約，確保新增卡片時格式一致。
+本專案為純前端 SPA（無後端 API），資料採模組化架構：
+
+- `flashcards/src/data/cards.js` -- 主檔，匯入並組合各主題子檔案
+- `flashcards/src/data/beginner/subject1/*.js` -- 各主題獨立檔案（新增卡片改這裡）
+
+每個主題檔案 `export default` 一個 Topic 物件。本文件定義資料結構契約，確保格式一致。
 
 ## 資料結構定義
 
@@ -50,6 +55,7 @@ interface Card {
   number: number             // 該主題內的流水編號（從 1 開始）
   title: string              // 中文名稱（正面顯示）
   engTitle?: string          // 英文名稱（正面顯示，選填）
+  image?: string             // 正面圖片路徑（選填）
   back: CardBack             // 背面內容
 }
 ```
@@ -133,7 +139,8 @@ interface Tag {
 | modelValue | Number | 是 | 當前主題索引 |
 
 **Emit：**
-- `update:modelValue(index: number)` - 切換主題
+- `update:modelValue(index: number)` - 切換主題（-1 表示「全部隨機」）
+- `reshuffle` - 重新洗牌（僅在全部隨機模式下觸發）
 
 ## 新增卡片範例
 
