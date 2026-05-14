@@ -28,7 +28,10 @@
   --radius: 16px;
 }
 
-html { font-size: 16px; }
+html {
+  font-size: 16px;
+  touch-action: manipulation;
+}
 
 body {
   font-family: "Microsoft JhengHei", "Noto Sans TC", "PingFang TC", sans-serif;

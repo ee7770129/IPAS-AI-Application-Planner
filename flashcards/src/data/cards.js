@@ -28,6 +28,7 @@ import advGenAi from './advanced/subject1/gen-ai.js'
 import advMultimodal from './advanced/subject1/multimodal.js'
 import advDeployment from './advanced/subject1/deployment.js'
 import advAiRisk from './advanced/subject1/ai-risk.js'
+import advReview from './advanced/subject1/review.js'
 
 export const DATA = {
   beginner: {
@@ -94,7 +95,8 @@ export const DATA = {
           advGenAi,
           advMultimodal,
           advDeployment,
-          advAiRisk
+          advAiRisk,
+          advReview
         ]
       }
     ]
