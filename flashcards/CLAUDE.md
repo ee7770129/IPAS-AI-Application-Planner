@@ -14,17 +14,26 @@ flashcards/
 │   ├── main.js             ← createApp 進入點
 │   ├── App.vue             ← 主佈局（狀態管理 + 洗牌 + 鍵盤/觸控事件）
 │   ├── data/
-│   │   ├── cards.js        ← 主檔（匯入各主題子檔案並組合）
-│   │   └── beginner/
-│   │       └── subject1/   ← 第一科各主題卡片（新增卡片改這裡）
-│   │           ├── ai-tech.js             ← AI 技術與架構（11 張）
-│   │           ├── data-processing.js     ← 資料處理與分析（26 張）
-│   │           ├── ml-concepts.js         ← 機器學習概念（32 張）
-│   │           ├── nn-dl.js               ← 神經網路與深度學習（27 張）
-│   │           ├── disc-gen-ai.js         ← 鑑別式AI與生成式AI（2 張）
-│   │           ├── ai-governance.js       ← AI 治理與倫理（2 張）
-│   │           ├── ai-industry.js         ← AI 產業應用（1 張）
-│   │           └── imbalance.js           ← 類別不平衡處理（5 張）
+│   │   ├── cards.js        ← 主檔（匯入初級+中級所有主題並組合）
+│   │   ├── beginner/
+│   │   │   └── subject1/   ← 初級第一科（約 106 張）
+│   │   │       ├── ai-tech.js             ← AI 技術與架構（11 張）
+│   │   │       ├── data-processing.js     ← 資料處理與分析（26 張）
+│   │   │       ├── ml-concepts.js         ← 機器學習概念（32 張）
+│   │   │       ├── nn-dl.js               ← 神經網路與深度學習（27 張）
+│   │   │       ├── disc-gen-ai.js         ← 鑑別式AI與生成式AI（2 張）
+│   │   │       ├── ai-governance.js       ← AI 治理與倫理（2 張）
+│   │   │       ├── ai-industry.js         ← AI 產業應用（1 張）
+│   │   │       └── imbalance.js           ← 類別不平衡處理（5 張）
+│   │   └── advanced/
+│   │       └── subject1/   ← 中級科目一（約 62 張）
+│   │           ├── nlp.js                 ← 自然語言處理（16 張）
+│   │           ├── cv.js                  ← 電腦視覺（4 張）
+│   │           ├── ml-advanced.js         ← 機器學習進階（20 張）
+│   │           ├── gen-ai.js              ← 生成式AI（4 張）
+│   │           ├── multimodal.js          ← 多模態AI（2 張）
+│   │           ├── deployment.js          ← 系統部署與運維（8 張）
+│   │           └── ai-risk.js             ← AI 風險管理（3 張）
 │   ├── components/
 │   │   ├── LevelTabs.vue   ← 級別切換（初級/中級）
 │   │   ├── SubjectTabs.vue ← 科目切換

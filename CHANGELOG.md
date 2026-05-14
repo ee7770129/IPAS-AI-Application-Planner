@@ -4,6 +4,26 @@
 
 ---
 
+## [3.0.0] - 2026-05-15
+
+### 新增
+- 中級科目一「人工智慧技術應用與規劃」完整卡片系統（7 主題，約 62 張）
+- 新主題檔案：nlp.js、cv.js、ml-advanced.js、gen-ai.js、multimodal.js、deployment.js、ai-risk.js
+- 中級 Q1-Q50 全部題目卡片，含考試重點
+- NLP 卡片：情感分析、Transformer、BERT、GPT、詞向量、Word2Vec、GloVe、TF-IDF、N-gram、Seq2Seq、RAG 語意漂移、Attention Collapse、反向翻譯、CLIP
+- CV 卡片：IoU、mAP、Max-Pooling、全景分割
+- ML 進階卡片：DBSCAN、LASSO、PCA+SVM、多重共線性、目標編碼、網格搜尋、ARIMA、資料漂移/KL散度、概念漂移、多任務損失權重、KD-Tree、K-Fold 洩漏、Batch Size/Sharding、資料增強失敗、VAE 監控偏移、生成式vs鑑別式
+- 生成式 AI 卡片：模式崩潰/WGAN、Stable Diffusion 品質、VAE/GAN/Diffusion 比較、VAE/GAN 預測+生成
+- 多模態卡片：多模態缺失處理、CLIP 跨模態對齊不足
+- 部署卡片：Kubernetes、MLOps、Model Registry、漸進式部署、CI、不可否認性、Auto Scaling、PSI
+- 風險卡片：對抗性攻擊、AI 著作權風險、模型偏誤與資料治理
+
+### 變更
+- cards.js 新增中級匯入（advanced/subject1/ 共 7 個檔案）
+- 總卡片數：初級約 106 張 + 中級約 62 張 = 約 168 張
+
+---
+
 ## [2.0.0] - 2026-05-15
 
 ### 新增

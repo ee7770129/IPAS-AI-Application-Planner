@@ -19,7 +19,7 @@
             <span class="material-icons">{{ isSpeaking ? 'volume_up' : 'volume_up' }}</span>
           </button>
         </div>
-        <img v-if="card.image" :src="card.image" :alt="card.title" class="card-image" />
+        <img v-if="card.image" :src="card.image" :alt="card.title" class="card-image" @load="syncHeight" />
         <div class="flip-hint">
           <span class="material-icons">touch_app</span> 點擊翻面
         </div>
@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import { ref, inject, watch, nextTick, onMounted } from 'vue'
+import { ref, inject, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
   card: { type: Object, required: true }
@@ -110,11 +110,23 @@ function syncHeight() {
   }
 }
 
-onMounted(syncHeight)
+let resizeObs = null
+onMounted(() => {
+  syncHeight()
+  document.fonts.ready.then(syncHeight)
+  setTimeout(syncHeight, 300)
+  /* 視窗/容器大小變化時重新計算高度 */
+  resizeObs = new ResizeObserver(syncHeight)
+  if (flipperRef.value) resizeObs.observe(flipperRef.value)
+})
+onBeforeUnmount(() => { if (resizeObs) resizeObs.disconnect() })
 watch(flipped, () => nextTick(syncHeight))
 watch(() => props.card, () => {
   flipped.value = false
-  nextTick(syncHeight)
+  nextTick(() => {
+    syncHeight()
+    setTimeout(syncHeight, 150)
+  })
 })
 
 /** 讓父元件可透過鍵盤觸發翻轉 */
