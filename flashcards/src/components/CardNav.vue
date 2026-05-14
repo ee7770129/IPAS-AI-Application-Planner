@@ -48,9 +48,14 @@ const actualDotStep = ref(16)
 /** 監聽容器寬度變化 */
 let resizeObs = null
 onMounted(() => {
-  measureDot()
-  updateWidth()
-  resizeObs = new ResizeObserver(updateWidth)
+  nextTick(() => {
+    measureDot()
+    updateWidth()
+  })
+  resizeObs = new ResizeObserver(() => {
+    updateWidth()
+    measureDot()
+  })
   if (viewportRef.value) resizeObs.observe(viewportRef.value)
 })
 onBeforeUnmount(() => { if (resizeObs) resizeObs.disconnect() })
