@@ -1,0 +1,9 @@
+# PDF study materials (too large for git)
+*.pdf
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Claude project files
+.claude/

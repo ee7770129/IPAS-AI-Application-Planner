@@ -1,0 +1,39 @@
+/**
+ * 請以繁體中文產生程式碼註解。請務必保持 UTF-8 編碼。
+ * 檔案：variables.css
+ * 功能：全域 CSS 變數（奶皇包配色）與基礎重設
+ * 建立日期：2026-05-14
+ * 版本：1.0.0
+ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* 頂部標題列：柔粉 */
+  --header-from: #F8C8B4;
+  --header-to: #E8A090;
+
+  /* 主色調：粉黃奶奶色 */
+  --custard-light: #FFF5EC;
+  --custard-cream: #FFE0C2;
+  --custard-gold: #FFD1A9;
+  --custard-deep: #E8976B;
+  --custard-amber: #D4764E;
+  --custard-brown: #5D3A2E;
+  --custard-brown-light: #7D5A4A;
+  --custard-bg: #FFFAF5;
+  --custard-card-front: #FFF0E0;
+  --custard-card-back: #FFF8F0;
+  --custard-shadow: rgba(180, 120, 80, 0.2);
+  --radius: 16px;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: "Microsoft JhengHei", "Noto Sans TC", "PingFang TC", sans-serif;
+  background: var(--custard-bg);
+  color: var(--custard-brown);
+  min-height: 100vh;
+  line-height: 1.6;
+}
