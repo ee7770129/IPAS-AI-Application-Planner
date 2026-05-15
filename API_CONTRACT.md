@@ -5,8 +5,9 @@
 本專案為純前端 SPA（無後端 API），資料採模組化架構：
 
 - `flashcards/src/data/cards.js` -- 主檔，匯入並組合所有主題子檔案
-- `flashcards/src/data/beginner/subject1/*.js` -- 初級第一科各主題（8 檔，約 106 張）
-- `flashcards/src/data/advanced/subject1/*.js` -- 中級科目一各主題（7 檔，約 62 張）
+- `flashcards/src/data/beginner/subject1/*.js` -- 初級第一科各主題（8 檔，約 149 張）
+- `flashcards/src/data/advanced/subject1/*.js` -- 中級科目一各主題（8 檔，約 70 張）
+- `flashcards/src/data/advanced/subject2/*.js` -- 中級科目二各主題（5 檔，約 36 張）
 
 每個主題檔案 `export default` 一個 Topic 物件。本文件定義資料結構契約，確保格式一致。
 
