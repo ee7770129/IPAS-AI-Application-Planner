@@ -127,6 +127,60 @@ const topicIdx = ref(0)
 const cardIdx = ref(0)
 const flashCardRef = ref(null)
 const shuffledCards = ref([])
+const isRestoring = ref(false)
+
+/* localStorage 位置記憶 */
+const STORAGE_KEY = 'ipas-flashcards-position'
+
+/** 將目前位置存入 localStorage */
+function savePosition() {
+  if (isRestoring.value) return
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      level: level.value,
+      subjectIdx: subjectIdx.value,
+      topicIdx: topicIdx.value,
+      cardIdx: cardIdx.value
+    }))
+  } catch { /* localStorage 不可用時靜默忽略 */ }
+}
+
+/** 從 localStorage 還原位置（含邊界驗證） */
+function restorePosition() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return
+    const saved = JSON.parse(raw)
+
+    /* 驗證級別 */
+    if (!DATA[saved.level]) return
+    isRestoring.value = true
+
+    level.value = saved.level
+    const lv = DATA[saved.level]
+
+    /* 驗證科目索引 */
+    const si = Number(saved.subjectIdx) || 0
+    if (si < 0 || si >= lv.subjects.length) { isRestoring.value = false; return }
+    subjectIdx.value = si
+
+    /* 驗證主題索引（-1 代表全部隨機） */
+    const subj = lv.subjects[si]
+    const ti = Number(saved.topicIdx)
+    if (ti < -1 || ti >= subj.topics.length) { isRestoring.value = false; return }
+    topicIdx.value = ti
+
+    /* 全部隨機模式需先洗牌，再還原卡片索引 */
+    if (ti === -1) doShuffle()
+
+    /* 驗證卡片索引 */
+    const cards = ti === -1 ? shuffledCards.value : (subj.topics[ti]?.cards || [])
+    const ci = Number(saved.cardIdx) || 0
+    cardIdx.value = (ci >= 0 && ci < cards.length) ? ci : 0
+
+    isRestoring.value = false
+  } catch { isRestoring.value = false }
+}
 
 /* 語音設定 */
 const showSettings = ref(false)
@@ -198,21 +252,32 @@ function doShuffle() {
 
 /* 切換級別時重設所有索引 */
 watch(level, () => {
+  if (isRestoring.value) return
   subjectIdx.value = 0
   topicIdx.value = 0
   cardIdx.value = 0
+  savePosition()
 })
 
 /* 切換科目時重設主題與卡片索引 */
 watch(subjectIdx, () => {
+  if (isRestoring.value) return
   topicIdx.value = 0
   cardIdx.value = 0
+  savePosition()
 })
 
 /* 切換主題時：若切到「全部」則洗牌，否則重設卡片索引 */
 watch(topicIdx, (val) => {
+  if (isRestoring.value) return
   cardIdx.value = 0
   if (val === -1) doShuffle()
+  savePosition()
+})
+
+/* 切換卡片時儲存位置 */
+watch(cardIdx, () => {
+  savePosition()
 })
 
 /* 卡片導覽 */
@@ -254,6 +319,8 @@ onMounted(() => {
   document.addEventListener('keydown', onKeydown)
   document.addEventListener('touchstart', onTouchStart, { passive: true })
   document.addEventListener('touchend', onTouchEnd, { passive: true })
+  /* 還原上次閱讀位置 */
+  restorePosition()
   /* 載入語音清單（部分瀏覽器需等 voiceschanged 事件） */
   loadVoices()
   window.speechSynthesis.onvoiceschanged = loadVoices

@@ -7,7 +7,8 @@
  *
  * 新增卡片請到對應的主題檔案中修改：
  *   初級 → beginner/subject1/
- *   中級 → advanced/subject1/
+ *   中級科目一 → advanced/subject1/
+ *   中級科目二 → advanced/subject2/
  */
 
 /* ===== 初級 ===== */
@@ -29,6 +30,13 @@ import advMultimodal from './advanced/subject1/multimodal.js'
 import advDeployment from './advanced/subject1/deployment.js'
 import advAiRisk from './advanced/subject1/ai-risk.js'
 import advReview from './advanced/subject1/review.js'
+
+/* ===== 中級科目二 ===== */
+import advStatistics from './advanced/subject2/statistics.js'
+import advDataEng from './advanced/subject2/data-engineering.js'
+import advBigdataTech from './advanced/subject2/bigdata-tech.js'
+import advBigdataAnalysis from './advanced/subject2/bigdata-analysis.js'
+import advBigdataPrivacy from './advanced/subject2/bigdata-privacy.js'
 
 export const DATA = {
   beginner: {
@@ -97,6 +105,17 @@ export const DATA = {
           advDeployment,
           advAiRisk,
           advReview
+        ]
+      },
+      {
+        id: 'adv-subject2',
+        label: '科目二 大數據處理分析與應用',
+        topics: [
+          advStatistics,
+          advDataEng,
+          advBigdataTech,
+          advBigdataAnalysis,
+          advBigdataPrivacy
         ]
       }
     ]
