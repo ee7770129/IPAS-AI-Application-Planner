@@ -16,31 +16,84 @@
     </button>
     <Transition name="settings">
       <div v-if="showSettings" class="settings-panel">
-        <span class="material-icons settings-icon">record_voice_over</span>
-        <span class="settings-label">朗讀語音</span>
-        <div class="voice-dropdown" ref="voiceDropdownRef">
-          <button class="voice-trigger" @click="showVoiceMenu = !showVoiceMenu" type="button">
-            <span class="voice-trigger-text">{{ voices[selectedVoiceIdx]?.name || '載入中...' }}</span>
-            <span class="material-icons voice-arrow" :class="{ open: showVoiceMenu }">expand_more</span>
-          </button>
-          <Transition name="vdrop">
-            <ul v-if="showVoiceMenu" class="voice-menu">
-              <li
-                v-for="(v, i) in voices"
-                :key="i"
-                class="voice-item"
-                :class="{ active: i === selectedVoiceIdx }"
-                @click="selectedVoiceIdx = i; showVoiceMenu = false"
-              >
-                <span class="voice-name">{{ v.name }}</span>
-                <span class="voice-lang">{{ v.lang }}</span>
-              </li>
-            </ul>
-          </Transition>
+        <!-- 語速控制 -->
+        <div class="settings-row">
+          <span class="material-icons settings-icon">speed</span>
+          <span class="settings-label">語速</span>
+          <input
+            type="range"
+            class="rate-slider"
+            min="0.5"
+            max="2.0"
+            step="0.1"
+            v-model.number="speechRate"
+          />
+          <span class="rate-value">{{ speechRate.toFixed(1) }}x</span>
         </div>
-        <button class="voice-test-btn" @click="testVoice" type="button">
-          <span class="material-icons">play_arrow</span> 試聽
-        </button>
+
+        <!-- 英文語音 -->
+        <div class="settings-row">
+          <span class="material-icons settings-icon">translate</span>
+          <span class="settings-label">英文</span>
+          <div class="voice-dropdown" ref="voiceDropdownRef">
+            <button class="voice-trigger" ref="enTriggerRef" @click="toggleVoiceMenu('en')" type="button">
+              <span class="voice-trigger-text">{{ voices[selectedVoiceIdx]?.name || '載入中...' }}</span>
+              <span class="material-icons voice-arrow" :class="{ open: showVoiceMenu }">expand_more</span>
+            </button>
+            <Teleport to="body">
+              <Transition name="vdrop">
+                <ul v-if="showVoiceMenu" class="voice-menu" :style="menuStyle">
+                  <li
+                    v-for="(v, i) in voices"
+                    :key="i"
+                    class="voice-item"
+                    :class="{ active: i === selectedVoiceIdx }"
+                    @click="selectedVoiceIdx = i; showVoiceMenu = false"
+                  >
+                    <span class="voice-name">{{ v.name }}</span>
+                    <span v-if="isNaturalVoice(v)" class="voice-tag">自然</span>
+                    <span class="voice-lang">{{ v.lang }}</span>
+                  </li>
+                </ul>
+              </Transition>
+            </Teleport>
+          </div>
+          <button class="voice-test-btn" @click="testVoice" type="button">
+            <span class="material-icons">play_arrow</span>
+          </button>
+        </div>
+
+        <!-- 中文語音 -->
+        <div class="settings-row">
+          <span class="material-icons settings-icon">record_voice_over</span>
+          <span class="settings-label">中文</span>
+          <div class="voice-dropdown" ref="zhVoiceDropdownRef">
+            <button class="voice-trigger" ref="zhTriggerRef" @click="toggleVoiceMenu('zh')" type="button">
+              <span class="voice-trigger-text">{{ zhVoices[selectedZhVoiceIdx]?.name || '載入中...' }}</span>
+              <span class="material-icons voice-arrow" :class="{ open: showZhVoiceMenu }">expand_more</span>
+            </button>
+            <Teleport to="body">
+              <Transition name="vdrop">
+                <ul v-if="showZhVoiceMenu" class="voice-menu" :style="menuStyle">
+                  <li
+                    v-for="(v, i) in zhVoices"
+                    :key="i"
+                    class="voice-item"
+                    :class="{ active: i === selectedZhVoiceIdx }"
+                    @click="selectedZhVoiceIdx = i; showZhVoiceMenu = false"
+                  >
+                    <span class="voice-name">{{ v.name }}</span>
+                    <span v-if="isNaturalVoice(v)" class="voice-tag">自然</span>
+                    <span class="voice-lang">{{ v.lang }}</span>
+                  </li>
+                </ul>
+              </Transition>
+            </Teleport>
+          </div>
+          <button class="voice-test-btn" @click="testZhVoice" type="button">
+            <span class="material-icons">play_arrow</span>
+          </button>
+        </div>
       </div>
     </Transition>
   </header>
@@ -204,18 +257,122 @@ async function restorePosition() {
 /* 語音設定 */
 const showSettings = ref(false)
 const showVoiceMenu = ref(false)
+const showZhVoiceMenu = ref(false)
 const voiceDropdownRef = ref(null)
-const voices = ref([])
-const selectedVoiceIdx = ref(0)
+const zhVoiceDropdownRef = ref(null)
+const enTriggerRef = ref(null)
+const zhTriggerRef = ref(null)
+const menuStyle = ref({})
 
-/** 載入可用語音清單（篩選英文語音） */
+/** 開關語音選單，並計算固定定位的 top 值 */
+function toggleVoiceMenu(type) {
+  if (type === 'en') {
+    showZhVoiceMenu.value = false
+    showVoiceMenu.value = !showVoiceMenu.value
+    if (showVoiceMenu.value && enTriggerRef.value) {
+      const rect = enTriggerRef.value.getBoundingClientRect()
+      menuStyle.value = { top: `${rect.bottom + 6}px` }
+    }
+  } else {
+    showVoiceMenu.value = false
+    showZhVoiceMenu.value = !showZhVoiceMenu.value
+    if (showZhVoiceMenu.value && zhTriggerRef.value) {
+      const rect = zhTriggerRef.value.getBoundingClientRect()
+      menuStyle.value = { top: `${rect.bottom + 6}px` }
+    }
+  }
+}
+const voices = ref([])
+const zhVoices = ref([])
+const selectedVoiceIdx = ref(0)
+const selectedZhVoiceIdx = ref(0)
+const speechRate = ref(1.0)
+const VOICE_KEY = 'ipas-flashcards-voice'
+const ZH_VOICE_KEY = 'ipas-flashcards-zh-voice'
+const RATE_KEY = 'ipas-flashcards-rate'
+
+/** 還原語速設定 */
+try {
+  const savedRate = localStorage.getItem(RATE_KEY)
+  if (savedRate) speechRate.value = Math.max(0.5, Math.min(2.0, Number(savedRate)))
+} catch { /* 靜默忽略 */ }
+
+/** 判斷是否為自然語音
+ *  Windows: 名稱含 Online / Natural
+ *  Apple: 不含 Compact（Apple 預設語音品質較好，Compact 是低品質版）
+ *  Google: 含 Wavenet / Neural
+ */
+function isNaturalVoice(v) {
+  const n = v.name
+  /* 明確的高品質標記 */
+  if (n.includes('Online') || n.includes('Natural') ||
+      n.includes('Wavenet') || n.includes('Neural') ||
+      n.includes('Siri')) return true
+  /* Apple 語音：沒有 Compact / Microsoft / Google 字樣的就是高品質 */
+  if (!n.includes('Compact') && !n.includes('Microsoft') && !n.includes('Google')) return true
+  return false
+}
+
+/** 載入可用語音清單，並還原上次選擇 */
 function loadVoices() {
   const all = window.speechSynthesis.getVoices()
   voices.value = all.filter(v => v.lang.startsWith('en'))
-  if (voices.value.length && selectedVoiceIdx.value >= voices.value.length) {
-    selectedVoiceIdx.value = 0
+  zhVoices.value = all.filter(v => v.lang.startsWith('zh'))
+
+  /* 還原英文語音（優先已儲存 → Online/Natural → 第一個） */
+  if (voices.value.length) {
+    let restored = false
+    try {
+      const savedName = localStorage.getItem(VOICE_KEY)
+      if (savedName) {
+        const idx = voices.value.findIndex(v => v.name === savedName)
+        if (idx !== -1) { selectedVoiceIdx.value = idx; restored = true }
+      }
+    } catch { /* 靜默忽略 */ }
+    if (!restored) {
+      const naturalIdx = voices.value.findIndex(v => isNaturalVoice(v))
+      selectedVoiceIdx.value = naturalIdx !== -1 ? naturalIdx : 0
+    }
+  }
+
+  /* 還原中文語音（優先已儲存 → zh-TW Online/Natural → zh-TW → 第一個） */
+  if (zhVoices.value.length) {
+    let restored = false
+    try {
+      const savedName = localStorage.getItem(ZH_VOICE_KEY)
+      if (savedName) {
+        const idx = zhVoices.value.findIndex(v => v.name === savedName)
+        if (idx !== -1) { selectedZhVoiceIdx.value = idx; restored = true }
+      }
+    } catch { /* 靜默忽略 */ }
+    if (!restored) {
+      /* 優先：zh-TW 自然語音 → 任何自然語音 → zh-TW → 第一個 */
+      const twNatural = zhVoices.value.findIndex(v => v.lang.startsWith('zh-TW') && isNaturalVoice(v))
+      if (twNatural !== -1) { selectedZhVoiceIdx.value = twNatural; return }
+      const anyNatural = zhVoices.value.findIndex(v => isNaturalVoice(v))
+      if (anyNatural !== -1) { selectedZhVoiceIdx.value = anyNatural; return }
+      const twIdx = zhVoices.value.findIndex(v => v.lang.startsWith('zh-TW'))
+      if (twIdx !== -1) selectedZhVoiceIdx.value = twIdx
+    }
   }
 }
+
+/** 語音選擇變更時存入 localStorage */
+watch(selectedVoiceIdx, (idx) => {
+  try {
+    const v = voices.value[idx]
+    if (v) localStorage.setItem(VOICE_KEY, v.name)
+  } catch { /* 靜默忽略 */ }
+})
+watch(selectedZhVoiceIdx, (idx) => {
+  try {
+    const v = zhVoices.value[idx]
+    if (v) localStorage.setItem(ZH_VOICE_KEY, v.name)
+  } catch { /* 靜默忽略 */ }
+})
+watch(speechRate, (rate) => {
+  try { localStorage.setItem(RATE_KEY, String(rate)) } catch { /* 靜默忽略 */ }
+})
 
 /** 試聽選定語音 */
 function testVoice() {
@@ -224,12 +381,24 @@ function testVoice() {
   const utterance = new SpeechSynthesisUtterance('Hello, this is a test.')
   utterance.voice = voices.value[selectedVoiceIdx.value]
   utterance.lang = 'en-US'
-  utterance.rate = 0.9
+  utterance.rate = speechRate.value
   window.speechSynthesis.speak(utterance)
 }
 
-/** 透過 provide 讓 FlashCard 取得選定的語音 */
+function testZhVoice() {
+  if (!zhVoices.value.length) return
+  window.speechSynthesis.cancel()
+  const utterance = new SpeechSynthesisUtterance('這是語音測試。')
+  utterance.voice = zhVoices.value[selectedZhVoiceIdx.value]
+  utterance.lang = 'zh-TW'
+  utterance.rate = speechRate.value
+  window.speechSynthesis.speak(utterance)
+}
+
+/** 透過 provide 讓 FlashCard 取得語音設定 */
 provide('getSelectedVoice', () => voices.value[selectedVoiceIdx.value] || null)
+provide('getZhVoice', () => zhVoices.value[selectedZhVoiceIdx.value] || null)
+provide('getSpeechRate', () => speechRate.value)
 
 /* 計算屬性 */
 const currentLevel = computed(() => DATA[level.value])
@@ -354,6 +523,9 @@ onMounted(() => {
     if (voiceDropdownRef.value && !voiceDropdownRef.value.contains(e.target)) {
       showVoiceMenu.value = false
     }
+    if (zhVoiceDropdownRef.value && !zhVoiceDropdownRef.value.contains(e.target)) {
+      showZhVoiceMenu.value = false
+    }
   })
 })
 
@@ -410,21 +582,62 @@ onBeforeUnmount(() => {
 /* 設定面板 */
 .settings-panel {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
   gap: 8px;
   margin-top: 10px;
   padding: 10px 14px;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 12px;
+}
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   flex-wrap: wrap;
 }
 .settings-label {
   font-size: 0.78rem;
   font-weight: 600;
+  min-width: 28px;
 }
 .settings-icon {
   font-size: 16px;
+}
+.rate-slider {
+  flex: 1;
+  min-width: 80px;
+  max-width: 160px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.rate-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+.rate-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+.rate-value {
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 32px;
+  text-align: center;
 }
 
 /* 語音自訂下拉 */
@@ -462,65 +675,77 @@ onBeforeUnmount(() => {
 .voice-arrow.open {
   transform: rotate(180deg);
 }
-.voice-menu {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  min-width: 100%;
-  width: max-content;
-  max-width: 90vw;
+/* 語音選單（Teleport 到 body，需用 :global） */
+:global(.voice-menu) {
+  position: fixed;
+  left: 12px;
+  right: 12px;
   max-height: 240px;
-  overflow-y: auto;
+  overflow: hidden auto;
   background: #fff;
   border: 2px solid var(--custard-cream);
   border-radius: var(--radius);
-  padding: 6px 0;
+  padding: 0;
   margin: 0;
   list-style: none;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  z-index: 200;
+  z-index: 600;
+  font-family: "Microsoft JhengHei", "Noto Sans TC", "PingFang TC", sans-serif;
 }
-.voice-item {
+:global(.voice-item) {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
   padding: 8px 16px;
   font-size: 0.82rem;
   color: var(--custard-brown);
   cursor: pointer;
   transition: background 0.15s;
-  white-space: nowrap;
 }
-.voice-item:hover {
+:global(.voice-item:hover) {
   background: var(--custard-light);
 }
-.voice-item.active {
+:global(.voice-item.active) {
   background: var(--custard-cream);
   font-weight: 700;
   color: var(--custard-deep);
 }
-.voice-name {
+:global(.voice-name) {
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
-.voice-lang {
+:global(.voice-tag) {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: rgba(102, 187, 106, 0.2);
+  color: #2E7D32;
+}
+:global(.voice-lang) {
+  flex-shrink: 0;
   font-size: 0.72rem;
   opacity: 0.6;
 }
 
 /* 語音下拉動畫 */
-.vdrop-enter-active,
-.vdrop-leave-active {
+:global(.vdrop-enter-active),
+:global(.vdrop-leave-active) {
   transition: opacity 0.15s ease, transform 0.15s ease;
-  transform-origin: top right;
+  transform-origin: top center;
 }
-.vdrop-enter-from,
-.vdrop-leave-to {
+:global(.vdrop-enter-from),
+:global(.vdrop-leave-to) {
   opacity: 0;
   transform: scaleY(0.9);
 }
-.vdrop-enter-to,
-.vdrop-leave-from {
+:global(.vdrop-enter-to),
+:global(.vdrop-leave-from) {
   opacity: 1;
   transform: scaleY(1);
 }

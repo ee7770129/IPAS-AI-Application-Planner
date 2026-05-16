@@ -69,6 +69,12 @@
           </div>
         </template>
 
+        <div class="back-actions">
+          <button class="read-btn" @click.stop="readExplanation" type="button" :title="isReadingZh ? '停止朗讀' : '朗讀解釋'">
+            <span class="material-icons">{{ isReadingZh ? 'stop' : 'volume_up' }}</span>
+            {{ isReadingZh ? '停止' : '朗讀解釋' }}
+          </button>
+        </div>
         <div class="flip-hint-back">點擊翻回正面</div>
       </div>
     </div>
@@ -88,23 +94,81 @@ const flipperRef = ref(null)
 const frontRef = ref(null)
 const backRef = ref(null)
 const isSpeaking = ref(false)
+const isReadingZh = ref(false)
 
-/** 從 App.vue 取得使用者選定的語音 */
+/** 從 App.vue 取得使用者選定的語音與語速 */
 const getSelectedVoice = inject('getSelectedVoice', () => null)
+const getZhVoice = inject('getZhVoice', () => null)
+const getSpeechRate = inject('getSpeechRate', () => 1.0)
 
 /** 使用 Web Speech API 朗讀英文 */
 function speak(text) {
   if (!text || !window.speechSynthesis) return
   window.speechSynthesis.cancel()
+  isReadingZh.value = false
   const utterance = new SpeechSynthesisUtterance(text)
   const voice = getSelectedVoice()
   if (voice) utterance.voice = voice
   utterance.lang = 'en-US'
-  utterance.rate = 0.9
+  utterance.rate = getSpeechRate()
   isSpeaking.value = true
   utterance.onend = () => { isSpeaking.value = false }
   utterance.onerror = () => { isSpeaking.value = false }
   window.speechSynthesis.speak(utterance)
+}
+
+/** 收集卡片背面文字，拆成多段（避免 Web Speech API 長文本中斷） */
+function collectBackChunks() {
+  if (!props.card?.back?.sections) return []
+  const chunks = []
+  for (const sec of props.card.back.sections) {
+    const parts = []
+    if (sec.label) parts.push(sec.label)
+    if (sec.content) parts.push(sec.content)
+    if (sec.code) parts.push(sec.code)
+    if (sec.tags) {
+      for (const tag of sec.tags) parts.push(tag.text)
+    }
+    if (parts.length) chunks.push(parts.join('。'))
+  }
+  return chunks
+}
+
+/** 朗讀卡片背面解釋（中文），分段依序念 */
+function readExplanation() {
+  if (!window.speechSynthesis) return
+  /* 正在念就停止 */
+  if (isReadingZh.value) {
+    window.speechSynthesis.cancel()
+    isReadingZh.value = false
+    return
+  }
+  window.speechSynthesis.cancel()
+  isSpeaking.value = false
+  const chunks = collectBackChunks()
+  if (!chunks.length) return
+
+  isReadingZh.value = true
+  const voice = getZhVoice()
+  const rate = getSpeechRate()
+  let idx = 0
+
+  /** 逐段朗讀：等當前段念完再念下一段 */
+  function speakNext() {
+    if (idx >= chunks.length || !isReadingZh.value) {
+      isReadingZh.value = false
+      return
+    }
+    const utterance = new SpeechSynthesisUtterance(chunks[idx])
+    if (voice) utterance.voice = voice
+    utterance.lang = 'zh-TW'
+    utterance.rate = rate
+    idx++
+    utterance.onend = speakNext
+    utterance.onerror = () => { isReadingZh.value = false }
+    window.speechSynthesis.speak(utterance)
+  }
+  speakNext()
 }
 
 /** 將換行符轉為 <br>，並跳脫 HTML */
@@ -148,6 +212,10 @@ onBeforeUnmount(() => { if (resizeObs) resizeObs.disconnect() })
 watch(flipped, () => nextTick(syncHeight))
 watch(() => props.card, () => {
   flipped.value = false
+  /* 切換卡片時停止朗讀 */
+  if (window.speechSynthesis) window.speechSynthesis.cancel()
+  isReadingZh.value = false
+  isSpeaking.value = false
   nextTick(() => {
     syncHeight()
     setTimeout(syncHeight, 150)
@@ -393,6 +461,34 @@ defineExpose({
 }
 .data-table tbody tr:hover {
   background: rgba(255, 213, 79, 0.15);
+}
+
+/* -- 朗讀解釋按鈕 -- */
+.back-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+.read-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--custard-cream);
+  border-radius: 20px;
+  background: var(--custard-light);
+  color: var(--custard-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.read-btn:hover {
+  background: var(--custard-cream);
+}
+.read-btn .material-icons {
+  font-size: 16px;
 }
 
 .flip-hint-back {
