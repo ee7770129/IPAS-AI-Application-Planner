@@ -70,7 +70,12 @@
         <span class="material-icons">bookmark</span>
         {{ displayCards[cardIdx]._topicLabel }}
       </div>
-      <div class="card-counter">卡片 {{ cardIdx + 1 }} / {{ displayCards.length }}</div>
+      <div class="card-counter">
+        <button class="drawer-btn" @click="drawerOpen = true" type="button" title="卡片目錄">
+          <span class="material-icons">menu</span>
+        </button>
+        卡片 {{ cardIdx + 1 }} / {{ displayCards.length }}
+      </div>
       <FlashCard ref="flashCardRef" :card="displayCards[cardIdx]" />
       <CardNav
         :current="cardIdx"
@@ -88,6 +93,16 @@
   <div class="keyboard-hint">
     鍵盤操作：空白鍵 翻轉 / 左右方向鍵 切換卡片
   </div>
+
+  <!-- 卡片目錄抽屜 -->
+  <CardDrawer
+    :open="drawerOpen"
+    :cards="displayCards"
+    :current="cardIdx"
+    :topicLabel="drawerLabel"
+    @close="drawerOpen = false"
+    @go="goCard"
+  />
 
   <!-- 撐開剩餘空間，把 footer 推到底 -->
   <div class="spacer"></div>
@@ -119,6 +134,7 @@ import SubjectTabs from './components/SubjectTabs.vue'
 import TopicSelect from './components/TopicSelect.vue'
 import FlashCard from './components/FlashCard.vue'
 import CardNav from './components/CardNav.vue'
+import CardDrawer from './components/CardDrawer.vue'
 
 /* 狀態 */
 const level = ref('beginner')
@@ -128,6 +144,7 @@ const cardIdx = ref(0)
 const flashCardRef = ref(null)
 const shuffledCards = ref([])
 const isRestoring = ref(false)
+const drawerOpen = ref(false)
 
 /* localStorage 位置記憶 */
 const STORAGE_KEY = 'ipas-flashcards-position'
@@ -218,6 +235,12 @@ const currentSubject = computed(() => currentLevel.value.subjects[subjectIdx.val
 const currentTopic = computed(() => {
   if (!currentSubject.value) return null
   return currentSubject.value.topics[topicIdx.value] || null
+})
+
+/** 目前主題名稱（用於抽屜標題） */
+const drawerLabel = computed(() => {
+  if (topicIdx.value === -1) return '全部（隨機）'
+  return currentTopic.value?.label || ''
 })
 
 /** 目前要顯示的卡片陣列（一般模式用 topic.cards，全部模式用 shuffledCards） */
@@ -565,10 +588,32 @@ onBeforeUnmount(() => {
   font-size: 16px;
 }
 .card-counter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.85rem;
   color: var(--custard-brown-light);
   margin-bottom: 10px;
   font-weight: 500;
+}
+.drawer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--custard-cream);
+  border-radius: 8px;
+  background: var(--custard-light);
+  color: var(--custard-deep);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.drawer-btn:hover {
+  background: var(--custard-cream);
+}
+.drawer-btn .material-icons {
+  font-size: 18px;
 }
 .placeholder {
   display: flex;

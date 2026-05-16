@@ -40,7 +40,22 @@
             <span class="material-icons">{{ sec.icon }}</span> {{ sec.label }}
           </div>
           <div v-if="sec.content" class="section-content" v-html="nl2br(sec.content)"></div>
-          <div v-if="sec.code" class="code-block" v-html="nl2br(sec.code)"></div>
+          <div v-if="sec.code" class="code-block" v-html="escapeHtml(sec.code)"></div>
+          <ChartSection v-if="sec.chart" :chart="sec.chart" />
+          <div v-if="sec.table" class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th v-for="(h, hi) in sec.table.headers" :key="hi">{{ h }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(row, ri) in sec.table.rows" :key="ri">
+                  <td v-for="(cell, ci) in row" :key="ci" :class="{ 'row-header': ci === 0 }">{{ cell }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div v-if="sec.tree" class="tree-block" v-html="nl2br(sec.tree)"></div>
           <div v-if="sec.tags" class="tags-row">
             <div
@@ -62,6 +77,7 @@
 
 <script setup>
 import { ref, inject, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import ChartSection from './ChartSection.vue'
 
 const props = defineProps({
   card: { type: Object, required: true }
@@ -99,6 +115,15 @@ function nl2br(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/\n/g, '<br>')
+}
+
+/** 跳脫 HTML（不轉換換行，搭配 white-space: pre-wrap 使用） */
+function escapeHtml(str) {
+  if (!str) return ''
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
 }
 
 /** 同步容器高度，避免背面內容與導覽列重疊 */
@@ -306,6 +331,7 @@ defineExpose({
   font-family: "Consolas", "Source Code Pro", monospace;
   font-size: 0.82rem;
   line-height: 1.6;
+  white-space: pre-wrap;
   overflow-x: auto;
 }
 .tree-block {
@@ -329,6 +355,46 @@ defineExpose({
 }
 .tag-pro { background: rgba(102,187,106,0.2); color: #2E7D32; }
 .tag-con { background: rgba(239,83,80,0.15); color: #C62828; }
+/* -- 表格 -- */
+.table-wrap {
+  margin: 8px 0;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--custard-cream);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  font-family: "Consolas", "Source Code Pro", monospace;
+}
+.data-table th {
+  background: var(--custard-deep);
+  color: #fff;
+  padding: 6px 8px;
+  text-align: right;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.data-table th:first-child {
+  text-align: left;
+}
+.data-table td {
+  padding: 5px 8px;
+  text-align: right;
+  border-bottom: 1px solid rgba(255, 213, 79, 0.25);
+  white-space: nowrap;
+}
+.data-table td.row-header {
+  text-align: left;
+  font-weight: 700;
+  color: var(--custard-deep);
+  background: rgba(255, 213, 79, 0.1);
+}
+.data-table tbody tr:hover {
+  background: rgba(255, 213, 79, 0.15);
+}
+
 .flip-hint-back {
   text-align: center;
   font-size: 0.75rem;

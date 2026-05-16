@@ -404,9 +404,17 @@ export default {
             content: '把連續型數據分成幾個區間（bin），用長條的高度表示每個區間有多少筆資料。看的是「資料分佈的形狀」。'
           },
           {
-            label: '範例',
+            label: '範例：顧客年齡分佈',
             icon: 'table_chart',
-            code: '顧客年齡分佈：\n\n20-29歲 ████████  (80人)\n30-39歲 ████████████ (120人)\n40-49歲 ██████ (60人)\n50-59歲 ███ (30人)\n\n→ 30-39歲最多，呈現左偏分佈'
+            chart: {
+              data: [
+                { label: '20-29歲', value: 80, color: '#FFB74D', tip: '80 人' },
+                { label: '30-39歲', value: 120, color: '#FF9800', tip: '120 人（最多）' },
+                { label: '40-49歲', value: 60, color: '#FFB74D', tip: '60 人' },
+                { label: '50-59歲', value: 30, color: '#FFCC80', tip: '30 人' }
+              ]
+            },
+            content: '30-39歲最多，呈現左偏分佈'
           },
           {
             label: '跟長條圖的差別',
@@ -457,9 +465,17 @@ export default {
             content: '用長條的高度或長度來比較不同「類別」之間的數量或大小。長條之間有間隔，表示類別是離散的。'
           },
           {
-            label: '範例',
+            label: '範例：各產品年度銷售總額',
             icon: 'table_chart',
-            code: '各產品年度銷售總額：\n\n手機  ████████████ 120萬\n筆電  ████████ 80萬\n平板  █████ 50萬\n手錶  ███ 30萬\n\n→ 比較不同「類別」的銷售額'
+            chart: {
+              data: [
+                { label: '手機', value: 120, color: '#42A5F5', tip: '120 萬' },
+                { label: '筆電', value: 80, color: '#66BB6A', tip: '80 萬' },
+                { label: '平板', value: 50, color: '#FFA726', tip: '50 萬' },
+                { label: '手錶', value: 30, color: '#AB47BC', tip: '30 萬' }
+              ]
+            },
+            content: '比較不同「類別」的銷售額'
           },
           {
             label: '跟直方圖的差別',

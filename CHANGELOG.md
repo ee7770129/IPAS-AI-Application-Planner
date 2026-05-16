@@ -4,6 +4,24 @@
 
 ---
 
+## [3.7.0] - 2026-05-16
+
+### 新增
+- Chart.js 圖表支援：卡片新增 `chart` section type，渲染彩色橫向長條圖（ChartSection.vue）
+- HTML 表格支援：卡片新增 `table` section type，渲染格式化表格
+- 卡片目錄側邊抽屜（CardDrawer.vue）：點卡片計數器旁的選單按鈕開啟，列出所有卡片名稱，點擊跳轉
+- 安裝 chart.js + vue-chartjs 套件
+
+### 修復
+- FlashCard code 區塊加 `white-space: pre-wrap`，修正 ASCII 圖表空格對齊被壓縮的問題
+- code 區塊改用 `escapeHtml()` 取代 `nl2br()`，避免 pre-wrap 下重複換行
+
+### 變更
+- 中級科目二 data-engineering.js：第 4 張 Robust Scaling ASCII 長條圖改為 Chart.js 彩色圖表、第 14 張 describe() ASCII 表格改為 HTML table
+- 初級第一科 data-processing.js：第 20 張直方圖、第 22 張長條圖範例改為 Chart.js 彩色圖表
+
+---
+
 ## [3.6.0] - 2026-05-15
 
 ### 變更
