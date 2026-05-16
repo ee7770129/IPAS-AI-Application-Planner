@@ -84,6 +84,7 @@
 <script setup>
 import { ref, inject, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import ChartSection from './ChartSection.vue'
+import { edgeSpeak } from '../utils/edge-tts.js'
 
 const props = defineProps({
   card: { type: Object, required: true }
@@ -96,79 +97,76 @@ const backRef = ref(null)
 const isSpeaking = ref(false)
 const isReadingZh = ref(false)
 
-/** 從 App.vue 取得使用者選定的語音與語速 */
-const getSelectedVoice = inject('getSelectedVoice', () => null)
-const getZhVoice = inject('getZhVoice', () => null)
+/** 從 App.vue 取得語音設定 */
+const getEdgeZhVoice = inject('getEdgeZhVoice', () => 'zh-CN-XiaoxiaoNeural')
+const getEdgeEnVoice = inject('getEdgeEnVoice', () => 'en-US-EmmaMultilingualNeural')
 const getSpeechRate = inject('getSpeechRate', () => 1.0)
 
-/** 使用 Web Speech API 朗讀英文 */
-function speak(text) {
-  if (!text || !window.speechSynthesis) return
-  window.speechSynthesis.cancel()
+/** 目前播放中的 Audio 與取消控制器 */
+let currentAbort = null
+
+/** 停止所有朗讀 */
+function stopAll() {
+  if (currentAbort) { currentAbort.abort(); currentAbort = null }
+  isSpeaking.value = false
   isReadingZh.value = false
-  const utterance = new SpeechSynthesisUtterance(text)
-  const voice = getSelectedVoice()
-  if (voice) utterance.voice = voice
-  utterance.lang = 'en-US'
-  utterance.rate = getSpeechRate()
-  isSpeaking.value = true
-  utterance.onend = () => { isSpeaking.value = false }
-  utterance.onerror = () => { isSpeaking.value = false }
-  window.speechSynthesis.speak(utterance)
 }
 
-/** 收集卡片背面文字，拆成多段（避免 Web Speech API 長文本中斷） */
-function collectBackChunks() {
-  if (!props.card?.back?.sections) return []
-  const chunks = []
+/** 朗讀英文標題（Edge TTS） */
+async function speak(text) {
+  if (!text) return
+  stopAll()
+  isSpeaking.value = true
+  const abort = new AbortController()
+  currentAbort = abort
+  try {
+    const audio = await edgeSpeak(text, {
+      voice: getEdgeEnVoice(),
+      rate: getSpeechRate(),
+      signal: abort.signal
+    })
+    audio.addEventListener('ended', () => { isSpeaking.value = false }, { once: true })
+  } catch {
+    if (!abort.signal.aborted) isSpeaking.value = false
+  }
+}
+
+/** 收集卡片背面所有文字 */
+function collectBackText() {
+  if (!props.card?.back?.sections) return ''
+  const parts = []
   for (const sec of props.card.back.sections) {
-    const parts = []
     if (sec.label) parts.push(sec.label)
     if (sec.content) parts.push(sec.content)
     if (sec.code) parts.push(sec.code)
     if (sec.tags) {
       for (const tag of sec.tags) parts.push(tag.text)
     }
-    if (parts.length) chunks.push(parts.join('。'))
   }
-  return chunks
+  return parts.join('。\n')
 }
 
-/** 朗讀卡片背面解釋（中文），分段依序念 */
-function readExplanation() {
-  if (!window.speechSynthesis) return
+/** 朗讀卡片背面解釋（Edge TTS 中文） */
+async function readExplanation() {
   /* 正在念就停止 */
-  if (isReadingZh.value) {
-    window.speechSynthesis.cancel()
-    isReadingZh.value = false
-    return
-  }
-  window.speechSynthesis.cancel()
-  isSpeaking.value = false
-  const chunks = collectBackChunks()
-  if (!chunks.length) return
+  if (isReadingZh.value) { stopAll(); return }
+  stopAll()
+  const text = collectBackText()
+  if (!text) return
 
   isReadingZh.value = true
-  const voice = getZhVoice()
-  const rate = getSpeechRate()
-  let idx = 0
-
-  /** 逐段朗讀：等當前段念完再念下一段 */
-  function speakNext() {
-    if (idx >= chunks.length || !isReadingZh.value) {
-      isReadingZh.value = false
-      return
-    }
-    const utterance = new SpeechSynthesisUtterance(chunks[idx])
-    if (voice) utterance.voice = voice
-    utterance.lang = 'zh-TW'
-    utterance.rate = rate
-    idx++
-    utterance.onend = speakNext
-    utterance.onerror = () => { isReadingZh.value = false }
-    window.speechSynthesis.speak(utterance)
+  const abort = new AbortController()
+  currentAbort = abort
+  try {
+    const audio = await edgeSpeak(text, {
+      voice: getEdgeZhVoice(),
+      rate: getSpeechRate(),
+      signal: abort.signal
+    })
+    audio.addEventListener('ended', () => { isReadingZh.value = false }, { once: true })
+  } catch {
+    if (!abort.signal.aborted) isReadingZh.value = false
   }
-  speakNext()
 }
 
 /** 將換行符轉為 <br>，並跳脫 HTML */
@@ -212,10 +210,7 @@ onBeforeUnmount(() => { if (resizeObs) resizeObs.disconnect() })
 watch(flipped, () => nextTick(syncHeight))
 watch(() => props.card, () => {
   flipped.value = false
-  /* 切換卡片時停止朗讀 */
-  if (window.speechSynthesis) window.speechSynthesis.cancel()
-  isReadingZh.value = false
-  isSpeaking.value = false
+  stopAll()
   nextTick(() => {
     syncHeight()
     setTimeout(syncHeight, 150)

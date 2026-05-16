@@ -37,21 +37,20 @@
           <span class="settings-label">英文</span>
           <div class="voice-dropdown" ref="voiceDropdownRef">
             <button class="voice-trigger" ref="enTriggerRef" @click="toggleVoiceMenu('en')" type="button">
-              <span class="voice-trigger-text">{{ voices[selectedVoiceIdx]?.name || '載入中...' }}</span>
+              <span class="voice-trigger-text">{{ selectedEnVoiceName }}</span>
               <span class="material-icons voice-arrow" :class="{ open: showVoiceMenu }">expand_more</span>
             </button>
             <Teleport to="body">
               <Transition name="vdrop">
                 <ul v-if="showVoiceMenu" class="voice-menu" :style="menuStyle">
                   <li
-                    v-for="(v, i) in voices"
-                    :key="i"
+                    v-for="v in EN_VOICES"
+                    :key="v.id"
                     class="voice-item"
-                    :class="{ active: i === selectedVoiceIdx }"
-                    @click="selectedVoiceIdx = i; showVoiceMenu = false"
+                    :class="{ active: v.id === selectedEnVoiceId }"
+                    @click="selectedEnVoiceId = v.id; showVoiceMenu = false"
                   >
                     <span class="voice-name">{{ v.name }}</span>
-                    <span v-if="isNaturalVoice(v)" class="voice-tag">自然</span>
                     <span class="voice-lang">{{ v.lang }}</span>
                   </li>
                 </ul>
@@ -69,21 +68,20 @@
           <span class="settings-label">中文</span>
           <div class="voice-dropdown" ref="zhVoiceDropdownRef">
             <button class="voice-trigger" ref="zhTriggerRef" @click="toggleVoiceMenu('zh')" type="button">
-              <span class="voice-trigger-text">{{ zhVoices[selectedZhVoiceIdx]?.name || '載入中...' }}</span>
+              <span class="voice-trigger-text">{{ selectedZhVoiceName }}</span>
               <span class="material-icons voice-arrow" :class="{ open: showZhVoiceMenu }">expand_more</span>
             </button>
             <Teleport to="body">
               <Transition name="vdrop">
                 <ul v-if="showZhVoiceMenu" class="voice-menu" :style="menuStyle">
                   <li
-                    v-for="(v, i) in zhVoices"
-                    :key="i"
+                    v-for="v in ZH_VOICES"
+                    :key="v.id"
                     class="voice-item"
-                    :class="{ active: i === selectedZhVoiceIdx }"
-                    @click="selectedZhVoiceIdx = i; showZhVoiceMenu = false"
+                    :class="{ active: v.id === selectedZhVoiceId }"
+                    @click="selectedZhVoiceId = v.id; showZhVoiceMenu = false"
                   >
                     <span class="voice-name">{{ v.name }}</span>
-                    <span v-if="isNaturalVoice(v)" class="voice-tag">自然</span>
                     <span class="voice-lang">{{ v.lang }}</span>
                   </li>
                 </ul>
@@ -182,6 +180,7 @@
 <script setup>
 import { ref, computed, watch, provide, onMounted, onBeforeUnmount } from 'vue'
 import { DATA } from './data/cards.js'
+import { ZH_VOICES, EN_VOICES, DEFAULT_ZH_VOICE, DEFAULT_EN_VOICE, edgeSpeak } from './utils/edge-tts.js'
 import LevelTabs from './components/LevelTabs.vue'
 import SubjectTabs from './components/SubjectTabs.vue'
 import TopicSelect from './components/TopicSelect.vue'
@@ -254,7 +253,7 @@ async function restorePosition() {
   } catch { isRestoring.value = false }
 }
 
-/* 語音設定 */
+/* 語音設定（Edge TTS） */
 const showSettings = ref(false)
 const showVoiceMenu = ref(false)
 const showZhVoiceMenu = ref(false)
@@ -282,122 +281,50 @@ function toggleVoiceMenu(type) {
     }
   }
 }
-const voices = ref([])
-const zhVoices = ref([])
-const selectedVoiceIdx = ref(0)
-const selectedZhVoiceIdx = ref(0)
+
+const selectedZhVoiceId = ref(DEFAULT_ZH_VOICE)
+const selectedEnVoiceId = ref(DEFAULT_EN_VOICE)
 const speechRate = ref(1.0)
-const VOICE_KEY = 'ipas-flashcards-voice'
-const ZH_VOICE_KEY = 'ipas-flashcards-zh-voice'
+const EDGE_ZH_KEY = 'ipas-edge-zh-voice'
+const EDGE_EN_KEY = 'ipas-edge-en-voice'
 const RATE_KEY = 'ipas-flashcards-rate'
 
-/** 還原語速設定 */
+/** 還原設定 */
 try {
   const savedRate = localStorage.getItem(RATE_KEY)
   if (savedRate) speechRate.value = Math.max(0.5, Math.min(2.0, Number(savedRate)))
+  const savedZh = localStorage.getItem(EDGE_ZH_KEY)
+  if (savedZh && ZH_VOICES.find(v => v.id === savedZh)) selectedZhVoiceId.value = savedZh
+  const savedEn = localStorage.getItem(EDGE_EN_KEY)
+  if (savedEn && EN_VOICES.find(v => v.id === savedEn)) selectedEnVoiceId.value = savedEn
 } catch { /* 靜默忽略 */ }
 
-/** 判斷是否為自然語音
- *  Windows: 名稱含 Online / Natural
- *  Apple: 不含 Compact（Apple 預設語音品質較好，Compact 是低品質版）
- *  Google: 含 Wavenet / Neural
- */
-function isNaturalVoice(v) {
-  const n = v.name
-  /* 明確的高品質標記 */
-  if (n.includes('Online') || n.includes('Natural') ||
-      n.includes('Wavenet') || n.includes('Neural') ||
-      n.includes('Siri')) return true
-  /* Apple 語音：沒有 Compact / Microsoft / Google 字樣的就是高品質 */
-  if (!n.includes('Compact') && !n.includes('Microsoft') && !n.includes('Google')) return true
-  return false
-}
-
-/** 載入可用語音清單，並還原上次選擇 */
-function loadVoices() {
-  const all = window.speechSynthesis.getVoices()
-  voices.value = all.filter(v => v.lang.startsWith('en'))
-  zhVoices.value = all.filter(v => v.lang.startsWith('zh'))
-
-  /* 還原英文語音（優先已儲存 → Online/Natural → 第一個） */
-  if (voices.value.length) {
-    let restored = false
-    try {
-      const savedName = localStorage.getItem(VOICE_KEY)
-      if (savedName) {
-        const idx = voices.value.findIndex(v => v.name === savedName)
-        if (idx !== -1) { selectedVoiceIdx.value = idx; restored = true }
-      }
-    } catch { /* 靜默忽略 */ }
-    if (!restored) {
-      const naturalIdx = voices.value.findIndex(v => isNaturalVoice(v))
-      selectedVoiceIdx.value = naturalIdx !== -1 ? naturalIdx : 0
-    }
-  }
-
-  /* 還原中文語音（優先已儲存 → zh-TW Online/Natural → zh-TW → 第一個） */
-  if (zhVoices.value.length) {
-    let restored = false
-    try {
-      const savedName = localStorage.getItem(ZH_VOICE_KEY)
-      if (savedName) {
-        const idx = zhVoices.value.findIndex(v => v.name === savedName)
-        if (idx !== -1) { selectedZhVoiceIdx.value = idx; restored = true }
-      }
-    } catch { /* 靜默忽略 */ }
-    if (!restored) {
-      /* 優先：zh-TW 自然語音 → 任何自然語音 → zh-TW → 第一個 */
-      const twNatural = zhVoices.value.findIndex(v => v.lang.startsWith('zh-TW') && isNaturalVoice(v))
-      if (twNatural !== -1) { selectedZhVoiceIdx.value = twNatural; return }
-      const anyNatural = zhVoices.value.findIndex(v => isNaturalVoice(v))
-      if (anyNatural !== -1) { selectedZhVoiceIdx.value = anyNatural; return }
-      const twIdx = zhVoices.value.findIndex(v => v.lang.startsWith('zh-TW'))
-      if (twIdx !== -1) selectedZhVoiceIdx.value = twIdx
-    }
-  }
-}
-
-/** 語音選擇變更時存入 localStorage */
-watch(selectedVoiceIdx, (idx) => {
-  try {
-    const v = voices.value[idx]
-    if (v) localStorage.setItem(VOICE_KEY, v.name)
-  } catch { /* 靜默忽略 */ }
+/** 設定變更時存入 localStorage */
+watch(selectedZhVoiceId, (id) => {
+  try { localStorage.setItem(EDGE_ZH_KEY, id) } catch {}
 })
-watch(selectedZhVoiceIdx, (idx) => {
-  try {
-    const v = zhVoices.value[idx]
-    if (v) localStorage.setItem(ZH_VOICE_KEY, v.name)
-  } catch { /* 靜默忽略 */ }
+watch(selectedEnVoiceId, (id) => {
+  try { localStorage.setItem(EDGE_EN_KEY, id) } catch {}
 })
 watch(speechRate, (rate) => {
-  try { localStorage.setItem(RATE_KEY, String(rate)) } catch { /* 靜默忽略 */ }
+  try { localStorage.setItem(RATE_KEY, String(rate)) } catch {}
 })
 
-/** 試聽選定語音 */
+/** 取得目前選定的語音名稱（用於顯示） */
+const selectedZhVoiceName = computed(() => ZH_VOICES.find(v => v.id === selectedZhVoiceId.value)?.name || '曉曉')
+const selectedEnVoiceName = computed(() => EN_VOICES.find(v => v.id === selectedEnVoiceId.value)?.name || 'Emma')
+
+/** 試聽 Edge TTS 語音 */
 function testVoice() {
-  if (!voices.value.length) return
-  window.speechSynthesis.cancel()
-  const utterance = new SpeechSynthesisUtterance('Hello, this is a test.')
-  utterance.voice = voices.value[selectedVoiceIdx.value]
-  utterance.lang = 'en-US'
-  utterance.rate = speechRate.value
-  window.speechSynthesis.speak(utterance)
+  edgeSpeak('Hello, this is a test.', { voice: selectedEnVoiceId.value, rate: speechRate.value })
 }
-
 function testZhVoice() {
-  if (!zhVoices.value.length) return
-  window.speechSynthesis.cancel()
-  const utterance = new SpeechSynthesisUtterance('這是語音測試。')
-  utterance.voice = zhVoices.value[selectedZhVoiceIdx.value]
-  utterance.lang = 'zh-TW'
-  utterance.rate = speechRate.value
-  window.speechSynthesis.speak(utterance)
+  edgeSpeak('這是語音測試。', { voice: selectedZhVoiceId.value, rate: speechRate.value })
 }
 
-/** 透過 provide 讓 FlashCard 取得語音設定 */
-provide('getSelectedVoice', () => voices.value[selectedVoiceIdx.value] || null)
-provide('getZhVoice', () => zhVoices.value[selectedZhVoiceIdx.value] || null)
+/** 透過 provide 讓 FlashCard 取得 Edge TTS 語音設定 */
+provide('getEdgeZhVoice', () => selectedZhVoiceId.value)
+provide('getEdgeEnVoice', () => selectedEnVoiceId.value)
 provide('getSpeechRate', () => speechRate.value)
 
 /* 計算屬性 */
@@ -515,9 +442,6 @@ onMounted(() => {
   document.addEventListener('touchend', onTouchEnd, { passive: true })
   /* 還原上次閱讀位置 */
   restorePosition()
-  /* 載入語音清單（部分瀏覽器需等 voiceschanged 事件） */
-  loadVoices()
-  window.speechSynthesis.onvoiceschanged = loadVoices
   /* 點擊外部關閉語音下拉 */
   document.addEventListener('click', (e) => {
     if (voiceDropdownRef.value && !voiceDropdownRef.value.contains(e.target)) {

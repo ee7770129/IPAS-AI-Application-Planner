@@ -4,6 +4,21 @@
 
 ---
 
+## [3.9.0] - 2026-05-16
+
+### 新增
+- Edge TTS 後端代理（Vercel Serverless Function）：`api/tts.js` 接收文字，用微軟 Neural 語音合成回傳音檔
+- 所有平台統一語音：iPhone Safari、Android Chrome、Windows 都能用曉曉等微軟自然語音
+- 可選 6 個中文語音（曉曉/雲希/雲健/曉臻/雲哲/曉佳）+ 4 個英文語音（Emma/Andrew/Aria/Guy）
+- 新增 `vercel.json` 路由設定、`src/utils/edge-tts.js` 封裝模組
+
+### 變更
+- 語音系統從 Web Speech API 全面改為 Edge TTS（透過後端代理）
+- 前端 `edgeSpeak()` 改用 `fetch('/api/tts')` 取代直接 WebSocket 連線
+- 設定面板語音選單改為固定的 Edge TTS 語音清單（不再依賴瀏覽器內建語音）
+
+---
+
 ## [3.8.0] - 2026-05-16
 
 ### 新增
