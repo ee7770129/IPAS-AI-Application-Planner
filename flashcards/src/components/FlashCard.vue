@@ -30,8 +30,8 @@
         <div class="back-title">{{ card.title }}</div>
         <div v-if="card.engTitle" class="back-eng">
           {{ card.engTitle }}
-          <button class="speak-btn" @click.stop="speak(card.engTitle)" type="button" title="朗讀英文">
-            <span class="material-icons">volume_up</span>
+          <button class="speak-btn" :class="{ loading: isLoadingEn }" @click.stop="speak(card.engTitle)" type="button" title="朗讀英文">
+            <span class="material-icons">{{ isLoadingEn ? 'hourglass_top' : 'volume_up' }}</span>
           </button>
         </div>
 
@@ -70,9 +70,9 @@
         </template>
 
         <div class="back-actions">
-          <button class="read-btn" @click.stop="readExplanation" type="button" :title="isReadingZh ? '停止朗讀' : '朗讀解釋'">
-            <span class="material-icons">{{ isReadingZh ? 'stop' : 'volume_up' }}</span>
-            {{ isReadingZh ? '停止' : '朗讀解釋' }}
+          <button class="read-btn" :class="{ loading: isLoadingZh }" @click.stop="readExplanation" type="button" :title="isLoadingZh ? '載入中...' : isReadingZh ? '停止朗讀' : '朗讀解釋'">
+            <span class="material-icons">{{ isLoadingZh ? 'hourglass_top' : isReadingZh ? 'stop' : 'volume_up' }}</span>
+            {{ isLoadingZh ? '載入中...' : isReadingZh ? '停止' : '朗讀解釋' }}
           </button>
         </div>
         <div class="flip-hint-back">點擊翻回正面</div>
@@ -96,6 +96,8 @@ const frontRef = ref(null)
 const backRef = ref(null)
 const isSpeaking = ref(false)
 const isReadingZh = ref(false)
+const isLoadingEn = ref(false)
+const isLoadingZh = ref(false)
 
 /** 從 App.vue 取得語音設定 */
 const getEdgeZhVoice = inject('getEdgeZhVoice', () => 'zh-CN-XiaoxiaoNeural')
@@ -110,13 +112,15 @@ function stopAll() {
   if (currentAbort) { currentAbort.abort(); currentAbort = null }
   isSpeaking.value = false
   isReadingZh.value = false
+  isLoadingEn.value = false
+  isLoadingZh.value = false
 }
 
 /** 朗讀英文標題（Edge TTS） */
 async function speak(text) {
   if (!text) return
   stopAll()
-  isSpeaking.value = true
+  isLoadingEn.value = true
   const abort = new AbortController()
   currentAbort = abort
   try {
@@ -125,9 +129,11 @@ async function speak(text) {
       rate: getSpeechRate(),
       signal: abort.signal
     })
+    isLoadingEn.value = false
+    isSpeaking.value = true
     audio.addEventListener('ended', () => { isSpeaking.value = false }, { once: true })
   } catch {
-    if (!abort.signal.aborted) isSpeaking.value = false
+    if (!abort.signal.aborted) { isLoadingEn.value = false; isSpeaking.value = false }
   }
 }
 
@@ -148,13 +154,13 @@ function collectBackText() {
 
 /** 朗讀卡片背面解釋（Edge TTS 中文） */
 async function readExplanation() {
-  /* 正在念就停止 */
-  if (isReadingZh.value) { stopAll(); return }
+  /* 正在念或載入中就停止 */
+  if (isReadingZh.value || isLoadingZh.value) { stopAll(); return }
   stopAll()
   const text = collectBackText()
   if (!text) return
 
-  isReadingZh.value = true
+  isLoadingZh.value = true
   const abort = new AbortController()
   currentAbort = abort
   try {
@@ -163,9 +169,11 @@ async function readExplanation() {
       rate: getSpeechRate(),
       signal: abort.signal
     })
+    isLoadingZh.value = false
+    isReadingZh.value = true
     audio.addEventListener('ended', () => { isReadingZh.value = false }, { once: true })
   } catch {
-    if (!abort.signal.aborted) isReadingZh.value = false
+    if (!abort.signal.aborted) { isLoadingZh.value = false; isReadingZh.value = false }
   }
 }
 
@@ -482,8 +490,22 @@ defineExpose({
 .read-btn:hover {
   background: var(--custard-cream);
 }
+.read-btn.loading {
+  opacity: 0.7;
+  cursor: wait;
+}
 .read-btn .material-icons {
   font-size: 16px;
+}
+
+/* 載入旋轉動畫 */
+.speak-btn.loading .material-icons,
+.read-btn.loading .material-icons {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .flip-hint-back {

@@ -513,11 +513,19 @@ onBeforeUnmount(() => {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 12px;
 }
+@media (min-width: 768px) {
+  .settings-panel {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
 .settings-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 .settings-label {
   font-size: 0.78rem;
