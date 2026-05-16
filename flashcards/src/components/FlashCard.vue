@@ -124,14 +124,14 @@ async function speak(text) {
   const abort = new AbortController()
   currentAbort = abort
   try {
-    const audio = await edgeSpeak(text, {
+    const { source } = await edgeSpeak(text, {
       voice: getEdgeEnVoice(),
       rate: getSpeechRate(),
       signal: abort.signal
     })
     isLoadingEn.value = false
     isSpeaking.value = true
-    audio.addEventListener('ended', () => { isSpeaking.value = false }, { once: true })
+    source.onended = () => { isSpeaking.value = false }
   } catch {
     if (!abort.signal.aborted) { isLoadingEn.value = false; isSpeaking.value = false }
   }
@@ -164,14 +164,14 @@ async function readExplanation() {
   const abort = new AbortController()
   currentAbort = abort
   try {
-    const audio = await edgeSpeak(text, {
+    const { source } = await edgeSpeak(text, {
       voice: getEdgeZhVoice(),
       rate: getSpeechRate(),
       signal: abort.signal
     })
     isLoadingZh.value = false
     isReadingZh.value = true
-    audio.addEventListener('ended', () => { isReadingZh.value = false }, { once: true })
+    source.onended = () => { isReadingZh.value = false }
   } catch {
     if (!abort.signal.aborted) { isLoadingZh.value = false; isReadingZh.value = false }
   }

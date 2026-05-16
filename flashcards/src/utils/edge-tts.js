@@ -3,7 +3,7 @@
  * 檔案：edge-tts.js
  * 功能：Edge TTS 前端封裝（透過 /api/tts 後端代理合成語音）
  * 建立日期：2026-05-16
- * 版本：2.1.0
+ * 版本：2.2.0
  */
 
 /** 預設中文語音（曉曉 - 自然語音） */
@@ -14,8 +14,6 @@ const DEFAULT_EN_VOICE = 'en-US-EmmaMultilingualNeural'
 
 /**
  * 將 0.5~2.0 的語速數值轉為 Edge TTS 格式（"+50%"、"-25%" 等）
- * @param {number} rate - 語速倍率（1.0 = 正常）
- * @returns {string}
  */
 function formatRate(rate) {
   const pct = Math.round((rate - 1) * 100)
@@ -23,26 +21,35 @@ function formatRate(rate) {
 }
 
 /**
+ * 共用 AudioContext（iOS Safari 需要在使用者互動時 resume）
+ */
+let _ctx = null
+function getAudioContext() {
+  if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)()
+  return _ctx
+}
+
+/**
  * 透過後端 API 合成語音並播放
  *
- * iOS Safari 限制：audio.play() 必須在使用者互動的同步呼叫鏈中觸發。
- * 解法：click 時立即建立 Audio 並播放靜音，解鎖播放權限，
- * fetch 完成後再設定 src 播放實際音檔。
+ * iOS Safari 限制：AudioContext 必須在使用者互動時 resume。
+ * 解法：每次呼叫時先 resume AudioContext（同步觸發於 click 事件鏈），
+ * fetch 完成後用 decodeAudioData + AudioBufferSourceNode 播放。
  *
  * @param {string} text - 要朗讀的文字
  * @param {object} options
  * @param {string} [options.voice] - 語音名稱
  * @param {number} [options.rate=1.0] - 語速倍率
  * @param {AbortSignal} [options.signal] - 取消信號
- * @returns {Promise<HTMLAudioElement>} 正在播放的 Audio 元素
+ * @returns {Promise<{source: AudioBufferSourceNode, ctx: AudioContext}>}
  */
 export async function edgeSpeak(text, options = {}) {
   const voice = options.voice || DEFAULT_ZH_VOICE
   const rate = formatRate(options.rate || 1.0)
 
-  /* 立即建立 Audio 並播放靜音，解鎖 iOS Safari 播放權限 */
-  const audio = new Audio()
-  audio.play().catch(() => {})
+  /* 在使用者互動的同步呼叫鏈中 resume AudioContext（iOS 必要） */
+  const ctx = getAudioContext()
+  if (ctx.state === 'suspended') ctx.resume()
 
   const res = await fetch('/api/tts', {
     method: 'POST',
@@ -56,25 +63,36 @@ export async function edgeSpeak(text, options = {}) {
     throw new Error(err.error || `TTS failed: ${res.status}`)
   }
 
-  const blob = await res.blob()
-  const url = URL.createObjectURL(blob)
+  const arrayBuffer = await res.arrayBuffer()
+  const audioBuffer = await ctx.decodeAudioData(arrayBuffer)
 
-  /* 設定實際音檔並播放 */
-  audio.src = url
-  audio.addEventListener('ended', () => URL.revokeObjectURL(url), { once: true })
-  audio.addEventListener('error', () => URL.revokeObjectURL(url), { once: true })
+  const source = ctx.createBufferSource()
+  source.buffer = audioBuffer
+  source.connect(ctx.destination)
+  source.start(0)
 
   /* 支援取消 */
   if (options.signal) {
     options.signal.addEventListener('abort', () => {
-      audio.pause()
-      audio.src = ''
-      URL.revokeObjectURL(url)
+      try { source.stop() } catch {}
     }, { once: true })
   }
 
-  await audio.play()
-  return audio
+  return { source, ctx }
+}
+
+/**
+ * edgeSpeak 的包裝，回傳 Promise 在播放結束時 resolve
+ */
+export function edgeSpeakAsync(text, options = {}) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { source } = await edgeSpeak(text, options)
+      source.onended = () => resolve()
+    } catch (err) {
+      reject(err)
+    }
+  })
 }
 
 /** Edge TTS 可用的中文語音清單 */
