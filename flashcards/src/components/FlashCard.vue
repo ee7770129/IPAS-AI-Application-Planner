@@ -137,19 +137,32 @@ async function speak(text) {
   }
 }
 
-/** 收集卡片背面文字，按 section 拆成多段 */
+/** 收集卡片背面文字，按段拆分，每段帶語音設定 */
 function collectBackChunks() {
-  if (!props.card?.back?.sections) return []
+  const zhVoice = getEdgeZhVoice()
+  const enVoice = getEdgeEnVoice()
   const chunks = []
-  for (const sec of props.card.back.sections) {
-    const parts = []
-    if (sec.label) parts.push(sec.label)
-    if (sec.content) parts.push(sec.content)
-    if (sec.code) parts.push(sec.code)
-    if (sec.tags) {
-      for (const tag of sec.tags) parts.push(tag.text)
+
+  /* 先念標題（中文） */
+  if (props.card.title) {
+    chunks.push({ text: props.card.title, voice: zhVoice })
+  }
+  /* 再念英文名稱（英文語音） */
+  if (props.card.engTitle) {
+    chunks.push({ text: props.card.engTitle, voice: enVoice })
+  }
+  /* 再念各 section */
+  if (props.card?.back?.sections) {
+    for (const sec of props.card.back.sections) {
+      const parts = []
+      if (sec.label) parts.push(sec.label)
+      if (sec.content) parts.push(sec.content)
+      if (sec.code) parts.push(sec.code)
+      if (sec.tags) {
+        for (const tag of sec.tags) parts.push(tag.text)
+      }
+      if (parts.length) chunks.push({ text: parts.join('。'), voice: zhVoice })
     }
-    if (parts.length) chunks.push(parts.join('。'))
   }
   return chunks
 }
@@ -167,7 +180,6 @@ async function readExplanation() {
   currentAbort = abort
   try {
     await edgeSpeakChunks(chunks, {
-      voice: getEdgeZhVoice(),
       rate: getSpeechRate(),
       signal: abort.signal,
       onStart: () => { isLoadingZh.value = false }

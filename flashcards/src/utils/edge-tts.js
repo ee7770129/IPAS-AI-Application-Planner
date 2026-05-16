@@ -64,16 +64,19 @@ export async function edgeSpeak(text, options = {}) {
 
 /**
  * 並行合成多段文字，依序播放
- * @param {string[]} chunks - 文字段落陣列
- * @param {object} options - voice, rate, signal
- * @param {function} [options.onStart] - 第一段開始播放時的回呼
+ * @param {Array<string|{text:string, voice?:string}>} chunks - 文字段落（字串或帶語音的物件）
+ * @param {object} options - voice, rate, signal, onStart
  * @returns {Promise<void>}
  */
 export async function edgeSpeakChunks(chunks, options = {}) {
   if (!chunks.length) return
 
-  /* 並行送出所有合成請求 */
-  const urlPromises = chunks.map(text => edgeSynthesize(text, options))
+  /* 並行送出所有合成請求（每段可帶自己的 voice） */
+  const urlPromises = chunks.map(chunk => {
+    const text = typeof chunk === 'string' ? chunk : chunk.text
+    const voice = (typeof chunk === 'object' && chunk.voice) ? chunk.voice : options.voice
+    return edgeSynthesize(text, { ...options, voice })
+  })
   const urls = await Promise.all(urlPromises)
 
   if (options.onStart) options.onStart()
