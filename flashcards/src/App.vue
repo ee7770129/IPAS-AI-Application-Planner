@@ -180,7 +180,7 @@
 <script setup>
 import { ref, computed, watch, provide, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { DATA } from './data/cards.js'
-import { ZH_VOICES, EN_VOICES, DEFAULT_ZH_VOICE, DEFAULT_EN_VOICE, edgeSpeak } from './utils/edge-tts.js'
+import { ZH_VOICES, EN_VOICES, DEFAULT_ZH_VOICE, DEFAULT_EN_VOICE, edgeSpeak, unlockAudio } from './utils/edge-tts.js'
 import LevelTabs from './components/LevelTabs.vue'
 import SubjectTabs from './components/SubjectTabs.vue'
 import TopicSelect from './components/TopicSelect.vue'
@@ -442,6 +442,8 @@ onMounted(() => {
   document.addEventListener('touchend', onTouchEnd, { passive: true })
   /* 還原上次閱讀位置 */
   restorePosition()
+  /* 解鎖 iOS Audio 播放權限（第一次觸碰時觸發） */
+  unlockAudio()
   /* 點擊外部關閉語音下拉 */
   document.addEventListener('click', (e) => {
     if (voiceDropdownRef.value && !voiceDropdownRef.value.contains(e.target)) {
