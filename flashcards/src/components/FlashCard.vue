@@ -84,7 +84,7 @@
 <script setup>
 import { ref, inject, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import ChartSection from './ChartSection.vue'
-import { edgeSpeak } from '../utils/edge-tts.js'
+import { edgeSpeak, edgeSpeakChunks } from '../utils/edge-tts.js'
 
 const props = defineProps({
   card: { type: Object, required: true }
@@ -137,40 +137,42 @@ async function speak(text) {
   }
 }
 
-/** 收集卡片背面所有文字 */
-function collectBackText() {
-  if (!props.card?.back?.sections) return ''
-  const parts = []
+/** 收集卡片背面文字，按 section 拆成多段 */
+function collectBackChunks() {
+  if (!props.card?.back?.sections) return []
+  const chunks = []
   for (const sec of props.card.back.sections) {
+    const parts = []
     if (sec.label) parts.push(sec.label)
     if (sec.content) parts.push(sec.content)
     if (sec.code) parts.push(sec.code)
     if (sec.tags) {
       for (const tag of sec.tags) parts.push(tag.text)
     }
+    if (parts.length) chunks.push(parts.join('。'))
   }
-  return parts.join('。\n')
+  return chunks
 }
 
-/** 朗讀卡片背面解釋（Edge TTS 中文） */
+/** 朗讀卡片背面解釋（並行合成，依序播放） */
 async function readExplanation() {
   if (isReadingZh.value || isLoadingZh.value) { stopAll(); return }
   stopAll()
-  const text = collectBackText()
-  if (!text) return
+  const chunks = collectBackChunks()
+  if (!chunks.length) return
 
   isLoadingZh.value = true
   isReadingZh.value = true
   const abort = new AbortController()
   currentAbort = abort
   try {
-    const audio = await edgeSpeak(text, {
+    await edgeSpeakChunks(chunks, {
       voice: getEdgeZhVoice(),
       rate: getSpeechRate(),
-      signal: abort.signal
+      signal: abort.signal,
+      onStart: () => { isLoadingZh.value = false }
     })
-    isLoadingZh.value = false
-    audio.addEventListener('ended', () => { isReadingZh.value = false }, { once: true })
+    isReadingZh.value = false
   } catch {
     if (!abort.signal.aborted) { isLoadingZh.value = false; isReadingZh.value = false }
   }

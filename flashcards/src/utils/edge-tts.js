@@ -18,9 +18,9 @@ function formatRate(rate) {
 }
 
 /**
- * 透過後端 API 合成語音並播放
+ * 只合成不播放，回傳 Blob URL
  */
-export async function edgeSpeak(text, options = {}) {
+export async function edgeSynthesize(text, options = {}) {
   const voice = options.voice || DEFAULT_ZH_VOICE
   const rate = formatRate(options.rate || 1.0)
 
@@ -37,7 +37,14 @@ export async function edgeSpeak(text, options = {}) {
   }
 
   const blob = await res.blob()
-  const url = URL.createObjectURL(blob)
+  return URL.createObjectURL(blob)
+}
+
+/**
+ * 合成並播放單段文字
+ */
+export async function edgeSpeak(text, options = {}) {
+  const url = await edgeSynthesize(text, options)
   const audio = new Audio(url)
 
   audio.addEventListener('ended', () => URL.revokeObjectURL(url), { once: true })
@@ -53,6 +60,41 @@ export async function edgeSpeak(text, options = {}) {
 
   await audio.play()
   return audio
+}
+
+/**
+ * 並行合成多段文字，依序播放
+ * @param {string[]} chunks - 文字段落陣列
+ * @param {object} options - voice, rate, signal
+ * @param {function} [options.onStart] - 第一段開始播放時的回呼
+ * @returns {Promise<void>}
+ */
+export async function edgeSpeakChunks(chunks, options = {}) {
+  if (!chunks.length) return
+
+  /* 並行送出所有合成請求 */
+  const urlPromises = chunks.map(text => edgeSynthesize(text, options))
+  const urls = await Promise.all(urlPromises)
+
+  if (options.onStart) options.onStart()
+
+  /* 依序播放 */
+  for (const url of urls) {
+    if (options.signal?.aborted) break
+    await new Promise((resolve, reject) => {
+      const audio = new Audio(url)
+      audio.addEventListener('ended', () => { URL.revokeObjectURL(url); resolve() }, { once: true })
+      audio.addEventListener('error', () => { URL.revokeObjectURL(url); resolve() }, { once: true })
+      if (options.signal) {
+        options.signal.addEventListener('abort', () => {
+          audio.pause()
+          URL.revokeObjectURL(url)
+          resolve()
+        }, { once: true })
+      }
+      audio.play().catch(reject)
+    })
+  }
 }
 
 /** Edge TTS 可用的中文語音清單 */
