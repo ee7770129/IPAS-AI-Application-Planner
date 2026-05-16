@@ -163,7 +163,7 @@ function savePosition() {
 }
 
 /** 從 localStorage 還原位置（含邊界驗證） */
-function restorePosition() {
+async function restorePosition() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return
@@ -195,6 +195,8 @@ function restorePosition() {
     const ci = Number(saved.cardIdx) || 0
     cardIdx.value = (ci >= 0 && ci < cards.length) ? ci : 0
 
+    /* 等待 watcher 執行完畢後再關閉旗標，避免 watcher 將 cardIdx 重設為 0 */
+    await nextTick()
     isRestoring.value = false
   } catch { isRestoring.value = false }
 }
