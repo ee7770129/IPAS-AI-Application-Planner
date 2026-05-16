@@ -3,7 +3,7 @@
  * 檔案：edge-tts.js
  * 功能：Edge TTS 前端封裝（透過 /api/tts 後端代理合成語音）
  * 建立日期：2026-05-16
- * 版本：2.3.0
+ * 版本：2.0.0
  */
 
 /** 預設中文語音（曉曉 - 自然語音） */
@@ -15,37 +15,6 @@ const DEFAULT_EN_VOICE = 'en-US-EmmaMultilingualNeural'
 function formatRate(rate) {
   const pct = Math.round((rate - 1) * 100)
   return pct >= 0 ? `+${pct}%` : `${pct}%`
-}
-
-/**
- * 全域共用 Audio 元素（避免 iOS 每次建立新 Audio 被擋）
- * iOS Safari 只允許使用者互動時啟動的 Audio 元素播放
- * 重複使用同一個元素，只換 src 即可
- */
-let _audio = null
-function getAudio() {
-  if (!_audio) {
-    _audio = new Audio()
-    _audio.setAttribute('playsinline', '')
-  }
-  return _audio
-}
-
-/**
- * 在第一次使用者互動時解鎖 Audio（iOS Safari 必要）
- * 應在 App.vue onMounted 時呼叫
- */
-export function unlockAudio() {
-  const handler = () => {
-    const audio = getAudio()
-    /* 播放極短的靜音來解鎖 */
-    audio.src = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRwMHAAAAAAD/+1DEAAAH0ANX9AAAIgoAa/8wAABMEAABMEADAoKAAHwfB8HygIAgCAI+D5QEP8uf/BDv/ygIf//+XB8HwfKAh///5cHwfB8oCH///lwfB8HygIAgCAIAAAAExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tQxBEAAADSAAAAAAAAANIAAAAATEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ=='
-    audio.play().catch(() => {})
-    document.removeEventListener('touchstart', handler)
-    document.removeEventListener('click', handler)
-  }
-  document.addEventListener('touchstart', handler, { once: true })
-  document.addEventListener('click', handler, { once: true })
 }
 
 /**
@@ -69,21 +38,16 @@ export async function edgeSpeak(text, options = {}) {
 
   const blob = await res.blob()
   const url = URL.createObjectURL(blob)
-  const audio = getAudio()
+  const audio = new Audio(url)
 
-  /* 先停止之前的播放 */
-  audio.pause()
-  if (audio._prevUrl) URL.revokeObjectURL(audio._prevUrl)
-  audio._prevUrl = url
+  audio.addEventListener('ended', () => URL.revokeObjectURL(url), { once: true })
+  audio.addEventListener('error', () => URL.revokeObjectURL(url), { once: true })
 
-  audio.src = url
-  audio.load()
-
-  /* 支援取消 */
   if (options.signal) {
     options.signal.addEventListener('abort', () => {
       audio.pause()
-      audio.currentTime = 0
+      audio.src = ''
+      URL.revokeObjectURL(url)
     }, { once: true })
   }
 
