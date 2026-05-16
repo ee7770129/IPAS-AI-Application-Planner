@@ -15,8 +15,8 @@
         <div class="card-title">{{ card.title }}</div>
         <div v-if="card.engTitle" class="card-eng">
           {{ card.engTitle }}
-          <button class="speak-btn" @click.stop="speak(card.engTitle)" type="button" title="朗讀英文">
-            <span class="material-icons">{{ isSpeaking ? 'volume_up' : 'volume_up' }}</span>
+          <button class="speak-btn" :class="{ loading: isLoadingEn }" @click.stop="speak(card.engTitle)" type="button" title="朗讀英文">
+            <span class="material-icons">{{ isLoadingEn ? 'hourglass_top' : 'volume_up' }}</span>
           </button>
         </div>
         <img v-if="card.image" :src="card.image" :alt="card.title" class="card-image" @load="syncHeight" />
