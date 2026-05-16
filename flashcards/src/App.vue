@@ -178,7 +178,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, provide, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, provide, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { DATA } from './data/cards.js'
 import { ZH_VOICES, EN_VOICES, DEFAULT_ZH_VOICE, DEFAULT_EN_VOICE, edgeSpeak } from './utils/edge-tts.js'
 import LevelTabs from './components/LevelTabs.vue'
