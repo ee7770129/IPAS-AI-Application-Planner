@@ -3,7 +3,7 @@
   檔案：App.vue
   功能：學習卡片系統主佈局（組合所有元件）
   建立日期：2026-05-14
-  版本：1.0.0
+  版本：2.0.0
 -->
 <template>
   <div class="app-wrapper">
@@ -26,84 +26,16 @@
       </button>
     </div>
     <Transition name="settings">
-      <div v-if="showSettings" class="settings-panel">
-        <!-- 語速控制 -->
-        <div class="settings-row">
-          <span class="material-icons settings-icon">speed</span>
-          <span class="settings-label">語速</span>
-          <input
-            type="range"
-            class="rate-slider"
-            min="0.5"
-            max="2.0"
-            step="0.1"
-            v-model.number="speechRate"
-          />
-          <span class="rate-value">{{ speechRate.toFixed(1) }}x</span>
-        </div>
-
-        <!-- 英文語音 -->
-        <div class="settings-row">
-          <span class="material-icons settings-icon">translate</span>
-          <span class="settings-label">英文</span>
-          <div class="voice-dropdown" ref="voiceDropdownRef">
-            <button class="voice-trigger" ref="enTriggerRef" @click="toggleVoiceMenu('en')" type="button">
-              <span class="voice-trigger-text">{{ selectedEnVoiceName }}</span>
-              <span class="material-icons voice-arrow" :class="{ open: showVoiceMenu }">expand_more</span>
-            </button>
-            <Teleport to="body">
-              <Transition name="vdrop">
-                <ul v-if="showVoiceMenu" class="voice-menu" :style="menuStyle">
-                  <li
-                    v-for="v in EN_VOICES"
-                    :key="v.id"
-                    class="voice-item"
-                    :class="{ active: v.id === selectedEnVoiceId }"
-                    @click="selectedEnVoiceId = v.id; showVoiceMenu = false"
-                  >
-                    <span class="voice-name">{{ v.name }}</span>
-                    <span class="voice-lang">{{ v.lang }}</span>
-                  </li>
-                </ul>
-              </Transition>
-            </Teleport>
-          </div>
-          <button class="voice-test-btn" @click="testVoice" type="button">
-            <span class="material-icons">play_arrow</span>
-          </button>
-        </div>
-
-        <!-- 中文語音 -->
-        <div class="settings-row">
-          <span class="material-icons settings-icon">record_voice_over</span>
-          <span class="settings-label">中文</span>
-          <div class="voice-dropdown" ref="zhVoiceDropdownRef">
-            <button class="voice-trigger" ref="zhTriggerRef" @click="toggleVoiceMenu('zh')" type="button">
-              <span class="voice-trigger-text">{{ selectedZhVoiceName }}</span>
-              <span class="material-icons voice-arrow" :class="{ open: showZhVoiceMenu }">expand_more</span>
-            </button>
-            <Teleport to="body">
-              <Transition name="vdrop">
-                <ul v-if="showZhVoiceMenu" class="voice-menu" :style="menuStyle">
-                  <li
-                    v-for="v in ZH_VOICES"
-                    :key="v.id"
-                    class="voice-item"
-                    :class="{ active: v.id === selectedZhVoiceId }"
-                    @click="selectedZhVoiceId = v.id; showZhVoiceMenu = false"
-                  >
-                    <span class="voice-name">{{ v.name }}</span>
-                    <span class="voice-lang">{{ v.lang }}</span>
-                  </li>
-                </ul>
-              </Transition>
-            </Teleport>
-          </div>
-          <button class="voice-test-btn" @click="testZhVoice" type="button">
-            <span class="material-icons">play_arrow</span>
-          </button>
-        </div>
-      </div>
+      <SettingsPanel
+        v-if="showSettings"
+        v-model:selectedZhVoiceId="selectedZhVoiceId"
+        v-model:selectedEnVoiceId="selectedEnVoiceId"
+        v-model:speechRate="speechRate"
+        :selectedZhVoiceName="selectedZhVoiceName"
+        :selectedEnVoiceName="selectedEnVoiceName"
+        @testVoice="testVoice"
+        @testZhVoice="testZhVoice"
+      />
     </Transition>
   </header>
 
@@ -199,10 +131,12 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, provide, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { DATA } from './data/cards.js'
 import { EXAM_DATA, hasExams } from './data/exams/index.js'
-import { ZH_VOICES, EN_VOICES, DEFAULT_ZH_VOICE, DEFAULT_EN_VOICE, edgeSpeak } from './utils/edge-tts.js'
+import { useVoiceSettings } from './composables/useVoiceSettings.js'
+import { usePosition } from './composables/usePosition.js'
+import { useInputEvents } from './composables/useInputEvents.js'
 import LevelTabs from './components/LevelTabs.vue'
 import SubjectTabs from './components/SubjectTabs.vue'
 import TopicSelect from './components/TopicSelect.vue'
@@ -210,156 +144,38 @@ import FlashCard from './components/FlashCard.vue'
 import CardNav from './components/CardNav.vue'
 import CardDrawer from './components/CardDrawer.vue'
 import ExamMode from './components/ExamMode.vue'
+import SettingsPanel from './components/SettingsPanel.vue'
+
+/* 語音設定（含 provide 給子元件） */
+const {
+  selectedZhVoiceId, selectedEnVoiceId, speechRate,
+  selectedZhVoiceName, selectedEnVoiceName,
+  testVoice, testZhVoice
+} = useVoiceSettings()
+
+/* 位置記憶 */
+const { isRestoring, savePosition, restorePosition } = usePosition()
 
 /* 狀態 */
 const level = ref('beginner')
-const mode = ref('flashcard') // 'flashcard' | 'exam'
+const mode = ref('flashcard')
 const subjectIdx = ref(0)
 const topicIdx = ref(0)
 const cardIdx = ref(0)
 const flashCardRef = ref(null)
 const shuffledCards = ref([])
-const isRestoring = ref(false)
 const drawerOpen = ref(false)
+const showSettings = ref(false)
 
 /** 當前級別是否有考題可用 */
 const showExamTab = computed(() => hasExams(level.value))
 
-/** 當前級別的考題科目資料（全部科目，含無考題的） */
+/** 當前級別的考題科目資料 */
 const examSubjects = computed(() => {
   const data = EXAM_DATA[level.value]
   if (!data) return []
   return data.subjects
 })
-
-/* localStorage 位置記憶 */
-const STORAGE_KEY = 'ipas-flashcards-position'
-
-/** 將目前位置存入 localStorage */
-function savePosition() {
-  if (isRestoring.value) return
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      level: level.value,
-      subjectIdx: subjectIdx.value,
-      topicIdx: topicIdx.value,
-      cardIdx: cardIdx.value
-    }))
-  } catch { /* localStorage 不可用時靜默忽略 */ }
-}
-
-/** 從 localStorage 還原位置（含邊界驗證） */
-async function restorePosition() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return
-    const saved = JSON.parse(raw)
-
-    /* 驗證級別 */
-    if (!DATA[saved.level]) return
-    isRestoring.value = true
-
-    level.value = saved.level
-    const lv = DATA[saved.level]
-
-    /* 驗證科目索引 */
-    const si = Number(saved.subjectIdx) || 0
-    if (si < 0 || si >= lv.subjects.length) { isRestoring.value = false; return }
-    subjectIdx.value = si
-
-    /* 驗證主題索引（-1 代表全部隨機） */
-    const subj = lv.subjects[si]
-    const ti = Number(saved.topicIdx)
-    if (ti < -1 || ti >= subj.topics.length) { isRestoring.value = false; return }
-    topicIdx.value = ti
-
-    /* 全部隨機模式需先洗牌，再還原卡片索引 */
-    if (ti === -1) doShuffle()
-
-    /* 驗證卡片索引 */
-    const cards = ti === -1 ? shuffledCards.value : (subj.topics[ti]?.cards || [])
-    const ci = Number(saved.cardIdx) || 0
-    cardIdx.value = (ci >= 0 && ci < cards.length) ? ci : 0
-
-    /* 等待 watcher 執行完畢後再關閉旗標，避免 watcher 將 cardIdx 重設為 0 */
-    await nextTick()
-    isRestoring.value = false
-  } catch { isRestoring.value = false }
-}
-
-/* 語音設定（Edge TTS） */
-const showSettings = ref(false)
-const showVoiceMenu = ref(false)
-const showZhVoiceMenu = ref(false)
-const voiceDropdownRef = ref(null)
-const zhVoiceDropdownRef = ref(null)
-const enTriggerRef = ref(null)
-const zhTriggerRef = ref(null)
-const menuStyle = ref({})
-
-/** 開關語音選單，並計算固定定位的 top 值 */
-function toggleVoiceMenu(type) {
-  if (type === 'en') {
-    showZhVoiceMenu.value = false
-    showVoiceMenu.value = !showVoiceMenu.value
-    if (showVoiceMenu.value && enTriggerRef.value) {
-      const rect = enTriggerRef.value.getBoundingClientRect()
-      menuStyle.value = { top: `${rect.bottom + 6}px` }
-    }
-  } else {
-    showVoiceMenu.value = false
-    showZhVoiceMenu.value = !showZhVoiceMenu.value
-    if (showZhVoiceMenu.value && zhTriggerRef.value) {
-      const rect = zhTriggerRef.value.getBoundingClientRect()
-      menuStyle.value = { top: `${rect.bottom + 6}px` }
-    }
-  }
-}
-
-const selectedZhVoiceId = ref(DEFAULT_ZH_VOICE)
-const selectedEnVoiceId = ref(DEFAULT_EN_VOICE)
-const speechRate = ref(1.0)
-const EDGE_ZH_KEY = 'ipas-edge-zh-voice'
-const EDGE_EN_KEY = 'ipas-edge-en-voice'
-const RATE_KEY = 'ipas-flashcards-rate'
-
-/** 還原設定 */
-try {
-  const savedRate = localStorage.getItem(RATE_KEY)
-  if (savedRate) speechRate.value = Math.max(0.5, Math.min(2.0, Number(savedRate)))
-  const savedZh = localStorage.getItem(EDGE_ZH_KEY)
-  if (savedZh && ZH_VOICES.find(v => v.id === savedZh)) selectedZhVoiceId.value = savedZh
-  const savedEn = localStorage.getItem(EDGE_EN_KEY)
-  if (savedEn && EN_VOICES.find(v => v.id === savedEn)) selectedEnVoiceId.value = savedEn
-} catch { /* 靜默忽略 */ }
-
-/** 設定變更時存入 localStorage */
-watch(selectedZhVoiceId, (id) => {
-  try { localStorage.setItem(EDGE_ZH_KEY, id) } catch {}
-})
-watch(selectedEnVoiceId, (id) => {
-  try { localStorage.setItem(EDGE_EN_KEY, id) } catch {}
-})
-watch(speechRate, (rate) => {
-  try { localStorage.setItem(RATE_KEY, String(rate)) } catch {}
-})
-
-/** 取得目前選定的語音名稱（用於顯示） */
-const selectedZhVoiceName = computed(() => ZH_VOICES.find(v => v.id === selectedZhVoiceId.value)?.name || '曉曉')
-const selectedEnVoiceName = computed(() => EN_VOICES.find(v => v.id === selectedEnVoiceId.value)?.name || 'Emma')
-
-/** 試聽 Edge TTS 語音 */
-function testVoice() {
-  edgeSpeak('Hello, this is a test.', { voice: selectedEnVoiceId.value, rate: speechRate.value })
-}
-function testZhVoice() {
-  edgeSpeak('這是語音測試。', { voice: selectedZhVoiceId.value, rate: speechRate.value })
-}
-
-/** 透過 provide 讓 FlashCard 取得 Edge TTS 語音設定 */
-provide('getEdgeZhVoice', () => selectedZhVoiceId.value)
-provide('getEdgeEnVoice', () => selectedEnVoiceId.value)
-provide('getSpeechRate', () => speechRate.value)
 
 /* 計算屬性 */
 const currentLevel = computed(() => DATA[level.value])
@@ -375,7 +191,7 @@ const drawerLabel = computed(() => {
   return currentTopic.value?.label || ''
 })
 
-/** 目前要顯示的卡片陣列（一般模式用 topic.cards，全部模式用 shuffledCards） */
+/** 目前要顯示的卡片陣列 */
 const displayCards = computed(() => {
   if (topicIdx.value === -1) return shuffledCards.value
   if (currentTopic.value) return currentTopic.value.cards
@@ -405,15 +221,30 @@ function doShuffle() {
   cardIdx.value = 0
 }
 
+/* 卡片導覽 */
+function goCard(idx) {
+  if (idx < 0 || idx >= displayCards.value.length) return
+  cardIdx.value = idx
+}
+
+/** 取得目前位置物件（供 savePosition 使用） */
+function getCurrentPosition() {
+  return {
+    level: level.value,
+    subjectIdx: subjectIdx.value,
+    topicIdx: topicIdx.value,
+    cardIdx: cardIdx.value
+  }
+}
+
 /* 切換級別時重設所有索引 */
 watch(level, () => {
   if (isRestoring.value) return
   subjectIdx.value = 0
   topicIdx.value = 0
   cardIdx.value = 0
-  /* 若切到沒有考題的級別，自動切回學習卡片模式 */
   if (!hasExams(level.value)) mode.value = 'flashcard'
-  savePosition()
+  savePosition(getCurrentPosition())
 })
 
 /* 切換科目時重設主題與卡片索引 */
@@ -421,7 +252,7 @@ watch(subjectIdx, () => {
   if (isRestoring.value) return
   topicIdx.value = 0
   cardIdx.value = 0
-  savePosition()
+  savePosition(getCurrentPosition())
 })
 
 /* 切換主題時：若切到「全部」則洗牌，否則重設卡片索引 */
@@ -429,70 +260,24 @@ watch(topicIdx, (val) => {
   if (isRestoring.value) return
   cardIdx.value = 0
   if (val === -1) doShuffle()
-  savePosition()
+  savePosition(getCurrentPosition())
 })
 
 /* 切換卡片時儲存位置 */
 watch(cardIdx, () => {
-  savePosition()
+  savePosition(getCurrentPosition())
 })
 
-/* 卡片導覽 */
-function goCard(idx) {
-  if (idx < 0 || idx >= displayCards.value.length) return
-  cardIdx.value = idx
-}
+/* 鍵盤與觸控事件 */
+useInputEvents({ flashCardRef, cardIdx, goCard })
 
-/* 鍵盤操作 */
-function onKeydown(e) {
-  if (e.key === ' ' || e.key === 'Spacebar') {
-    e.preventDefault()
-    if (flashCardRef.value) flashCardRef.value.toggle()
-  } else if (e.key === 'ArrowLeft') {
-    goCard(cardIdx.value - 1)
-  } else if (e.key === 'ArrowRight') {
-    goCard(cardIdx.value + 1)
-  }
-}
-
-/* 觸控滑動 */
-let touchStartX = 0
-let touchStartY = 0
-
-function onTouchStart(e) {
-  touchStartX = e.touches[0].clientX
-  touchStartY = e.touches[0].clientY
-}
-
-function onTouchEnd(e) {
-  const dx = e.changedTouches[0].clientX - touchStartX
-  const dy = e.changedTouches[0].clientY - touchStartY
-  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-    goCard(cardIdx.value + (dx < 0 ? 1 : -1))
-  }
-}
-
+/* 掛載時還原位置 */
 onMounted(() => {
-  document.addEventListener('keydown', onKeydown)
-  document.addEventListener('touchstart', onTouchStart, { passive: true })
-  document.addEventListener('touchend', onTouchEnd, { passive: true })
-  /* 還原上次閱讀位置 */
-  restorePosition()
-  /* 點擊外部關閉語音下拉 */
-  document.addEventListener('click', (e) => {
-    if (voiceDropdownRef.value && !voiceDropdownRef.value.contains(e.target)) {
-      showVoiceMenu.value = false
-    }
-    if (zhVoiceDropdownRef.value && !zhVoiceDropdownRef.value.contains(e.target)) {
-      showZhVoiceMenu.value = false
-    }
-  })
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('keydown', onKeydown)
-  document.removeEventListener('touchstart', onTouchStart)
-  document.removeEventListener('touchend', onTouchEnd)
+  restorePosition(
+    { level, subjectIdx, topicIdx, cardIdx },
+    doShuffle,
+    () => shuffledCards.value
+  )
 })
 </script>
 
@@ -545,206 +330,6 @@ onBeforeUnmount(() => {
 }
 .header-icon-btn .material-icons {
   font-size: 20px;
-}
-
-/* 設定面板 */
-.settings-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 10px;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-}
-@media (min-width: 768px) {
-  .settings-panel {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-}
-.settings-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: nowrap;
-}
-.settings-label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  min-width: 28px;
-}
-.settings-icon {
-  font-size: 16px;
-}
-.rate-slider {
-  flex: 1;
-  min-width: 80px;
-  max-width: 160px;
-  height: 4px;
-  -webkit-appearance: none;
-  appearance: none;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-  outline: none;
-  cursor: pointer;
-}
-.rate-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-}
-.rate-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  border: none;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-}
-.rate-value {
-  font-size: 0.75rem;
-  font-weight: 700;
-  min-width: 32px;
-  text-align: center;
-}
-
-/* 語音自訂下拉 */
-.voice-dropdown {
-  position: relative;
-}
-.voice-trigger {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: 0.78rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 0.2s;
-  max-width: 240px;
-}
-.voice-trigger:hover {
-  background: rgba(255, 255, 255, 0.35);
-}
-.voice-trigger-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.voice-arrow {
-  font-size: 16px;
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
-.voice-arrow.open {
-  transform: rotate(180deg);
-}
-/* 語音選單（Teleport 到 body，需用 :global） */
-:global(.voice-menu) {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  max-height: 240px;
-  overflow: hidden auto;
-  background: #fff;
-  border: 2px solid var(--custard-cream);
-  border-radius: var(--radius);
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  z-index: 600;
-  font-family: "Microsoft JhengHei", "Noto Sans TC", "PingFang TC", sans-serif;
-}
-:global(.voice-item) {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  font-size: 0.82rem;
-  color: var(--custard-brown);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-:global(.voice-item:hover) {
-  background: var(--custard-light);
-}
-:global(.voice-item.active) {
-  background: var(--custard-cream);
-  font-weight: 700;
-  color: var(--custard-deep);
-}
-:global(.voice-name) {
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-  min-width: 0;
-}
-:global(.voice-tag) {
-  flex-shrink: 0;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 8px;
-  background: rgba(102, 187, 106, 0.2);
-  color: #2E7D32;
-}
-:global(.voice-lang) {
-  flex-shrink: 0;
-  font-size: 0.72rem;
-  opacity: 0.6;
-}
-
-/* 語音下拉動畫 */
-:global(.vdrop-enter-active),
-:global(.vdrop-leave-active) {
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  transform-origin: top center;
-}
-:global(.vdrop-enter-from),
-:global(.vdrop-leave-to) {
-  opacity: 0;
-  transform: scaleY(0.9);
-}
-:global(.vdrop-enter-to),
-:global(.vdrop-leave-from) {
-  opacity: 1;
-  transform: scaleY(1);
-}
-
-.voice-test-btn {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 5px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: 0.78rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.voice-test-btn:hover {
-  background: rgba(255, 255, 255, 0.35);
-}
-.voice-test-btn .material-icons {
-  font-size: 16px;
 }
 
 /* 設定面板動畫 */

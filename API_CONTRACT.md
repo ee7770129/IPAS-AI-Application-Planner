@@ -216,11 +216,33 @@ interface Option {
 
 ## 考題元件 Props 契約
 
+### ExamSetup.vue
+
+| Prop | 型別 | 必填 | 說明 |
+|------|------|------|------|
+| subjectLabel | String | 是 | 科目顯示名稱 |
+| totalCount | Number | 是 | 題庫總題數 |
+| quizCount | Number | 是 | 隨機抽題數（15） |
+| modelValue | String | 是 | 作答模式（'instant' / 'full' / 'review'） |
+| savedProgress | Object | 否 | 全部檢視模式的暫停記錄（null 無記錄） |
+
+**Emit：** `update:modelValue(type: string)`, `start`
+
 ### ExamMode.vue
 
 | Prop | 型別 | 必填 | 說明 |
 |------|------|------|------|
 | subjects | ExamSubject[] | 是 | 該級別的全部考題科目 |
+
+**examType 值：**
+- `'instant'` — 單題模式（隨機 15 題，做一題看一題）
+- `'full'` — 整卷模式（隨機 15 題，做完再檢討）
+- `'review'` — 全部檢視模式（原始順序全部題目，可暫停繼續）
+
+**localStorage 進度持久化（review 模式）：**
+- Key: `ipas-exam-review-{subjectId}`
+- Value: `{ currentIdx, answers, timestamp }`
+- 暫停/關閉瀏覽器自動恢復，完成後自動清除
 
 ### QuestionCard.vue
 

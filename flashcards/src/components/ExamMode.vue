@@ -27,46 +27,15 @@
     </div>
 
     <!-- 開始畫面（未開始作答時） -->
-    <div v-if="phase === 'setup'" class="exam-setup">
-      <div class="setup-card">
-        <span class="material-icons setup-icon">assignment</span>
-        <h3 class="setup-title">歷屆考題練習</h3>
-        <p class="setup-info">
-          題庫：{{ currentSubject.label }}
-          <br>
-          共 {{ allQuestions.length }} 題，每次隨機抽 {{ quizCount }} 題
-        </p>
-
-        <!-- 模式選擇 -->
-        <div class="mode-select">
-          <button
-            class="mode-option"
-            :class="{ active: examType === 'instant' }"
-            @click="examType = 'instant'"
-            type="button"
-          >
-            <span class="material-icons">visibility</span>
-            <span class="mode-name">單題模式</span>
-            <span class="mode-desc">做一題看一題解析</span>
-          </button>
-          <button
-            class="mode-option"
-            :class="{ active: examType === 'full' }"
-            @click="examType = 'full'"
-            type="button"
-          >
-            <span class="material-icons">grading</span>
-            <span class="mode-name">整卷模式</span>
-            <span class="mode-desc">做完再一起檢討</span>
-          </button>
-        </div>
-
-        <button class="start-btn" @click="startExam" type="button">
-          <span class="material-icons">play_arrow</span>
-          開始作答
-        </button>
-      </div>
-    </div>
+    <ExamSetup
+      v-if="phase === 'setup'"
+      v-model="examType"
+      :subjectLabel="currentSubject.label"
+      :totalCount="allQuestions.length"
+      :quizCount="quizCount"
+      :savedProgress="savedProgress"
+      @start="startExam"
+    />
 
     <!-- 作答中 -->
     <div v-else-if="phase === 'answering'" class="exam-answering">
@@ -92,8 +61,18 @@
 
       <!-- 操作按鈕 -->
       <div class="exam-nav">
+        <!-- 全部檢視模式：暫停按鈕 -->
         <button
-          v-if="currentIdx > 0"
+          v-if="examType === 'review'"
+          class="nav-btn"
+          @click="pauseReview"
+          type="button"
+        >
+          <span class="material-icons">pause_circle</span>
+          暫停
+        </button>
+        <button
+          v-else-if="currentIdx > 0"
           class="nav-btn"
           @click="currentIdx--"
           type="button"
@@ -103,9 +82,9 @@
         </button>
         <div class="nav-spacer"></div>
 
-        <!-- 單題模式：看答案按鈕 -->
+        <!-- 單題/全部檢視模式：看答案按鈕 -->
         <button
-          v-if="examType === 'instant' && !instantRevealed && answers[currentIdx]"
+          v-if="(examType === 'instant' || examType === 'review') && !instantRevealed && answers[currentIdx]"
           class="nav-btn primary"
           @click="revealAnswer"
           type="button"
@@ -114,9 +93,9 @@
           看答案
         </button>
 
-        <!-- 單題模式：下一題（看完解析後） -->
+        <!-- 單題/全部檢視模式：下一題（看完解析後） -->
         <button
-          v-if="examType === 'instant' && instantRevealed && currentIdx < quizQuestions.length - 1"
+          v-if="(examType === 'instant' || examType === 'review') && instantRevealed && currentIdx < quizQuestions.length - 1"
           class="nav-btn primary"
           @click="nextInstant"
           type="button"
@@ -125,9 +104,9 @@
           <span class="material-icons">arrow_forward</span>
         </button>
 
-        <!-- 單題模式：最後一題看完解析 -->
+        <!-- 單題/全部檢視模式：最後一題看完解析 -->
         <button
-          v-if="examType === 'instant' && instantRevealed && currentIdx === quizQuestions.length - 1"
+          v-if="(examType === 'instant' || examType === 'review') && instantRevealed && currentIdx === quizQuestions.length - 1"
           class="nav-btn primary"
           @click="finishExam"
           type="button"
@@ -193,6 +172,7 @@
 import { ref, computed, watch } from 'vue'
 import QuestionCard from './QuestionCard.vue'
 import ExamResult from './ExamResult.vue'
+import ExamSetup from './ExamSetup.vue'
 
 const props = defineProps({
   /** EXAM_DATA[level].subjects（全部科目） */
@@ -202,7 +182,7 @@ const props = defineProps({
 /* 狀態 */
 const subjectIdx = ref(0)
 const phase = ref('setup') // setup | answering | result
-const examType = ref('instant') // instant | full
+const examType = ref('instant') // instant | full | review
 const quizQuestions = ref([])
 const currentIdx = ref(0)
 const answers = ref({}) // { idx: 'A'|'B'|'C'|'D' }
@@ -210,6 +190,7 @@ const instantRevealed = ref(false)
 const questionCardRef = ref(null)
 
 const QUIZ_COUNT = 15
+const REVIEW_STORAGE_PREFIX = 'ipas-exam-review-'
 
 /** 判斷科目是否有考題 */
 function subjectHasExams(subj) {
@@ -218,6 +199,12 @@ function subjectHasExams(subj) {
 
 /** 目前科目 */
 const currentSubject = computed(() => props.subjects[subjectIdx.value] || props.subjects[0])
+
+/** 目前科目的 localStorage key */
+const reviewStorageKey = computed(() => {
+  if (!currentSubject.value) return ''
+  return REVIEW_STORAGE_PREFIX + currentSubject.value.id
+})
 
 /** 所有題目（合併該科目所有屆） */
 const allQuestions = computed(() => {
@@ -249,6 +236,21 @@ const examResults = computed(() => {
   }))
 })
 
+/** 讀取 localStorage 中的全部檢視進度（供 ExamSetup 顯示） */
+const savedProgress = computed(() => {
+  try {
+    const raw = localStorage.getItem(reviewStorageKey.value)
+    if (!raw) return null
+    const data = JSON.parse(raw)
+    if (!data || typeof data.currentIdx !== 'number') return null
+    return {
+      currentIdx: data.currentIdx,
+      answeredCount: Object.keys(data.answers || {}).length,
+      timestamp: data.timestamp
+    }
+  } catch { return null }
+})
+
 /** Fisher-Yates 洗牌 */
 function shuffle(arr) {
   const a = [...arr]
@@ -259,12 +261,50 @@ function shuffle(arr) {
   return a
 }
 
+/** 儲存全部檢視進度到 localStorage */
+function saveReviewProgress() {
+  if (examType.value !== 'review') return
+  try {
+    localStorage.setItem(reviewStorageKey.value, JSON.stringify({
+      currentIdx: currentIdx.value,
+      answers: answers.value,
+      timestamp: Date.now()
+    }))
+  } catch { /* 靜默忽略 */ }
+}
+
+/** 清除全部檢視進度 */
+function clearReviewProgress() {
+  try { localStorage.removeItem(reviewStorageKey.value) } catch {}
+}
+
 /** 開始考試 */
 function startExam() {
-  const shuffled = shuffle(allQuestions.value)
-  quizQuestions.value = shuffled.slice(0, quizCount.value)
-  answers.value = {}
-  currentIdx.value = 0
+  if (examType.value === 'review') {
+    /* 全部檢視模式：原始順序，嘗試恢復進度 */
+    quizQuestions.value = [...allQuestions.value]
+    const saved = savedProgress.value
+    if (saved) {
+      /* 恢復進度 */
+      try {
+        const raw = JSON.parse(localStorage.getItem(reviewStorageKey.value))
+        answers.value = raw.answers || {}
+        currentIdx.value = raw.currentIdx || 0
+      } catch {
+        answers.value = {}
+        currentIdx.value = 0
+      }
+    } else {
+      answers.value = {}
+      currentIdx.value = 0
+    }
+  } else {
+    /* 單題/整卷模式：隨機抽題 */
+    const shuffled = shuffle(allQuestions.value)
+    quizQuestions.value = shuffled.slice(0, quizCount.value)
+    answers.value = {}
+    currentIdx.value = 0
+  }
   instantRevealed.value = false
   phase.value = 'answering'
 }
@@ -272,22 +312,31 @@ function startExam() {
 /** 選擇答案 */
 function onAnswer(label) {
   answers.value[currentIdx.value] = label
+  saveReviewProgress()
 }
 
-/** 單題模式：顯示答案 */
+/** 單題/全部檢視模式：顯示答案 */
 function revealAnswer() {
   instantRevealed.value = true
   if (questionCardRef.value) questionCardRef.value.reveal()
 }
 
-/** 單題模式：下一題 */
+/** 單題/全部檢視模式：下一題 */
 function nextInstant() {
   currentIdx.value++
   instantRevealed.value = false
+  saveReviewProgress()
+}
+
+/** 全部檢視模式：暫停 */
+function pauseReview() {
+  saveReviewProgress()
+  phase.value = 'setup'
 }
 
 /** 完成考試 */
 function finishExam() {
+  if (examType.value === 'review') clearReviewProgress()
   phase.value = 'result'
 }
 
@@ -341,111 +390,6 @@ watch(subjectIdx, () => {
   font-weight: 400;
   opacity: 0.7;
 }
-
-/* 開始畫面 */
-.exam-setup {
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-}
-
-.setup-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 32px 24px;
-  background: #fff;
-  border: 2px solid var(--custard-cream);
-  border-radius: var(--radius);
-  box-shadow: 0 2px 12px var(--custard-shadow);
-  max-width: 400px;
-  width: 100%;
-}
-
-.setup-icon {
-  font-size: 48px;
-  color: var(--custard-deep);
-  margin-bottom: 12px;
-}
-
-.setup-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--custard-brown);
-  margin-bottom: 8px;
-}
-
-.setup-info {
-  font-size: 0.83rem;
-  color: var(--custard-brown-light);
-  text-align: center;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-/* 模式選擇 */
-.mode-select {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
-  width: 100%;
-}
-
-.mode-option {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 14px 10px;
-  border: 2px solid var(--custard-cream);
-  border-radius: 12px;
-  background: #fff;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-.mode-option:hover {
-  border-color: var(--custard-gold);
-  background: var(--custard-light);
-}
-.mode-option.active {
-  border-color: var(--custard-deep);
-  background: rgba(232, 151, 107, 0.08);
-}
-.mode-option .material-icons {
-  font-size: 24px;
-  color: var(--custard-deep);
-}
-.mode-name {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--custard-brown);
-}
-.mode-desc {
-  font-size: 0.72rem;
-  color: var(--custard-brown-light);
-}
-
-.start-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 32px;
-  border: none;
-  border-radius: 24px;
-  background: var(--custard-deep);
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.start-btn:hover {
-  background: var(--custard-amber);
-}
-.start-btn .material-icons { font-size: 20px; }
 
 /* 作答中 */
 .exam-answering {
@@ -574,7 +518,5 @@ watch(subjectIdx, () => {
 
 @media (max-width: 600px) {
   .exam-mode { padding: 0 10px 12px; }
-  .mode-select { flex-direction: column; }
-  .setup-card { padding: 24px 16px; }
 }
 </style>
