@@ -174,6 +174,7 @@ onMounted(() => {
   padding: 10px 14px;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 12px;
+  margin-right: 0;
 }
 @media (min-width: 768px) {
   .settings-panel {

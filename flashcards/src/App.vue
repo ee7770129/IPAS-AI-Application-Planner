@@ -9,21 +9,25 @@
   <div class="app-wrapper">
   <!-- 頂部標題 -->
   <header class="header">
-    <h1>IPAS AI 應用規劃師 - {{ mode === 'exam' ? '歷屆考題' : '學習卡片' }}</h1>
-    <p>{{ mode === 'exam' ? '歷屆考題隨機練習' : '翻轉卡片，掌握知識要點' }}</p>
-    <div class="header-actions">
-      <button class="header-icon-btn" @click="showSettings = !showSettings" type="button" title="設定">
-        <span class="material-icons">settings</span>
-      </button>
-      <button
-        v-if="showExamTab"
-        class="header-icon-btn"
-        @click="mode = mode === 'flashcard' ? 'exam' : 'flashcard'"
-        type="button"
-        :title="mode === 'flashcard' ? '切換至歷屆考題' : '切換至學習卡片'"
-      >
-        <span class="material-icons">{{ mode === 'flashcard' ? 'quiz' : 'style' }}</span>
-      </button>
+    <div class="header-top">
+      <div class="header-content">
+        <h1>IPAS AI 應用規劃師 - {{ mode === 'exam' ? '歷屆考題' : '學習卡片' }}</h1>
+        <p>{{ mode === 'exam' ? '歷屆考題隨機練習' : '翻轉卡片，掌握知識要點' }}</p>
+      </div>
+      <div class="header-actions">
+        <button class="header-icon-btn" @click="showSettings = !showSettings" type="button" title="設定">
+          <span class="material-icons">settings</span>
+        </button>
+        <button
+          v-if="showExamTab"
+          class="header-icon-btn"
+          @click="mode = mode === 'flashcard' ? 'exam' : 'flashcard'"
+          type="button"
+          :title="mode === 'flashcard' ? '切換至歷屆考題' : '切換至學習卡片'"
+        >
+          <span class="material-icons">{{ mode === 'flashcard' ? 'quiz' : 'style' }}</span>
+        </button>
+      </div>
     </div>
     <Transition name="settings">
       <SettingsPanel
@@ -292,25 +296,27 @@ onMounted(() => {
 }
 
 .header {
-  position: relative;
   background: linear-gradient(135deg, var(--header-from), var(--header-to));
   color: #fff;
-  text-align: center;
-  padding: 16px 56px 14px;
+  padding: 16px 12px 12px;
   box-shadow: 0 3px 12px var(--custard-shadow);
+}
+.header-top {
+  display: flex;
+  align-items: center;
+}
+.header-content {
+  flex: 1;
+  text-align: center;
 }
 
 /* 頂部右側按鈕群組 */
 .header-actions {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 .header-icon-btn {
   display: flex;
@@ -333,13 +339,33 @@ onMounted(() => {
 }
 
 /* 設定面板動畫 */
-.settings-enter-active,
-.settings-leave-active {
-  transition: opacity 0.2s ease, max-height 0.2s ease;
+.settings-enter-active {
+  transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.35s ease;
+  overflow: hidden;
 }
-.settings-enter-from,
+.settings-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease, max-height 0.2s ease;
+  overflow: hidden;
+}
+.settings-enter-from {
+  opacity: 0;
+  transform: translateY(-8px);
+  max-height: 0;
+}
+.settings-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 200px;
+}
+.settings-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 200px;
+}
 .settings-leave-to {
   opacity: 0;
+  transform: translateY(-8px);
+  max-height: 0;
 }
 .header h1 {
   font-size: 1.3rem;
@@ -473,7 +499,7 @@ onMounted(() => {
 }
 
 @media (max-width: 600px) {
-  .header { padding: 16px 12px 10px; }
+  .header { padding: 12px 8px 10px; }
   .header h1 { font-size: 1.1rem; }
   .card-area { padding: 12px 10px; min-height: 360px; }
   .keyboard-hint { display: none; }
