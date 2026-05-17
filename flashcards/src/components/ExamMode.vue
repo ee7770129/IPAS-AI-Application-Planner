@@ -173,6 +173,7 @@ import { ref, computed, watch } from 'vue'
 import QuestionCard from './QuestionCard.vue'
 import ExamResult from './ExamResult.vue'
 import ExamSetup from './ExamSetup.vue'
+import { useExamLogic } from '../composables/useExamLogic.js'
 
 const props = defineProps({
   /** EXAM_DATA[level].subjects（全部科目） */
@@ -181,16 +182,6 @@ const props = defineProps({
 
 /* 狀態 */
 const subjectIdx = ref(0)
-const phase = ref('setup') // setup | answering | result
-const examType = ref('instant') // instant | full | review
-const quizQuestions = ref([])
-const currentIdx = ref(0)
-const answers = ref({}) // { idx: 'A'|'B'|'C'|'D' }
-const instantRevealed = ref(false)
-const questionCardRef = ref(null)
-
-const QUIZ_COUNT = 15
-const REVIEW_STORAGE_PREFIX = 'ipas-exam-review-'
 
 /** 判斷科目是否有考題 */
 function subjectHasExams(subj) {
@@ -200,145 +191,15 @@ function subjectHasExams(subj) {
 /** 目前科目 */
 const currentSubject = computed(() => props.subjects[subjectIdx.value] || props.subjects[0])
 
-/** 目前科目的 localStorage key */
-const reviewStorageKey = computed(() => {
-  if (!currentSubject.value) return ''
-  return REVIEW_STORAGE_PREFIX + currentSubject.value.id
-})
-
-/** 所有題目（合併該科目所有屆） */
-const allQuestions = computed(() => {
-  if (!currentSubject.value) return []
-  const all = []
-  for (const exam of currentSubject.value.exams) {
-    for (const q of exam.questions) {
-      all.push({ ...q, _examLabel: exam.label })
-    }
-  }
-  return all
-})
-
-/** 實際出題數（題庫不足 15 題時取全部） */
-const quizCount = computed(() => Math.min(QUIZ_COUNT, allQuestions.value.length))
-
-/** 已答題數 */
-const answeredCount = computed(() => Object.keys(answers.value).length)
-
-/** 進度百分比 */
-const progressPct = computed(() => ((currentIdx.value + 1) / quizQuestions.value.length) * 100)
-
-/** 結果陣列 */
-const examResults = computed(() => {
-  return quizQuestions.value.map((q, idx) => ({
-    question: q,
-    userAnswer: answers.value[idx] || null,
-    correct: answers.value[idx] === q.answer
-  }))
-})
-
-/** 讀取 localStorage 中的全部檢視進度（供 ExamSetup 顯示） */
-const savedProgress = computed(() => {
-  try {
-    const raw = localStorage.getItem(reviewStorageKey.value)
-    if (!raw) return null
-    const data = JSON.parse(raw)
-    if (!data || typeof data.currentIdx !== 'number') return null
-    return {
-      currentIdx: data.currentIdx,
-      answeredCount: Object.keys(data.answers || {}).length,
-      timestamp: data.timestamp
-    }
-  } catch { return null }
-})
-
-/** Fisher-Yates 洗牌 */
-function shuffle(arr) {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
-
-/** 儲存全部檢視進度到 localStorage */
-function saveReviewProgress() {
-  if (examType.value !== 'review') return
-  try {
-    localStorage.setItem(reviewStorageKey.value, JSON.stringify({
-      currentIdx: currentIdx.value,
-      answers: answers.value,
-      timestamp: Date.now()
-    }))
-  } catch { /* 靜默忽略 */ }
-}
-
-/** 清除全部檢視進度 */
-function clearReviewProgress() {
-  try { localStorage.removeItem(reviewStorageKey.value) } catch {}
-}
-
-/** 開始考試 */
-function startExam() {
-  if (examType.value === 'review') {
-    /* 全部檢視模式：原始順序，嘗試恢復進度 */
-    quizQuestions.value = [...allQuestions.value]
-    const saved = savedProgress.value
-    if (saved) {
-      /* 恢復進度 */
-      try {
-        const raw = JSON.parse(localStorage.getItem(reviewStorageKey.value))
-        answers.value = raw.answers || {}
-        currentIdx.value = raw.currentIdx || 0
-      } catch {
-        answers.value = {}
-        currentIdx.value = 0
-      }
-    } else {
-      answers.value = {}
-      currentIdx.value = 0
-    }
-  } else {
-    /* 單題/整卷模式：隨機抽題 */
-    const shuffled = shuffle(allQuestions.value)
-    quizQuestions.value = shuffled.slice(0, quizCount.value)
-    answers.value = {}
-    currentIdx.value = 0
-  }
-  instantRevealed.value = false
-  phase.value = 'answering'
-}
-
-/** 選擇答案 */
-function onAnswer(label) {
-  answers.value[currentIdx.value] = label
-  saveReviewProgress()
-}
-
-/** 單題/全部檢視模式：顯示答案 */
-function revealAnswer() {
-  instantRevealed.value = true
-  if (questionCardRef.value) questionCardRef.value.reveal()
-}
-
-/** 單題/全部檢視模式：下一題 */
-function nextInstant() {
-  currentIdx.value++
-  instantRevealed.value = false
-  saveReviewProgress()
-}
-
-/** 全部檢視模式：暫停 */
-function pauseReview() {
-  saveReviewProgress()
-  phase.value = 'setup'
-}
-
-/** 完成考試 */
-function finishExam() {
-  if (examType.value === 'review') clearReviewProgress()
-  phase.value = 'result'
-}
+/* 考題邏輯（透過 composable 管理） */
+const {
+  phase, examType, quizQuestions, currentIdx, answers,
+  instantRevealed, questionCardRef,
+  allQuestions, quizCount, answeredCount, progressPct,
+  examResults, savedProgress,
+  startExam, onAnswer, revealAnswer, nextInstant,
+  pauseReview, finishExam
+} = useExamLogic(currentSubject)
 
 /** 切換科目時重設 */
 watch(subjectIdx, () => {
