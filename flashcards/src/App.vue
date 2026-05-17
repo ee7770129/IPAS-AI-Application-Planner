@@ -9,11 +9,22 @@
   <div class="app-wrapper">
   <!-- 頂部標題 -->
   <header class="header">
-    <h1>IPAS AI 應用規劃師 - 學習卡片</h1>
-    <p>翻轉卡片，掌握知識要點</p>
-    <button class="settings-btn" @click="showSettings = !showSettings" type="button" title="設定">
-      <span class="material-icons">settings</span>
-    </button>
+    <h1>IPAS AI 應用規劃師 - {{ mode === 'exam' ? '歷屆考題' : '學習卡片' }}</h1>
+    <p>{{ mode === 'exam' ? '歷屆考題隨機練習' : '翻轉卡片，掌握知識要點' }}</p>
+    <div class="header-actions">
+      <button class="header-icon-btn" @click="showSettings = !showSettings" type="button" title="設定">
+        <span class="material-icons">settings</span>
+      </button>
+      <button
+        v-if="showExamTab"
+        class="header-icon-btn"
+        @click="mode = mode === 'flashcard' ? 'exam' : 'flashcard'"
+        type="button"
+        :title="mode === 'flashcard' ? '切換至歷屆考題' : '切換至學習卡片'"
+      >
+        <span class="material-icons">{{ mode === 'flashcard' ? 'quiz' : 'style' }}</span>
+      </button>
+    </div>
     <Transition name="settings">
       <div v-if="showSettings" class="settings-panel">
         <!-- 語速控制 -->
@@ -99,6 +110,9 @@
   <!-- 級別頁籤 -->
   <LevelTabs v-model="level" :levels="DATA" />
 
+  <!-- === 學習卡片模式 === -->
+  <template v-if="mode === 'flashcard'">
+
   <!-- 科目頁籤 -->
   <SubjectTabs
     v-if="currentLevel.subjects.length"
@@ -155,6 +169,13 @@
     @go="goCard"
   />
 
+  </template>
+
+  <!-- === 歷屆考題模式 === -->
+  <template v-if="mode === 'exam'">
+    <ExamMode :subjects="examSubjects" />
+  </template>
+
   <!-- 撐開剩餘空間，把 footer 推到底 -->
   <div class="spacer"></div>
 
@@ -180,6 +201,7 @@
 <script setup>
 import { ref, computed, watch, provide, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { DATA } from './data/cards.js'
+import { EXAM_DATA, hasExams } from './data/exams/index.js'
 import { ZH_VOICES, EN_VOICES, DEFAULT_ZH_VOICE, DEFAULT_EN_VOICE, edgeSpeak } from './utils/edge-tts.js'
 import LevelTabs from './components/LevelTabs.vue'
 import SubjectTabs from './components/SubjectTabs.vue'
@@ -187,9 +209,11 @@ import TopicSelect from './components/TopicSelect.vue'
 import FlashCard from './components/FlashCard.vue'
 import CardNav from './components/CardNav.vue'
 import CardDrawer from './components/CardDrawer.vue'
+import ExamMode from './components/ExamMode.vue'
 
 /* 狀態 */
 const level = ref('beginner')
+const mode = ref('flashcard') // 'flashcard' | 'exam'
 const subjectIdx = ref(0)
 const topicIdx = ref(0)
 const cardIdx = ref(0)
@@ -197,6 +221,16 @@ const flashCardRef = ref(null)
 const shuffledCards = ref([])
 const isRestoring = ref(false)
 const drawerOpen = ref(false)
+
+/** 當前級別是否有考題可用 */
+const showExamTab = computed(() => hasExams(level.value))
+
+/** 當前級別的考題科目資料（全部科目，含無考題的） */
+const examSubjects = computed(() => {
+  const data = EXAM_DATA[level.value]
+  if (!data) return []
+  return data.subjects
+})
 
 /* localStorage 位置記憶 */
 const STORAGE_KEY = 'ipas-flashcards-position'
@@ -377,6 +411,8 @@ watch(level, () => {
   subjectIdx.value = 0
   topicIdx.value = 0
   cardIdx.value = 0
+  /* 若切到沒有考題的級別，自動切回學習卡片模式 */
+  if (!hasExams(level.value)) mode.value = 'flashcard'
   savePosition()
 })
 
@@ -475,15 +511,23 @@ onBeforeUnmount(() => {
   background: linear-gradient(135deg, var(--header-from), var(--header-to));
   color: #fff;
   text-align: center;
-  padding: 20px 16px 12px;
+  padding: 16px 56px 14px;
   box-shadow: 0 3px 12px var(--custard-shadow);
 }
 
-/* 設定按鈕 */
-.settings-btn {
+/* 頂部右側按鈕群組 */
+.header-actions {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.header-icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -496,10 +540,10 @@ onBeforeUnmount(() => {
   cursor: pointer;
   transition: background 0.2s;
 }
-.settings-btn:hover {
+.header-icon-btn:hover {
   background: rgba(255, 255, 255, 0.35);
 }
-.settings-btn .material-icons {
+.header-icon-btn .material-icons {
   font-size: 20px;
 }
 

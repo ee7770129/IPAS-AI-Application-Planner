@@ -13,7 +13,11 @@
 
 ### 考科結構
 - **初級**：第一科 人工智慧基礎概論 / 第二科 生成式AI應用與規劃
-- **中級**：待建置
+- **中級**：科目一 人工智慧技術應用與規劃 / 科目二 大數據處理分析與應用
+
+### 功能模式
+- **學習卡片**：翻轉卡片記憶法（正面名詞 → 背面解釋）
+- **歷屆考題**：隨機抽 15 題練習，單題即時模式 / 整卷模式，含逐選項解析
 
 ## 架構依賴圖
 
@@ -56,29 +60,47 @@ D:\IPAS-AI 應用規劃師\
         │   │       ├── ai-governance.js       ← AI 治理與倫理（6 張）
         │   │       ├── ai-industry.js         ← AI 產業應用（1 張）
         │   │       └── imbalance.js           ← 類別不平衡處理（5 張）
-        │   └── advanced\
-        │       ├── subject1\          ← 中級科目一（約 70 張）
-        │       │   ├── nlp.js                 ← 自然語言處理技術與應用（16 張）
-        │       │   ├── cv.js                  ← 電腦視覺技術與應用（4 張）
-        │       │   ├── ml-advanced.js         ← 機器學習進階概念（20 張）
-        │       │   ├── gen-ai.js              ← 生成式AI技術與應用（4 張）
-        │       │   ├── multimodal.js          ← 多模態人工智慧應用（2 張）
-        │       │   ├── deployment.js          ← AI 系統部署與運維（8 張）
-        │       │   ├── ai-risk.js             ← AI 風險管理（3 張）
-        │       │   └── review.js              ← 基礎複習（含進階考法）（13 張）
-        │       └── subject2\          ← 中級科目二（約 36 張）
-        │           ├── statistics.js          ← 機率統計基礎（22 張）
-        │           ├── data-engineering.js    ← 數據處理與特徵工程（6 張）
-        │           ├── bigdata-tech.js        ← 大數據處理技術（4 張）
-        │           ├── bigdata-analysis.js    ← 大數據分析方法與工具（3 張）
-        │           └── bigdata-privacy.js     ← 大數據隱私保護與安全（1 張）
+        │   ├── advanced\
+        │   │   ├── subject1\          ← 中級科目一（約 101 張）
+        │   │   │   ├── nlp.js                 ← 自然語言處理技術與應用（31 張）
+        │   │   │   ├── cv.js                  ← 電腦視覺技術與應用（8 張）
+        │   │   │   ├── ml-advanced.js         ← 機器學習進階概念（20 張）
+        │   │   │   ├── gen-ai.js              ← 生成式AI技術與應用（8 張）
+        │   │   │   ├── multimodal.js          ← 多模態人工智慧應用（3 張）
+        │   │   │   ├── deployment.js          ← AI 系統部署與運維（12 張）
+        │   │   │   ├── ai-risk.js             ← AI 風險管理（3 張）
+        │   │   │   └── review.js              ← 基礎複習（含進階考法）（13 張）
+        │   │   └── subject2\          ← 中級科目二（約 41 張）
+        │   │       ├── statistics.js          ← 機率統計基礎（22 張）
+        │   │       ├── data-engineering.js    ← 數據處理與特徵工程（6 張）
+        │   │       ├── bigdata-tech.js        ← 大數據處理技術（7 張）
+        │   │       ├── bigdata-analysis.js    ← 大數據分析方法與工具（3 張）
+        │   │       └── bigdata-privacy.js     ← 大數據隱私保護與安全（5 張）
+        │   └── exams\                 ← 歷屆考題資料
+        │       ├── index.js           ← 考題索引 + hasExams() 判斷
+        │       └── advanced\
+        │           ├── subject1-114.js        ← 科目一 114 年歷屆（50 題）
+        │           ├── subject1-textbook.js   ← 科目一 課本練習（30 題）
+        │           ├── subject1-mock.js       ← 科目一 模擬題（187 題）
+        │           ├── subject2-114.js        ← 科目二 114 年歷屆（50 題）
+        │           ├── subject2-textbook.js   ← 科目二 課本練習（40 題）
+        │           └── subject2-mock.js       ← 科目二 模擬題（36 題）
         │
         ├── components\
         │   ├── LevelTabs.vue          ← 級別頁籤（初級 / 中級）
         │   ├── SubjectTabs.vue        ← 科目頁籤
         │   ├── TopicSelect.vue        ← 主題下拉選單（含「全部隨機」模式）
         │   ├── FlashCard.vue          ← 翻轉卡片（正面名詞 / 背面解釋）
-        │   └── CardNav.vue            ← 導覽列（上下張按鈕 + 圓點/計數器）
+        │   ├── CardNav.vue            ← 導覽列（上下張按鈕 + 圓點/計數器）
+        │   ├── CardDrawer.vue         ← 卡片目錄抽屜
+        │   ├── ChartSection.vue       ← 圖表區段元件
+        │   ├── ExamMode.vue           ← 考題練習主元件（單題/整卷模式）
+        │   ├── QuestionCard.vue       ← 單題選擇題卡片（含解析）
+        │   ├── ExamResult.vue         ← 整卷結果頁
+        │   └── ModeTabs.vue           ← 模式切換元件（備用）
+        │
+        ├── public\
+        │   └── exams\                 ← 考題附圖
         │
         └── styles\
             └── variables.css          ← 全域 CSS 變數（粉黃奶奶配色）
@@ -89,10 +111,16 @@ D:\IPAS-AI 應用規劃師\
 ```
 App.vue
 ├── LevelTabs.vue          ← v-model: level (beginner/advanced)
-├── SubjectTabs.vue        ← v-model: subjectIdx
-├── TopicSelect.vue        ← v-model: topicIdx / emit: reshuffle
-├── FlashCard.vue          ← props: card / expose: toggle()
-└── CardNav.vue            ← props: current, total / emit: go
+├── [學習卡片模式]
+│   ├── SubjectTabs.vue    ← v-model: subjectIdx
+│   ├── TopicSelect.vue    ← v-model: topicIdx / emit: reshuffle
+│   ├── FlashCard.vue      ← props: card / expose: toggle()
+│   ├── CardNav.vue        ← props: current, total / emit: go
+│   └── CardDrawer.vue     ← 卡片目錄抽屜
+└── [歷屆考題模式]（header 右上角切換按鈕）
+    └── ExamMode.vue       ← props: subjects
+        ├── QuestionCard.vue   ← props: question / expose: reveal()
+        └── ExamResult.vue     ← props: results / emit: retry, back
 ```
 
 ### 資料流（含全部隨機模式）
@@ -212,16 +240,24 @@ App.vue
 - 神經網路與深度學習、鑑別式AI與生成式AI
 - AI 治理與倫理、AI 產業應用、類別不平衡處理
 
-**中級科目一（8 主題，約 70 張）**
-- 自然語言處理技術與應用、電腦視覺技術與應用
-- 機器學習進階概念、生成式AI技術與應用
-- 多模態人工智慧應用、AI 系統部署與運維
-- AI 風險管理、基礎複習（含進階考法）
+**中級科目一（8 主題，約 101 張）**
+- 自然語言處理技術與應用（31）、電腦視覺技術與應用（8）
+- 機器學習進階概念（20）、生成式AI技術與應用（8）
+- 多模態人工智慧應用（3）、AI 系統部署與運維（12）
+- AI 風險管理（3）、基礎複習（含進階考法）（13）
 
-**中級科目二（5 主題，約 36 張）**
-- 機率統計基礎、數據處理與特徵工程
-- 大數據處理技術、大數據分析方法與工具
-- 大數據隱私保護與安全
+**中級科目二（5 主題，約 41 張）**
+- 機率統計基礎（22）、數據處理與特徵工程（6）
+- 大數據處理技術（7）、大數據分析方法與工具（3）
+- 大數據隱私保護與安全（5）
+
+### 考題題庫
+
+**中級科目一（267 題）**
+- 114 年歷屆考題（50 題）、課本練習題（30 題）、模擬題（187 題）
+
+**中級科目二（126 題）**
+- 114 年歷屆考題（50 題）、課本練習題（40 題）、模擬題（36 題）
 
 ### 新增卡片流程
 1. 使用者貼題目

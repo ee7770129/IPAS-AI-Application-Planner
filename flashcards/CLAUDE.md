@@ -17,41 +17,42 @@ flashcards/
 │   │   ├── cards.js        ← 主檔（匯入初級+中級所有主題並組合）
 │   │   ├── beginner/
 │   │   │   └── subject1/   ← 初級第一科（約 149 張）
-│   │   │       ├── ai-tech.js             ← AI 技術與架構（13 張）
-│   │   │       ├── data-processing.js     ← 資料處理與分析（46 張）
-│   │   │       ├── ml-concepts.js         ← 機器學習概念（45 張）
-│   │   │       ├── nn-dl.js               ← 神經網路與深度學習（29 張）
-│   │   │       ├── disc-gen-ai.js         ← 鑑別式AI與生成式AI（4 張）
-│   │   │       ├── ai-governance.js       ← AI 治理與倫理（6 張）
-│   │   │       ├── ai-industry.js         ← AI 產業應用（1 張）
-│   │   │       └── imbalance.js           ← 類別不平衡處理（5 張）
-│   │   └── advanced/
-│   │       ├── subject1/   ← 中級科目一（約 70 張）
-│   │       │   ├── nlp.js                 ← 自然語言處理（16 張）
-│   │       │   ├── cv.js                  ← 電腦視覺（4 張）
-│   │       │   ├── ml-advanced.js         ← 機器學習進階（20 張）
-│   │       │   ├── gen-ai.js              ← 生成式AI（4 張）
-│   │       │   ├── multimodal.js          ← 多模態AI（2 張）
-│   │       │   ├── deployment.js          ← 系統部署與運維（8 張）
-│   │       │   ├── ai-risk.js             ← AI 風險管理（3 張）
-│   │       │   └── review.js              ← 基礎複習（13 張）
-│   │       └── subject2/   ← 中級科目二（約 36 張）
-│   │           ├── statistics.js          ← 機率統計基礎（22 張）
-│   │           ├── data-engineering.js    ← 數據處理與特徵工程（6 張）
-│   │           ├── bigdata-tech.js        ← 大數據處理技術（4 張）
-│   │           ├── bigdata-analysis.js    ← 大數據分析方法（3 張）
-│   │           └── bigdata-privacy.js     ← 大數據隱私保護（1 張）
+│   │   ├── advanced/
+│   │   │   ├── subject1/   ← 中級科目一（約 101 張）
+│   │   │   │   ├── nlp.js             ← 自然語言處理（31 張）
+│   │   │   │   ├── cv.js              ← 電腦視覺（8 張）
+│   │   │   │   ├── ml-advanced.js     ← 機器學習進階（20 張）
+│   │   │   │   ├── gen-ai.js          ← 生成式AI（8 張）
+│   │   │   │   ├── multimodal.js      ← 多模態AI（3 張）
+│   │   │   │   ├── deployment.js      ← 系統部署與運維（12 張）
+│   │   │   │   ├── ai-risk.js         ← AI 風險管理（3 張）
+│   │   │   │   └── review.js          ← 基礎複習（13 張）
+│   │   │   └── subject2/   ← 中級科目二（約 41 張）
+│   │   │       ├── statistics.js      ← 機率統計基礎（22 張）
+│   │   │       ├── data-engineering.js← 數據處理與特徵工程（6 張）
+│   │   │       ├── bigdata-tech.js    ← 大數據處理技術（7 張）
+│   │   │       ├── bigdata-analysis.js← 大數據分析方法（3 張）
+│   │   │       └── bigdata-privacy.js ← 大數據隱私保護（5 張）
+│   │   └── exams/           ← 考題資料
+│   │       ├── index.js     ← 考題索引 + hasExams()
+│   │       └── advanced/    ← 中級考題（6 檔，393 題）
 │   ├── components/
-│   │   ├── LevelTabs.vue   ← 級別切換（初級/中級）
-│   │   ├── SubjectTabs.vue ← 科目切換
-│   │   ├── TopicSelect.vue ← 主題下拉（含「全部隨機」+ 重新洗牌按鈕）
-│   │   ├── FlashCard.vue   ← 翻轉卡片核心元件
-│   │   └── CardNav.vue     ← 導覽按鈕（圓點或計數器，依卡片數自動切換）
+│   │   ├── LevelTabs.vue    ← 級別切換（初級/中級）
+│   │   ├── SubjectTabs.vue  ← 科目切換
+│   │   ├── TopicSelect.vue  ← 主題下拉
+│   │   ├── FlashCard.vue    ← 翻轉卡片核心元件
+│   │   ├── CardNav.vue      ← 導覽按鈕
+│   │   ├── CardDrawer.vue   ← 卡片目錄抽屜
+│   │   ├── ExamMode.vue     ← 考題練習主元件
+│   │   ├── QuestionCard.vue ← 單題選擇題卡片
+│   │   ├── ExamResult.vue   ← 整卷結果頁
+│   │   └── ModeTabs.vue     ← 模式切換（備用）
 │   └── styles/
-│       └── variables.css   ← CSS 變數（粉黃奶奶配色）
+│       └── variables.css    ← CSS 變數（粉黃奶奶配色）
 └── public/
     ├── favicon.ico
-    └── favicon.png
+    ├── favicon.png
+    └── exams/               ← 考題附圖
 ```
 
 ### 資料流

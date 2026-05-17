@@ -4,6 +4,35 @@
 
 ---
 
+## [4.0.0] - 2026-05-17
+
+### 新增
+- 歷屆考題練習區：支援單題即時模式與整卷送出模式，每次隨機抽 15 題
+- 考題練習元件：ExamMode.vue、QuestionCard.vue、ExamResult.vue、ModeTabs.vue
+- 考題資料架構：src/data/exams/（含 index.js 索引 + hasExams() 動態判斷）
+- 中級科目一 114 年歷屆考題 50 題（含各選項解析 + optionExplanations）
+- 中級科目二 114 年歷屆考題 50 題（含各選項解析 + 附圖題支援）
+- 中級科目一課本練習題 30 題（第 3/4/5 章）
+- 中級科目二課本練習題 40 題（第 3/4/5/6 章）
+- 中級科目一模擬題 187 題（來源：已分區 xlsx 28 個工作表自動解析）
+- 中級科目二模擬題 36 題（來源：已分區 xlsx）
+- 考題附圖支援：QuestionCard 可顯示 image 欄位，圖檔存放於 public/exams/
+- Header 右上角模式切換按鈕（齒輪上方，動態顯示）
+- 學習卡片大量補充（從課本 PDF 提取概念）：
+  - nlp.js +15 張（NLU/NLG、技術演進、HMM/CRF、GRU、LoRA、BLEU/ROUGE 等）
+  - cv.js +4 張（CNN 架構演進、物件偵測模型、分割模型、ViT/SAM）
+  - gen-ai.js +4 張（生成式 vs 鑑別式、演進五階段、Deepfake/RLHF、評估指標）
+  - multimodal.js +1 張（多模態融合方式 Early/Late Fusion）
+  - deployment.js +4 張（AI 導入評估框架、POC、風險矩陣、XAI）
+  - bigdata-privacy.js +3 張（差分隱私、混合精度訓練、AI 資料治理）
+
+### 變更
+- App.vue 新增 mode 狀態切換（flashcard / exam），header 標題和副標題隨模式動態變化
+- App.vue header-actions 改為垂直排列（設定齒輪在上、模式切換在下）
+- 考題科目頁籤顯示全部科目，無考題的科目標灰色不可點
+
+---
+
 ## [3.9.1] - 2026-05-16
 
 ### 新增

@@ -144,6 +144,104 @@ interface Tag {
 - `update:modelValue(index: number)` - 切換主題（-1 表示「全部隨機」）
 - `reshuffle` - 重新洗牌（僅在全部隨機模式下觸發）
 
+## 考題資料結構定義
+
+### EXAM_DATA（考題頂層結構）
+
+```typescript
+interface EXAM_DATA {
+  [levelKey: string]: ExamLevel  // 'beginner' | 'advanced'
+}
+```
+
+### ExamLevel（考題級別）
+
+```typescript
+interface ExamLevel {
+  label: string                  // 顯示名稱
+  subjects: ExamSubject[]        // 科目陣列
+}
+```
+
+### ExamSubject（考題科目）
+
+```typescript
+interface ExamSubject {
+  id: string                     // 唯一識別
+  label: string                  // 顯示名稱
+  exams: Exam[]                  // 考卷陣列（可多屆）
+}
+```
+
+### Exam（考卷）
+
+```typescript
+interface Exam {
+  id: string                     // 唯一識別，例：'adv-s1-114'
+  label: string                  // 顯示名稱，例：'114 年 科目一'
+  subject: string                // 科目全名
+  examDate: string               // 考試日期或 '課本練習' / '模擬題'
+  questions: Question[]          // 題目陣列
+}
+```
+
+### Question（題目）
+
+```typescript
+interface Question {
+  id: number                     // 題號（從 1 開始）
+  question: string               // 題目文字
+  image?: string                 // 題目附圖路徑（選填）
+  options: Option[]              // 選項陣列（固定 4 個）
+  answer: string                 // 正確答案（'A'|'B'|'C'|'D'）
+  chapter: string                // 章節歸屬
+  explanation: string            // 整體解析
+  optionExplanations: {          // 各選項解析（正確答案為 null）
+    A: string | null
+    B: string | null
+    C: string | null
+    D: string | null
+  }
+}
+```
+
+### Option（選項）
+
+```typescript
+interface Option {
+  label: string                  // 'A'|'B'|'C'|'D'
+  text: string                   // 選項文字
+}
+```
+
+## 考題元件 Props 契約
+
+### ExamMode.vue
+
+| Prop | 型別 | 必填 | 說明 |
+|------|------|------|------|
+| subjects | ExamSubject[] | 是 | 該級別的全部考題科目 |
+
+### QuestionCard.vue
+
+| Prop | 型別 | 必填 | 說明 |
+|------|------|------|------|
+| question | Question | 是 | 單題資料物件 |
+| forceReveal | Boolean | 否 | 強制顯示答案（整卷模式） |
+| externalAnswer | String | 否 | 外部傳入已選答案 |
+
+**Expose：** `reveal()`, `reset()`, `selected`
+
+**Emit：** `answered(label: string)`
+
+### ExamResult.vue
+
+| Prop | 型別 | 必填 | 說明 |
+|------|------|------|------|
+| results | ResultItem[] | 是 | `[{ question, userAnswer, correct }]` |
+
+**Emit：** `retry`, `back`
+
 ## 新增卡片範例
 
 ```javascript

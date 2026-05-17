@@ -110,6 +110,92 @@ export default {
           }
         ]
       }
+    },
+    {
+      number: 5,
+      title: 'CNN 經典架構演進',
+      engTitle: 'CNN Architecture Evolution',
+      back: {
+        sections: [
+          {
+            label: '四大經典模型',
+            icon: 'layers',
+            code: 'LeNet（1998）\n  最早的 CNN，5 層，手寫數字辨識\n  結構簡單，適合入門\n\nAlexNet（2012）\n  深度學習里程碑！ImageNet 冠軍\n  8 層，引入 ReLU + Dropout\n  證明 CNN 在大規模影像分類的威力\n\nVGG（2014）\n  強調「深度」，全用 3x3 小卷積核\n  最深 19 層，分類準確度大幅提升\n  但參數量極大\n\nResNet（2015）\n  引入殘差連接（Skip Connection）\n  解決深層網路的梯度消失問題\n  可訓練 152 層以上的超深網路'
+          },
+          {
+            label: 'CNN 基本組件',
+            icon: 'build',
+            code: '卷積層 → 提取局部特徵（邊緣、紋理）\n池化層 → 降維、減少計算量（Max Pooling）\n激活層 → 引入非線性（ReLU）\n全連接層 → 整合特徵做分類\n輸出層 → Softmax 轉為類別機率'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: 'AlexNet = 2012 年 ImageNet 突破，開啟 CNN 時代。\nResNet = 殘差連接解決梯度消失，能訓練超深網路。\n\n評估指標：\n- 準確率(Accuracy)\n- Top-5 錯誤率（真實類別在前 5 名內即正確）\n- 混淆矩陣（分析各類別的誤分類情況）'
+          }
+        ]
+      }
+    },
+    {
+      number: 6,
+      title: '物件偵測模型',
+      engTitle: 'Object Detection Models',
+      back: {
+        sections: [
+          {
+            label: '三大主流模型',
+            icon: 'crop_free',
+            code: 'YOLO（You Only Look Once）\n  一次性預測邊界框+類別（迴歸方法）\n  速度極快，適合即時應用\n  應用：即時監控、人臉辨識、自駕車\n\nFaster R-CNN\n  先用 RPN 生成候選框，再分類+迴歸\n  準確度高但速度較慢\n  應用：高精度偵測（醫療影像）\n\nSSD（Single Shot Multibox Detector）\n  多尺度特徵圖偵測\n  速度和準確度的平衡\n  應用：嵌入式裝置、邊緣運算'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '常考情境配對：\n- 「即時偵測、速度優先」→ YOLO\n- 「高準確度、可接受較慢」→ Faster R-CNN\n- 「速度和準確度平衡」→ SSD\n\n物件偵測 = 定位（框在哪）+ 分類（框裡是什麼）\n評估用 mAP（不同 IoU 閾值下的平均精確率）'
+          }
+        ]
+      }
+    },
+    {
+      number: 7,
+      title: '影像分割模型',
+      engTitle: 'Image Segmentation Models',
+      back: {
+        sections: [
+          {
+            label: '三大分割模型',
+            icon: 'auto_awesome_mosaic',
+            code: 'FCN（Fully Convolutional Network）\n  把 CNN 改成全卷積，端到端像素分類\n  用上採樣還原解析度\n  適合語意分割\n\nU-Net\n  對稱的編碼器-解碼器結構\n  跳躍連接保留細節\n  專為醫療影像設計\n  適合小資料集、不平衡資料\n\nMask R-CNN\n  Faster R-CNN + 像素遮罩分支\n  能同時做物件偵測和實例分割\n  適合多目標精細分割'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '常考配對：\n- 「醫療影像分割」→ U-Net\n- 「實例分割」→ Mask R-CNN\n- 「語意分割（基礎）」→ FCN\n\n分割 vs 偵測：\n- 偵測 = 畫邊界框（粗略位置）\n- 分割 = 標每個像素（精確邊界）'
+          }
+        ]
+      }
+    },
+    {
+      number: 8,
+      title: 'Vision Transformer / SAM',
+      engTitle: 'ViT / Segment Anything Model',
+      back: {
+        sections: [
+          {
+            label: 'Vision Transformer (ViT)',
+            icon: 'grid_view',
+            content: '把 NLP 的 Transformer 架構搬到影像領域。把影像切成小塊（Patches），每塊當作一個「詞」，用自注意力機制處理。\n\n突破：證明 Transformer 不只能處理文字，也能處理影像，在大規模資料上效果超越 CNN。\n\n意義：打破 CNN 在電腦視覺的壟斷地位。'
+          },
+          {
+            label: 'SAM (Segment Anything)',
+            icon: 'auto_fix_high',
+            content: 'Meta 推出的通用影像分割模型。核心特點是「什麼都能分割」-- 不限特定類別或領域，具備極強的泛化能力。\n\n只需要簡單的提示（點一個點、畫一個框），就能自動分割出目標物件。\n\n意義：把分割任務從「需要專門訓練」變成「通用即插即用」。'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: 'CV 技術演進三階段：\n1. 特徵工程（1980s-2010）→ 手工設計特徵\n2. CNN 革命（2012-2020）→ AlexNet 突破，自動學習特徵\n3. 多模態+生成式（2020-至今）→ ViT、CLIP、DALL-E、SAM\n\n第三階段的關鍵：不只「辨識」還能「生成」和「跨模態理解」。'
+          }
+        ]
+      }
     }
   ]
 }

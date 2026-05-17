@@ -105,6 +105,87 @@ export default {
           }
         ]
       }
+    },
+    {
+      number: 5,
+      title: '生成式AI vs 鑑別式AI',
+      engTitle: 'Generative AI vs Discriminative AI',
+      back: {
+        sections: [
+          {
+            label: '核心差異',
+            icon: 'compare',
+            code: '生成式AI（Generative）\n  目標：生成新的資料樣本\n  學什麼：學資料分佈 P(X)\n  輸出：新的內容（文字、圖像、語音）\n  代表：GPT、VAE、GAN、Diffusion\n\n鑑別式AI（Discriminative）\n  目標：分類、辨識或預測\n  學什麼：學決策邊界 P(Y|X)\n  輸出：類別標籤或預測值\n  代表：SVM、決策樹、隨機森林、Logistic'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '生成式 = 創造新內容（文章、圖片、語音）\n鑑別式 = 分類或預測（垃圾郵件判斷、疾病預測）\n\n常考情境：\n- 「生成行銷文案/圖像」→ 生成式\n- 「判斷是否詐騙」→ 鑑別式\n- 「同時預測+生成虛擬樣本」→ VAE/GAN（生成式）'
+          }
+        ]
+      }
+    },
+    {
+      number: 6,
+      title: '生成式AI 演進五階段',
+      engTitle: 'Generative AI Evolution',
+      back: {
+        sections: [
+          {
+            label: '五大階段',
+            icon: 'timeline',
+            code: '1. 初期（2013-2015）VAE/RNN\n   編碼器-解碼器架構\n   生成模糊、訓練困難\n\n2. GAN 時代（2014-2020）\n   對抗訓練，高寫實性\n   代表：DCGAN、StyleGAN、CycleGAN\n   限制：訓練不穩定（模式崩潰）\n\n3. Transformer 崛起（2017 起）\n   自注意力機制，高效語境建模\n   代表：BERT、GPT、T5\n\n4. 擴散與多模態（2020 起）\n   逐步去噪，高品質多模態\n   代表：Stable Diffusion、DALL-E\n\n5. 巨型模型與 Agent 化（2023 起）\n   千億參數 + 工具整合 + 自主代理\n   代表：GPT-4、Gemini'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: 'GAN 變體要分清楚：\n- DCGAN = 深度卷積 GAN\n- CycleGAN = 風格轉換（油畫↔照片）\n- StyleGAN = 高品質人臉生成\n\nAI 四個演進階段（黃仁勳 CES 2025）：\n感知AI → 生成式AI → 代理式AI → 物理AI'
+          }
+        ]
+      }
+    },
+    {
+      number: 7,
+      title: 'Deepfake / RLHF',
+      engTitle: 'Deep Fake & RLHF',
+      back: {
+        sections: [
+          {
+            label: 'Deepfake 深偽技術',
+            icon: 'face_retouching_off',
+            content: '結合影像生成和語音合成技術，製作出以假亂真的偽造影片或語音。已成為詐騙和假訊息散播的工具。\n\n風險：偽造政治人物講話、偽造身份進行詐騙、破壞個人名譽。\n\n防禦：生成內容偵測技術、數位浮水印、法律規範。'
+          },
+          {
+            label: 'RLHF',
+            icon: 'feedback',
+            content: 'RLHF（Reinforcement Learning with Human Feedback）= 基於人類回饋的強化學習。\n\n用途：讓生成式模型的輸出更符合人類期望，減少有害、偏見或不準確的內容。\n\n流程：模型生成多個回覆 → 人類評分排序 → 用排序訓練獎勵模型 → 強化學習微調生成模型。\n\nChatGPT 就是用 RLHF 微調 GPT 模型的產物。'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: 'Deepfake 屬於生成式AI 的「濫用風險」。\nRLHF 屬於「模型對齊」(Alignment) 技術。\n\n常考：\n- 「確保生成內容安全」→ RLHF + 紅隊測試\n- 「偽造影片/語音」→ Deepfake\n- 「著作權侵權預防」→ 訓練資料授權驗證（不是 Deepfake 問題）'
+          }
+        ]
+      }
+    },
+    {
+      number: 8,
+      title: 'BLEU / ROUGE',
+      engTitle: 'Text Generation Evaluation Metrics',
+      back: {
+        sections: [
+          {
+            label: '兩大文本評估指標',
+            icon: 'assessment',
+            code: 'BLEU（機器翻譯常用）\n  衡量：生成文本與參考文本的 n-gram 重疊度\n  核心：精確率導向（生成的有多少是對的）\n  分數：0-1，越高越相似\n  適用：機器翻譯、文本生成\n\nROUGE（摘要常用）\n  衡量：生成摘要覆蓋了多少參考內容\n  核心：召回率導向（參考的有多少被生成出來）\n  變體：\n    ROUGE-N = n-gram 重疊\n    ROUGE-L = 最長公共子序列\n  適用：自動摘要、問答系統'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: 'BLEU = 精確率導向（生成文本品質）\nROUGE = 召回率導向（內容覆蓋程度）\n\n兩者共同限制：只看詞彙重疊，不理解語意。\n對話和創意寫作通常需要人工評估（流暢性+準確性）。\n\n三種評估方式：BLEU（自動）、ROUGE（自動）、人工評估（主觀但最全面）。'
+          }
+        ]
+      }
     }
   ]
 }
