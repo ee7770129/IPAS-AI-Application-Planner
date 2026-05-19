@@ -29,9 +29,12 @@ export function useSpeech(getCard) {
   let currentAbort = null
   /** 目前播放中的 Audio 物件（直接追踪，確保能立刻停止） */
   let currentAudio = null
-  /** 背面朗讀快取（同一張卡再點直接播，不重新合成） */
+  /** 背面朗讀快取（同一張卡 + 同樣語音/語速，再點直接播） */
   let cachedUrls = null
   let cachedCardRef = null
+  let cachedZhVoice = null
+  let cachedEnVoice = null
+  let cachedRate = null
 
   /** 釋放快取的 Blob URL */
   function clearCache() {
@@ -40,6 +43,9 @@ export function useSpeech(getCard) {
       cachedUrls = null
     }
     cachedCardRef = null
+    cachedZhVoice = null
+    cachedEnVoice = null
+    cachedRate = null
   }
 
   /** 停止所有朗讀，立刻清空未播完的音頻 */
@@ -124,14 +130,20 @@ export function useSpeech(getCard) {
 
     try {
       let urls
-      if (cachedUrls && cachedCardRef === card) {
+      const zhVoice = getEdgeZhVoice()
+      const enVoice = getEdgeEnVoice()
+      const rate = getSpeechRate()
+      const cacheHit = cachedUrls && cachedCardRef === card
+        && cachedZhVoice === zhVoice && cachedEnVoice === enVoice
+        && cachedRate === rate
+
+      if (cacheHit) {
         /* 快取命中，直接播放 */
         urls = cachedUrls
       } else {
-        /* 首次合成：並行送出所有段落，完成後快取 */
+        /* 合成：並行送出所有段落，完成後快取 */
         isLoadingZh.value = true
         clearCache()
-        const rate = getSpeechRate()
         urls = await Promise.all(
           chunks.map(chunk => edgeSynthesize(
             typeof chunk === 'string' ? chunk : chunk.text,
@@ -145,6 +157,9 @@ export function useSpeech(getCard) {
         isLoadingZh.value = false
         cachedUrls = urls
         cachedCardRef = card
+        cachedZhVoice = zhVoice
+        cachedEnVoice = enVoice
+        cachedRate = rate
       }
 
       /* 依序播放（不釋放 URL，保留快取） */
