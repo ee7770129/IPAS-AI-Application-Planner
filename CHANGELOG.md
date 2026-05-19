@@ -4,6 +4,15 @@
 
 ---
 
+## [4.1.2] - 2026-05-19
+
+### 修復
+- 朗讀按鈕切換時舊音頻未清空：新增 currentAudio 直接追踪 Audio 物件，stopAll() 立刻 pause + 清空 src
+- edge-tts.js edgeSpeakChunks abort handler 補上 audio.src = '' 清源（原本只有 pause）
+- edgeSpeak / edgeSpeakChunks 新增 onAudioCreated callback，讓 useSpeech 即時追踪播放中的 Audio
+
+---
+
 ## [4.1.1] - 2026-05-17
 
 ### 修復

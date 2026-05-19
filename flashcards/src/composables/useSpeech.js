@@ -27,9 +27,16 @@ export function useSpeech(getCard) {
 
   /** 目前播放中的取消控制器 */
   let currentAbort = null
+  /** 目前播放中的 Audio 物件（直接追踪，確保能立刻停止） */
+  let currentAudio = null
 
-  /** 停止所有朗讀 */
+  /** 停止所有朗讀，立刻清空未播完的音頻 */
   function stopAll() {
+    if (currentAudio) {
+      currentAudio.pause()
+      currentAudio.src = ''
+      currentAudio = null
+    }
     if (currentAbort) { currentAbort.abort(); currentAbort = null }
     isSpeaking.value = false
     isReadingZh.value = false
@@ -49,7 +56,8 @@ export function useSpeech(getCard) {
       const audio = await edgeSpeak(text, {
         voice: getEdgeEnVoice(),
         rate: getSpeechRate(),
-        signal: abort.signal
+        signal: abort.signal,
+        onAudioCreated: (a) => { currentAudio = a }
       })
       isLoadingEn.value = false
       audio.addEventListener('ended', () => { isSpeaking.value = false }, { once: true })
@@ -104,7 +112,8 @@ export function useSpeech(getCard) {
       await edgeSpeakChunks(chunks, {
         rate: getSpeechRate(),
         signal: abort.signal,
-        onStart: () => { isLoadingZh.value = false }
+        onStart: () => { isLoadingZh.value = false },
+        onAudioCreated: (a) => { currentAudio = a }
       })
       isReadingZh.value = false
     } catch {

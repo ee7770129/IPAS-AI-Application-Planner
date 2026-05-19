@@ -47,6 +47,9 @@ export async function edgeSpeak(text, options = {}) {
   const url = await edgeSynthesize(text, options)
   const audio = new Audio(url)
 
+  /* 讓外部可直接追踪此 Audio 物件 */
+  if (options.onAudioCreated) options.onAudioCreated(audio)
+
   audio.addEventListener('ended', () => URL.revokeObjectURL(url), { once: true })
   audio.addEventListener('error', () => URL.revokeObjectURL(url), { once: true })
 
@@ -88,9 +91,11 @@ export async function edgeSpeakChunks(chunks, options = {}) {
       const audio = new Audio(url)
       audio.addEventListener('ended', () => { URL.revokeObjectURL(url); resolve() }, { once: true })
       audio.addEventListener('error', () => { URL.revokeObjectURL(url); resolve() }, { once: true })
+      if (options.onAudioCreated) options.onAudioCreated(audio)
       if (options.signal) {
         options.signal.addEventListener('abort', () => {
           audio.pause()
+          audio.src = ''
           URL.revokeObjectURL(url)
           resolve()
         }, { once: true })
