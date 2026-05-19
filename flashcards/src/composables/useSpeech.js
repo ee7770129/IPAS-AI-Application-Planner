@@ -115,7 +115,26 @@ export function useSpeech(getCard) {
     return chunks
   }
 
-  /** 朗讀卡片背面解釋（有快取直接播，沒有才合成） */
+  /** 播放單段 Blob URL（內部用） */
+  function playOneChunk(url, signal) {
+    return new Promise((resolve) => {
+      if (signal?.aborted) { resolve(); return }
+      const audio = new Audio(url)
+      currentAudio = audio
+      audio.addEventListener('ended', () => resolve(), { once: true })
+      audio.addEventListener('error', () => resolve(), { once: true })
+      if (signal) {
+        signal.addEventListener('abort', () => {
+          audio.pause()
+          audio.src = ''
+          resolve()
+        }, { once: true })
+      }
+      audio.play().catch(() => resolve())
+    })
+  }
+
+  /** 朗讀卡片背面解釋（有快取直接播，沒有才邊合成邊播） */
   async function readExplanation() {
     if (isReadingZh.value || isLoadingZh.value) { stopAll(); return }
     stopAll()
@@ -124,49 +143,56 @@ export function useSpeech(getCard) {
     const chunks = collectBackChunks()
     if (!chunks.length) return
 
+    const zhVoice = getEdgeZhVoice()
+    const enVoice = getEdgeEnVoice()
+    const rate = getSpeechRate()
+    const cacheHit = cachedUrls && cachedCardRef === card
+      && cachedZhVoice === zhVoice && cachedEnVoice === enVoice
+      && cachedRate === rate
+
     isReadingZh.value = true
     const abort = new AbortController()
     currentAbort = abort
 
     try {
-      let urls
-      const zhVoice = getEdgeZhVoice()
-      const enVoice = getEdgeEnVoice()
-      const rate = getSpeechRate()
-      const cacheHit = cachedUrls && cachedCardRef === card
-        && cachedZhVoice === zhVoice && cachedEnVoice === enVoice
-        && cachedRate === rate
-
       if (cacheHit) {
         /* 快取命中，直接播放 */
-        urls = cachedUrls
+        await playBlobUrls(cachedUrls, {
+          signal: abort.signal,
+          onAudioCreated: (a) => { currentAudio = a }
+        })
       } else {
-        /* 合成：並行送出所有段落，完成後快取 */
-        isLoadingZh.value = true
+        /* 並行送出所有合成請求 */
         clearCache()
-        urls = await Promise.all(
-          chunks.map(chunk => edgeSynthesize(
-            typeof chunk === 'string' ? chunk : chunk.text,
-            {
-              voice: (typeof chunk === 'object' && chunk.voice) ? chunk.voice : undefined,
-              rate,
-              signal: abort.signal
-            }
-          ))
-        )
-        isLoadingZh.value = false
-        cachedUrls = urls
-        cachedCardRef = card
-        cachedZhVoice = zhVoice
-        cachedEnVoice = enVoice
-        cachedRate = rate
-      }
+        isLoadingZh.value = true
+        const urlPromises = chunks.map(chunk => edgeSynthesize(
+          typeof chunk === 'string' ? chunk : chunk.text,
+          {
+            voice: (typeof chunk === 'object' && chunk.voice) ? chunk.voice : undefined,
+            rate,
+            signal: abort.signal
+          }
+        ))
 
-      /* 依序播放（不釋放 URL，保留快取） */
-      await playBlobUrls(urls, {
-        signal: abort.signal,
-        onAudioCreated: (a) => { currentAudio = a }
-      })
+        /* 第一段好了就開始播，邊播邊等後續段落合成完畢 */
+        const urls = []
+        for (let i = 0; i < urlPromises.length; i++) {
+          if (abort.signal.aborted) break
+          const url = await urlPromises[i]
+          urls.push(url)
+          if (i === 0) isLoadingZh.value = false
+          await playOneChunk(url, abort.signal)
+        }
+
+        /* 全部播完才存快取（中途停止不存） */
+        if (!abort.signal.aborted && urls.length === chunks.length) {
+          cachedUrls = urls
+          cachedCardRef = card
+          cachedZhVoice = zhVoice
+          cachedEnVoice = enVoice
+          cachedRate = rate
+        }
+      }
       isReadingZh.value = false
     } catch {
       if (!abort.signal.aborted) { isLoadingZh.value = false; isReadingZh.value = false }
