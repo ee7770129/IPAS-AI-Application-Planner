@@ -7,7 +7,7 @@
  */
 
 /** 預設中文語音（曉曉 - 自然語音） */
-const DEFAULT_ZH_VOICE = 'zh-CN-XiaoxiaoNeural'
+const DEFAULT_ZH_VOICE = 'zh-TW-YunJheNeural'
 
 /** 預設英文語音 */
 const DEFAULT_EN_VOICE = 'en-US-EmmaMultilingualNeural'

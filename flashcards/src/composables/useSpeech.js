@@ -21,7 +21,7 @@ export function useSpeech(getCard) {
   const isLoadingZh = ref(false)
 
   /** 從 App.vue 取得語音設定 */
-  const getEdgeZhVoice = inject('getEdgeZhVoice', () => 'zh-CN-XiaoxiaoNeural')
+  const getEdgeZhVoice = inject('getEdgeZhVoice', () => 'zh-TW-YunJheNeural')
   const getEdgeEnVoice = inject('getEdgeEnVoice', () => 'en-US-EmmaMultilingualNeural')
   const getSpeechRate = inject('getSpeechRate', () => 1.0)
 
