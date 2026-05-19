@@ -15,6 +15,10 @@
 - 背面朗讀快取機制：同一張卡已合成的音頻會快取，再次點擊「朗讀解釋」直接播放，不重新呼叫 TTS API
 - edge-tts.js 新增 playBlobUrls() 函式：播放已快取的 Blob URL 陣列（不釋放 URL）
 - 切換卡片時自動清除快取（clearCache），避免記憶體洩漏
+- 朗讀快取加入語音/語速判斷：調整設定後重新合成，未調整則直接用快取
+
+### 變更
+- 預設中文語音從曉曉（zh-CN-XiaoxiaoNeural）改為雲哲（zh-TW-YunJheNeural，男，台灣）
 
 ---
 
