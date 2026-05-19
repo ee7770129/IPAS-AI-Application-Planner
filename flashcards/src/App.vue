@@ -61,7 +61,7 @@
   />
 
   <!-- 卡片區域 -->
-  <div class="card-area">
+  <div class="card-area" ref="cardAreaRef">
     <template v-if="displayCards.length">
       <div v-if="topicIdx === -1" class="topic-badge">
         <span class="material-icons">bookmark</span>
@@ -131,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { DATA } from './data/cards.js'
 import { EXAM_DATA, hasExams } from './data/exams/index.js'
 import { useVoiceSettings } from './composables/useVoiceSettings.js'
@@ -163,6 +163,7 @@ const subjectIdx = ref(0)
 const topicIdx = ref(0)
 const cardIdx = ref(0)
 const flashCardRef = ref(null)
+const cardAreaRef = ref(null)
 const shuffledCards = ref([])
 const drawerOpen = ref(false)
 const showSettings = ref(false)
@@ -225,6 +226,11 @@ function doShuffle() {
 function goCard(idx) {
   if (idx < 0 || idx >= displayCards.value.length) return
   cardIdx.value = idx
+  nextTick(() => {
+    if (cardAreaRef.value) {
+      cardAreaRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  })
 }
 
 /** 取得目前位置物件（供 savePosition 使用） */
