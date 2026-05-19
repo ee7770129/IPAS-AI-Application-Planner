@@ -174,13 +174,17 @@ export function useSpeech(getCard) {
           }
         ))
 
-        /* 第一段好了就開始播，邊播邊等後續段落合成完畢 */
+        /* 等前兩段合成完再開始播（避免第一段播完第二段還沒好的空檔） */
+        const prefetch = Math.min(2, urlPromises.length)
+        await Promise.all(urlPromises.slice(0, prefetch))
+        isLoadingZh.value = false
+
+        /* 依序播放（前兩段已就緒，後續段落在播放期間陸續完成） */
         const urls = []
         for (let i = 0; i < urlPromises.length; i++) {
           if (abort.signal.aborted) break
           const url = await urlPromises[i]
           urls.push(url)
-          if (i === 0) isLoadingZh.value = false
           await playOneChunk(url, abort.signal)
         }
 
