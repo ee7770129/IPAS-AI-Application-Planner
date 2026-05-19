@@ -48,3 +48,55 @@ npm run dev
 ```
 
 > 語音功能需要 Vercel 的 `/api/tts` 端點，本地開發時語音朗讀不可用，需部署到 Vercel 或自行架設 TTS 代理。
+
+## 一起貢獻卡片
+
+歡迎任何人幫忙新增學習卡片或考題！你不需要會寫程式，只要有課本內容或考題，搭配 Claude 就能自動產出符合格式的卡片。
+
+### 事前準備
+
+1. Fork 這個 repo 到你自己的 GitHub 帳號
+2. Clone 到本地：`git clone https://github.com/你的帳號/IPAS-AI-Application-Planner.git`
+3. 安裝 [Claude Code](https://claude.ai/claude-code)（Anthropic 的 CLI 工具）
+
+### 用 Claude 幫你建卡片
+
+這個專案已經寫好完整的 `CLAUDE.md` 說明文件，裡面包含卡片格式、寫作風格、資料結構、檔案位置等所有規範。當你在專案目錄下啟動 Claude Code，它會自動讀取這些規範，知道該怎麼做。
+
+**你只需要：**
+
+1. 建立你的分支
+   ```bash
+   git checkout -b add/你的主題名稱
+   ```
+
+2. 啟動 Claude Code，把課本內容或考題貼給它
+   ```
+   claude
+   ```
+
+3. 告訴 Claude 你想做什麼，例如：
+   - 「這是初級第二科的課本第三章，幫我把重點名詞做成學習卡片」
+   - 「這是 113 年的考古題，幫我建成考題檔案，每個選項也做成學習卡」
+   - 「幫我在 NLP 主題補一張 BERT 的卡片」
+
+4. Claude 會自動：
+   - 依照 `CLAUDE.md` 的卡片格式和寫作規範產出內容
+   - 每個選項獨立做成一張卡，用口語化方式解釋
+   - 放到正確的檔案位置（`flashcards/src/data/` 下對應的主題）
+   - 更新 `cards.js` 的匯入
+
+5. 確認沒問題後，推送並發 Pull Request
+   ```bash
+   git add .
+   git commit -m "[功能] 新增 XXX 卡片"
+   git push origin add/你的主題名稱
+   ```
+   到 GitHub 頁面點「Compare & pull request」，等待審核合併。
+
+### 注意事項
+
+- **請勿直接推送到 main 分支**，一律透過 Pull Request 合併
+- 卡片內容要用**繁體中文**，解釋要夠詳細，讓不懂的人也看得懂
+- 如果名詞已經有對應的卡片，就不用重複建立
+- 有任何問題歡迎開 Issue 討論
