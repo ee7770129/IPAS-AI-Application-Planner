@@ -105,6 +105,31 @@ export async function edgeSpeakChunks(chunks, options = {}) {
   }
 }
 
+/**
+ * 播放預先合成的 Blob URL 陣列（依序播放，不釋放 URL，供快取重播用）
+ * @param {string[]} urls - Blob URL 陣列
+ * @param {object} options - signal, onAudioCreated
+ */
+export async function playBlobUrls(urls, options = {}) {
+  for (const url of urls) {
+    if (options.signal?.aborted) break
+    await new Promise((resolve) => {
+      const audio = new Audio(url)
+      if (options.onAudioCreated) options.onAudioCreated(audio)
+      audio.addEventListener('ended', () => resolve(), { once: true })
+      audio.addEventListener('error', () => resolve(), { once: true })
+      if (options.signal) {
+        options.signal.addEventListener('abort', () => {
+          audio.pause()
+          audio.src = ''
+          resolve()
+        }, { once: true })
+      }
+      audio.play().catch(() => resolve())
+    })
+  }
+}
+
 /** Edge TTS 可用的中文語音清單 */
 export const ZH_VOICES = [
   { id: 'zh-CN-XiaoxiaoNeural', name: '曉曉（女，自然）', lang: 'zh-CN' },

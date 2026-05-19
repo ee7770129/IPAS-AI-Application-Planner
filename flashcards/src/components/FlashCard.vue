@@ -98,7 +98,7 @@ const backRef = ref(null)
 /* 朗讀邏輯（透過 composable 管理） */
 const {
   isReadingZh, isLoadingEn, isLoadingZh,
-  stopAll, speak, readExplanation
+  stopAll, clearCache, speak, readExplanation
 } = useSpeech(() => props.card)
 
 /** 將換行符轉為 <br>，並跳脫 HTML */
@@ -143,6 +143,7 @@ watch(flipped, () => nextTick(syncHeight))
 watch(() => props.card, () => {
   flipped.value = false
   stopAll()
+  clearCache()
   nextTick(() => {
     syncHeight()
     setTimeout(syncHeight, 150)

@@ -11,6 +11,11 @@
 - edge-tts.js edgeSpeakChunks abort handler 補上 audio.src = '' 清源（原本只有 pause）
 - edgeSpeak / edgeSpeakChunks 新增 onAudioCreated callback，讓 useSpeech 即時追踪播放中的 Audio
 
+### 新增
+- 背面朗讀快取機制：同一張卡已合成的音頻會快取，再次點擊「朗讀解釋」直接播放，不重新呼叫 TTS API
+- edge-tts.js 新增 playBlobUrls() 函式：播放已快取的 Blob URL 陣列（不釋放 URL）
+- 切換卡片時自動清除快取（clearCache），避免記憶體洩漏
+
 ---
 
 ## [4.1.1] - 2026-05-17

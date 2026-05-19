@@ -7,7 +7,7 @@
 */
 
 import { ref, inject } from 'vue'
-import { edgeSpeak, edgeSpeakChunks } from '../utils/edge-tts.js'
+import { edgeSpeak, edgeSynthesize, playBlobUrls } from '../utils/edge-tts.js'
 
 /**
  * Edge TTS 朗讀邏輯 composable
@@ -29,6 +29,18 @@ export function useSpeech(getCard) {
   let currentAbort = null
   /** 目前播放中的 Audio 物件（直接追踪，確保能立刻停止） */
   let currentAudio = null
+  /** 背面朗讀快取（同一張卡再點直接播，不重新合成） */
+  let cachedUrls = null
+  let cachedCardRef = null
+
+  /** 釋放快取的 Blob URL */
+  function clearCache() {
+    if (cachedUrls) {
+      cachedUrls.forEach(url => URL.revokeObjectURL(url))
+      cachedUrls = null
+    }
+    cachedCardRef = null
+  }
 
   /** 停止所有朗讀，立刻清空未播完的音頻 */
   function stopAll() {
@@ -97,22 +109,47 @@ export function useSpeech(getCard) {
     return chunks
   }
 
-  /** 朗讀卡片背面解釋（並行合成，依序播放） */
+  /** 朗讀卡片背面解釋（有快取直接播，沒有才合成） */
   async function readExplanation() {
     if (isReadingZh.value || isLoadingZh.value) { stopAll(); return }
     stopAll()
+
+    const card = getCard()
     const chunks = collectBackChunks()
     if (!chunks.length) return
 
-    isLoadingZh.value = true
     isReadingZh.value = true
     const abort = new AbortController()
     currentAbort = abort
+
     try {
-      await edgeSpeakChunks(chunks, {
-        rate: getSpeechRate(),
+      let urls
+      if (cachedUrls && cachedCardRef === card) {
+        /* 快取命中，直接播放 */
+        urls = cachedUrls
+      } else {
+        /* 首次合成：並行送出所有段落，完成後快取 */
+        isLoadingZh.value = true
+        clearCache()
+        const rate = getSpeechRate()
+        urls = await Promise.all(
+          chunks.map(chunk => edgeSynthesize(
+            typeof chunk === 'string' ? chunk : chunk.text,
+            {
+              voice: (typeof chunk === 'object' && chunk.voice) ? chunk.voice : undefined,
+              rate,
+              signal: abort.signal
+            }
+          ))
+        )
+        isLoadingZh.value = false
+        cachedUrls = urls
+        cachedCardRef = card
+      }
+
+      /* 依序播放（不釋放 URL，保留快取） */
+      await playBlobUrls(urls, {
         signal: abort.signal,
-        onStart: () => { isLoadingZh.value = false },
         onAudioCreated: (a) => { currentAudio = a }
       })
       isReadingZh.value = false
@@ -127,6 +164,7 @@ export function useSpeech(getCard) {
     isLoadingEn,
     isLoadingZh,
     stopAll,
+    clearCache,
     speak,
     readExplanation
   }
