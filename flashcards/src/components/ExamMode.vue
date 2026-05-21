@@ -46,7 +46,6 @@
       <div class="progress-info">
         <span class="progress-left">
           <button
-            v-if="examType === 'review'"
             class="drawer-toggle-btn"
             @click="drawerOpen = true"
             type="button"
@@ -75,20 +74,27 @@
 
       <!-- 操作按鈕 -->
       <div class="exam-nav">
-        <!-- 全部檢視模式：暫停按鈕 -->
-        <button
-          v-if="examType === 'review'"
-          class="nav-btn"
-          @click="pauseReview"
-          type="button"
-        >
-          <span class="material-icons">pause_circle</span>
-          暫停
-        </button>
+        <!-- 全部檢視模式：暫停 + 上一題 -->
+        <template v-if="examType === 'review'">
+          <button class="nav-btn" @click="pauseReview" type="button">
+            <span class="material-icons">pause_circle</span>
+            暫停
+          </button>
+          <button
+            v-if="currentIdx > 0"
+            class="nav-btn"
+            @click="goBack"
+            type="button"
+          >
+            <span class="material-icons">arrow_back</span>
+            上一題
+          </button>
+        </template>
+        <!-- 單題/整卷模式：上一題 -->
         <button
           v-else-if="currentIdx > 0"
           class="nav-btn"
-          @click="currentIdx--"
+          @click="goBack"
           type="button"
         >
           <span class="material-icons">arrow_back</span>
@@ -229,6 +235,14 @@ const {
   startExam, onAnswer, revealAnswer, nextInstant,
   pauseReview, finishExam, tryRestoreSession
 } = useExamLogic(currentSubject)
+
+/** 回上一題 */
+function goBack() {
+  if (currentIdx.value > 0) {
+    currentIdx.value--
+    instantRevealed.value = false
+  }
+}
 
 /** 從抽屜跳轉到指定題目 */
 function onDrawerGo(idx) {
