@@ -44,8 +44,22 @@
         <div class="progress-fill" :style="{ width: progressPct + '%' }"></div>
       </div>
       <div class="progress-info">
-        <span>題目 {{ currentIdx + 1 }} / {{ quizQuestions.length }}</span>
+        <span class="progress-left">
+          <button
+            v-if="examType === 'review'"
+            class="drawer-toggle-btn"
+            @click="drawerOpen = true"
+            type="button"
+            title="題目列表"
+          >
+            <span class="material-icons">list</span>
+          </button>
+          題目 {{ currentIdx + 1 }} / {{ quizQuestions.length }}
+        </span>
         <span v-if="examType === 'full'" class="answered-count">
+          已答 {{ answeredCount }} 題
+        </span>
+        <span v-else-if="examType === 'review'" class="answered-count">
           已答 {{ answeredCount }} 題
         </span>
       </div>
@@ -165,6 +179,16 @@
       @retry="startExam"
       @back="phase = 'setup'"
     />
+
+    <!-- 全部檢視模式：題目目錄抽屜 -->
+    <ExamDrawer
+      :open="drawerOpen"
+      :questions="quizQuestions"
+      :current="currentIdx"
+      :answers="answers"
+      @close="drawerOpen = false"
+      @go="onDrawerGo"
+    />
   </div>
 </template>
 
@@ -173,6 +197,7 @@ import { ref, computed, watch } from 'vue'
 import QuestionCard from './QuestionCard.vue'
 import ExamResult from './ExamResult.vue'
 import ExamSetup from './ExamSetup.vue'
+import ExamDrawer from './ExamDrawer.vue'
 import { useExamLogic } from '../composables/useExamLogic.js'
 
 const props = defineProps({
@@ -182,6 +207,7 @@ const props = defineProps({
 
 /* 狀態 */
 const subjectIdx = ref(0)
+const drawerOpen = ref(false)
 
 /** 判斷科目是否有考題 */
 function subjectHasExams(subj) {
@@ -200,6 +226,12 @@ const {
   startExam, onAnswer, revealAnswer, nextInstant,
   pauseReview, finishExam
 } = useExamLogic(currentSubject)
+
+/** 從抽屜跳轉到指定題目 */
+function onDrawerGo(idx) {
+  currentIdx.value = idx
+  instantRevealed.value = false
+}
 
 /** 切換科目時重設 */
 watch(subjectIdx, () => {
@@ -276,9 +308,37 @@ watch(subjectIdx, () => {
 .progress-info {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 0.8rem;
   color: var(--custard-brown-light);
   margin-bottom: 16px;
+}
+.progress-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.drawer-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--custard-cream);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--custard-brown-light);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+.drawer-toggle-btn:hover {
+  border-color: var(--custard-gold);
+  color: var(--custard-deep);
+  background: var(--custard-light);
+}
+.drawer-toggle-btn .material-icons {
+  font-size: 18px;
 }
 .answered-count {
   font-weight: 600;
