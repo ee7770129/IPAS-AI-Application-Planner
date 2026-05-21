@@ -228,7 +228,11 @@ function goCard(idx) {
   cardIdx.value = idx
   nextTick(() => {
     if (cardAreaRef.value) {
-      cardAreaRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const rect = cardAreaRef.value.getBoundingClientRect()
+      // 只在卡片區域頂端被捲出視窗時才滾回來，避免正面連按時反覆滾動
+      if (rect.top < 0) {
+        cardAreaRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
     }
   })
 }
