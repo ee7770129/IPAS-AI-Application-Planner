@@ -1,15 +1,15 @@
 /*
   請以繁體中文產生程式碼註解。請務必保持 UTF-8 編碼。
   檔案：useExamLogic.js
-  功能：考題練習邏輯 composable（狀態管理、洗牌、全部檢視進度）
+  功能：考題練習邏輯 composable（狀態管理、洗牌、考試進度持久化）
   建立日期：2026-05-17
-  版本：1.0.0
+  版本：2.0.0
 */
 
 import { ref, computed, watch } from 'vue'
 
 const QUIZ_COUNT = 15
-const REVIEW_STORAGE_PREFIX = 'ipas-exam-review-'
+const SESSION_PREFIX = 'ipas-exam-session-'
 
 /**
  * 考題練習邏輯 composable
@@ -54,22 +54,51 @@ export function useExamLogic(currentSubject) {
     }))
   })
 
-  /** 目前科目的 localStorage key */
-  const reviewStorageKey = computed(() => {
+  /** 目前科目的 session localStorage key */
+  const sessionKey = computed(() => {
     if (!currentSubject.value) return ''
-    return REVIEW_STORAGE_PREFIX + currentSubject.value.id
+    return SESSION_PREFIX + currentSubject.value.id
   })
 
-  /** 讀取 localStorage 中的全部檢視進度 */
+  // --- 持久化：統一存取所有考試模式的進度 ---
+
+  /** 儲存考試進度到 localStorage */
+  function saveSession() {
+    if (phase.value !== 'answering') return
+    try {
+      const data = {
+        examType: examType.value,
+        currentIdx: currentIdx.value,
+        answers: answers.value,
+        timestamp: Date.now()
+      }
+      // instant / full 模式需要存洗牌後的題目順序（用題目 id 記錄）
+      if (examType.value !== 'review') {
+        data.questionIds = quizQuestions.value.map(q => q.id)
+      }
+      localStorage.setItem(sessionKey.value, JSON.stringify(data))
+    } catch { /* 靜默忽略 */ }
+  }
+
+  /** 清除考試進度 */
+  function clearSession() {
+    try { localStorage.removeItem(sessionKey.value) } catch {}
+  }
+
+  /**
+   * 讀取已儲存的考試進度摘要（用於 setup 頁面顯示）
+   * 回傳 null 表示沒有進度
+   */
   const savedProgress = computed(() => {
     try {
-      const raw = localStorage.getItem(reviewStorageKey.value)
+      const raw = localStorage.getItem(sessionKey.value)
       if (!raw) return null
       const data = JSON.parse(raw)
       if (!data || typeof data.currentIdx !== 'number') return null
       return {
         currentIdx: data.currentIdx,
         answeredCount: Object.keys(data.answers || {}).length,
+        examType: data.examType || 'review',
         timestamp: data.timestamp
       }
     } catch { return null }
@@ -85,55 +114,73 @@ export function useExamLogic(currentSubject) {
     return a
   }
 
-  /** 儲存全部檢視進度到 localStorage */
-  function saveReviewProgress() {
-    if (examType.value !== 'review') return
+  /**
+   * 嘗試從 localStorage 恢復進行中的考試
+   * @returns {boolean} 是否成功恢復
+   */
+  function tryRestoreSession() {
     try {
-      localStorage.setItem(reviewStorageKey.value, JSON.stringify({
-        currentIdx: currentIdx.value,
-        answers: answers.value,
-        timestamp: Date.now()
-      }))
-    } catch { /* 靜默忽略 */ }
+      const raw = localStorage.getItem(sessionKey.value)
+      if (!raw) return false
+      const data = JSON.parse(raw)
+      if (!data || typeof data.currentIdx !== 'number') return false
+
+      const savedType = data.examType || 'review'
+      examType.value = savedType
+
+      if (savedType === 'review') {
+        // 全部檢視：題目就是全部題目（按原始順序）
+        quizQuestions.value = [...allQuestions.value]
+      } else {
+        // instant / full：用儲存的題目 id 還原洗牌順序
+        const ids = data.questionIds || []
+        if (ids.length === 0) return false
+        const idMap = new Map()
+        for (const q of allQuestions.value) {
+          idMap.set(q.id, q)
+        }
+        const restored = []
+        for (const id of ids) {
+          const q = idMap.get(id)
+          if (q) restored.push(q)
+        }
+        if (restored.length === 0) return false
+        quizQuestions.value = restored
+      }
+
+      answers.value = data.answers || {}
+      currentIdx.value = Math.min(data.currentIdx, quizQuestions.value.length - 1)
+      instantRevealed.value = false
+      phase.value = 'answering'
+      return true
+    } catch { return false }
   }
 
-  /** 清除全部檢視進度 */
-  function clearReviewProgress() {
-    try { localStorage.removeItem(reviewStorageKey.value) } catch {}
-  }
-
-  /** 開始考試 */
+  /** 開始考試（如果有同模式的已存進度就恢復，否則重新開始） */
   function startExam() {
+    const saved = savedProgress.value
+    // 有同模式的進度 → 恢復
+    if (saved && saved.examType === examType.value) {
+      if (tryRestoreSession()) return
+    }
+    // 全新開始
     if (examType.value === 'review') {
       quizQuestions.value = [...allQuestions.value]
-      const saved = savedProgress.value
-      if (saved) {
-        try {
-          const raw = JSON.parse(localStorage.getItem(reviewStorageKey.value))
-          answers.value = raw.answers || {}
-          currentIdx.value = raw.currentIdx || 0
-        } catch {
-          answers.value = {}
-          currentIdx.value = 0
-        }
-      } else {
-        answers.value = {}
-        currentIdx.value = 0
-      }
     } else {
       const shuffled = shuffle(allQuestions.value)
       quizQuestions.value = shuffled.slice(0, quizCount.value)
-      answers.value = {}
-      currentIdx.value = 0
     }
+    answers.value = {}
+    currentIdx.value = 0
     instantRevealed.value = false
     phase.value = 'answering'
+    saveSession()
   }
 
   /** 選擇答案 */
   function onAnswer(label) {
     answers.value[currentIdx.value] = label
-    saveReviewProgress()
+    saveSession()
   }
 
   /** 顯示答案 */
@@ -146,18 +193,18 @@ export function useExamLogic(currentSubject) {
   function nextInstant() {
     currentIdx.value++
     instantRevealed.value = false
-    saveReviewProgress()
+    saveSession()
   }
 
   /** 全部檢視模式：暫停 */
   function pauseReview() {
-    saveReviewProgress()
+    saveSession()
     phase.value = 'setup'
   }
 
   /** 完成考試 */
   function finishExam() {
-    if (examType.value === 'review') clearReviewProgress()
+    clearSession()
     phase.value = 'result'
   }
 
@@ -167,6 +214,6 @@ export function useExamLogic(currentSubject) {
     allQuestions, quizCount, answeredCount, progressPct,
     examResults, savedProgress,
     startExam, onAnswer, revealAnswer, nextInstant,
-    pauseReview, finishExam
+    pauseReview, finishExam, tryRestoreSession
   }
 }

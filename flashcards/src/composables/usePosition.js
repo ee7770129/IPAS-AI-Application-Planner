@@ -20,7 +20,7 @@ export function usePosition() {
 
   /**
    * 將目前位置存入 localStorage
-   * @param {Object} pos - { level, subjectIdx, topicIdx, cardIdx }
+   * @param {Object} pos - { level, subjectIdx, topicIdx, cardIdx, mode }
    */
   function savePosition(pos) {
     if (isRestoring.value) return
@@ -31,7 +31,7 @@ export function usePosition() {
 
   /**
    * 從 localStorage 還原位置（含邊界驗證）
-   * @param {Object} refs - { level, subjectIdx, topicIdx, cardIdx } 的 ref 物件
+   * @param {Object} refs - { level, subjectIdx, topicIdx, cardIdx, mode } 的 ref 物件
    * @param {Function} doShuffle - 全部隨機模式的洗牌函式
    * @param {Function} getShuffledCards - 取得洗牌後卡片的函式
    */
@@ -46,6 +46,12 @@ export function usePosition() {
       isRestoring.value = true
 
       refs.level.value = saved.level
+      if (saved.mode && refs.mode) {
+        // mode 只允許 flashcard / exam，其他值忽略
+        if (saved.mode === 'flashcard' || saved.mode === 'exam') {
+          refs.mode.value = saved.mode
+        }
+      }
       const lv = DATA[saved.level]
 
       /* 驗證科目索引 */

@@ -26,7 +26,10 @@
         >
           <span class="material-icons">visibility</span>
           <span class="mode-name">單題模式</span>
-          <span class="mode-desc">隨機 {{ quizCount }} 題，做一題看一題</span>
+          <span v-if="savedProgress && savedProgress.examType === 'instant'" class="mode-desc mode-resume">
+            繼續（已做 {{ savedProgress.answeredCount }}/{{ quizCount }} 題）
+          </span>
+          <span v-else class="mode-desc">隨機 {{ quizCount }} 題，做一題看一題</span>
         </button>
         <button
           class="mode-option"
@@ -36,7 +39,10 @@
         >
           <span class="material-icons">grading</span>
           <span class="mode-name">整卷模式</span>
-          <span class="mode-desc">隨機 {{ quizCount }} 題，做完再檢討</span>
+          <span v-if="savedProgress && savedProgress.examType === 'full'" class="mode-desc mode-resume">
+            繼續（已做 {{ savedProgress.answeredCount }}/{{ quizCount }} 題）
+          </span>
+          <span v-else class="mode-desc">隨機 {{ quizCount }} 題，做完再檢討</span>
         </button>
         <button
           class="mode-option"
@@ -46,7 +52,7 @@
         >
           <span class="material-icons">playlist_play</span>
           <span class="mode-name">全部檢視</span>
-          <span v-if="savedProgress" class="mode-desc mode-resume">
+          <span v-if="savedProgress && savedProgress.examType === 'review'" class="mode-desc mode-resume">
             繼續（已做 {{ savedProgress.answeredCount }}/{{ totalCount }} 題）
           </span>
           <span v-else class="mode-desc">全部 {{ totalCount }} 題，可暫停繼續</span>
@@ -54,8 +60,8 @@
       </div>
 
       <button class="start-btn" @click="$emit('start')" type="button">
-        <span class="material-icons">{{ modelValue === 'review' && savedProgress ? 'play_circle' : 'play_arrow' }}</span>
-        {{ modelValue === 'review' && savedProgress ? '繼續作答' : '開始作答' }}
+        <span class="material-icons">{{ savedProgress && savedProgress.examType === modelValue ? 'play_circle' : 'play_arrow' }}</span>
+        {{ savedProgress && savedProgress.examType === modelValue ? '繼續作答' : '開始作答' }}
       </button>
     </div>
   </div>

@@ -241,6 +241,7 @@ function goCard(idx) {
 function getCurrentPosition() {
   return {
     level: level.value,
+    mode: mode.value,
     subjectIdx: subjectIdx.value,
     topicIdx: topicIdx.value,
     cardIdx: cardIdx.value
@@ -278,13 +279,19 @@ watch(cardIdx, () => {
   savePosition(getCurrentPosition())
 })
 
+/* 切換模式時儲存位置 */
+watch(mode, () => {
+  if (isRestoring.value) return
+  savePosition(getCurrentPosition())
+})
+
 /* 鍵盤與觸控事件 */
 useInputEvents({ flashCardRef, cardIdx, goCard })
 
 /* 掛載時還原位置 */
 onMounted(() => {
   restorePosition(
-    { level, subjectIdx, topicIdx, cardIdx },
+    { level, subjectIdx, topicIdx, cardIdx, mode },
     doShuffle,
     () => shuffledCards.value
   )

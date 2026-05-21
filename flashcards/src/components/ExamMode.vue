@@ -193,12 +193,14 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import QuestionCard from './QuestionCard.vue'
 import ExamResult from './ExamResult.vue'
 import ExamSetup from './ExamSetup.vue'
 import ExamDrawer from './ExamDrawer.vue'
 import { useExamLogic } from '../composables/useExamLogic.js'
+
+const SUBJECT_KEY = 'ipas-exam-subject'
 
 const props = defineProps({
   /** EXAM_DATA[level].subjects（全部科目） */
@@ -208,6 +210,7 @@ const props = defineProps({
 /* 狀態 */
 const subjectIdx = ref(0)
 const drawerOpen = ref(false)
+const isRestoring = ref(false)
 
 /** 判斷科目是否有考題 */
 function subjectHasExams(subj) {
@@ -224,7 +227,7 @@ const {
   allQuestions, quizCount, answeredCount, progressPct,
   examResults, savedProgress,
   startExam, onAnswer, revealAnswer, nextInstant,
-  pauseReview, finishExam
+  pauseReview, finishExam, tryRestoreSession
 } = useExamLogic(currentSubject)
 
 /** 從抽屜跳轉到指定題目 */
@@ -233,9 +236,34 @@ function onDrawerGo(idx) {
   instantRevealed.value = false
 }
 
-/** 切換科目時重設 */
+/** 切換科目時重設（還原期間不觸發） */
 watch(subjectIdx, () => {
+  if (isRestoring.value) return
   phase.value = 'setup'
+  // 記住目前選的科目
+  try { localStorage.setItem(SUBJECT_KEY, String(subjectIdx.value)) } catch {}
+})
+
+/** 掛載時還原科目選擇，並嘗試恢復進行中的考試 */
+onMounted(() => {
+  try {
+    const saved = localStorage.getItem(SUBJECT_KEY)
+    if (saved != null) {
+      const idx = Number(saved)
+      if (idx >= 0 && idx < props.subjects.length) {
+        isRestoring.value = true
+        subjectIdx.value = idx
+        isRestoring.value = false
+      }
+    }
+  } catch {}
+  // 嘗試恢復進行中的考試（直接跳回作答畫面）
+  if (!tryRestoreSession()) {
+    // 沒有進行中的考試，但有暫停記錄時自動選到對應模式
+    if (savedProgress.value) {
+      examType.value = savedProgress.value.examType
+    }
+  }
 })
 </script>
 
