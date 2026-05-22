@@ -62,6 +62,106 @@ export default {
           { label: '考試重點', icon: 'school', content: '常考：\n- 「確保合規性與可追溯性」→ 資料版本管理+操作紀錄\n- 「持續符合法規與道德標準」→ AI 治理框架+跨部門監管\n- 「醫療資料訓練 AI」→ 取得授權+病患同意+隱私強化' }
         ]
       }
+    },
+    {
+      number: 6,
+      title: 'GDPR 重點',
+      engTitle: 'General Data Protection Regulation',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'gavel',
+            content: '歐盟的個人資料保護法規（2018 年實施）。全球最嚴格的隱私法規，違規罰款最高可達全球營收的 4% 或 2000 萬歐元。'
+          },
+          {
+            label: '核心權利',
+            icon: 'person',
+            code: '知情權 → 知道資料怎麼被使用\n存取權 → 可要求查看自己的資料\n更正權 → 可要求修正錯誤資料\n刪除權（被遺忘權）→ 可要求刪除資料\n可攜權 → 可要求資料轉移到其他服務\n反對權 → 可拒絕資料被用於特定目的\n\n對 AI 的影響：\n  自動化決策需告知使用者\n  使用者有權要求人工審查\n  訓練資料需有合法基礎'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「歐盟個資保護」→ GDPR。\n「被遺忘權」= 使用者可要求刪除所有個人資料。\n\n對 AI 開發的要求：\n- 訓練資料需合法取得\n- 模型不能記住個資（差分隱私）\n- 自動化決策需可解釋（XAI）'
+          }
+        ]
+      }
+    },
+    {
+      number: 7,
+      title: 'K-匿名 / L-多樣性 / T-接近性',
+      engTitle: 'K-anonymity / L-diversity / T-closeness',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '三層隱私保護',
+            icon: 'security',
+            code: 'K-匿名（K-anonymity）：\n  確保每個人至少跟 K-1 個人「長得一樣」\n  → 泛化：年齡 25 → 20-30\n  → 抑制：刪除太獨特的紀錄\n  → 弱點：如果一群人都得同一種病，還是能推出\n\nL-多樣性（L-diversity）：\n  每個等價類中，敏感屬性至少有 L 種不同值\n  → 解決 K-匿名的弱點\n  → 弱點：各值分佈可能不均\n\nT-接近性（T-closeness）：\n  每個等價類中敏感屬性的分佈\n  跟整體分佈的差距不超過 T\n  → 最嚴格的保護'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「至少 K 個人無法區分」→ K-匿名。\n「敏感屬性有多樣性」→ L-多樣性。\n「分佈接近整體」→ T-接近性。\n\n保護強度：K-匿名 < L-多樣性 < T-接近性。\n\n這些都是「發佈資料集」時的隱私保護，跟差分隱私（模型訓練時）不同。'
+          }
+        ]
+      }
+    },
+    {
+      number: 8,
+      title: '聯邦式學習的隱私應用',
+      engTitle: 'Federated Learning for Privacy',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '為什麼能保護隱私',
+            icon: 'shield',
+            content: '資料不出門：每個機構的原始資料留在本地，只有模型參數（梯度）會傳出去。中央伺服器看不到任何一筆原始資料。'
+          },
+          {
+            label: '進階隱私保護',
+            icon: 'build',
+            code: '基本聯邦學習：\n  只傳參數/梯度，不傳資料\n  → 但梯度可能被逆推原始資料！\n\n+ 差分隱私：\n  在梯度上加噪音再傳\n  → 無法從梯度逆推原始資料\n\n+ 安全聚合：\n  加密梯度，伺服器只能看到聚合結果\n  → 連個別機構的梯度都看不到\n\n+ 同態加密：\n  在加密狀態下聚合\n  → 最強保護但計算成本最高'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「多醫院合作訓練 + 資料不共享」→ 聯邦式學習。\n「聯邦學習 + 防梯度攻擊」→ 加差分隱私。\n\n應用場景：跨醫院 AI 診斷、跨銀行風控模型、手機鍵盤預測（Google Gboard）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 9,
+      title: '安全多方計算',
+      engTitle: 'Secure Multi-party Computation, MPC',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'enhanced_encryption',
+            content: '多方共同計算一個函數的結果，但沒有任何一方能看到其他方的原始輸入。每方只知道自己的輸入和最終結果。'
+          },
+          {
+            label: '範例',
+            icon: 'lightbulb',
+            code: '情境：三個人想知道平均薪水\n  但不想讓別人知道自己的薪水\n\nMPC 做法：\n  每個人把薪水拆成多個「秘密分享」\n  分發給其他人\n  各方在秘密分享上計算\n  最後合併得到平均薪水\n  → 沒有人看到別人的原始薪水'
+          },
+          {
+            label: '跟其他隱私技術比較',
+            icon: 'compare',
+            code: '差分隱私 → 在輸出加噪音\n同態加密 → 在密文上計算\n聯邦學習 → 資料不出門，傳參數\nMPC → 拆分輸入，多方協作計算\n\n保護對象不同：\n  差分隱私 → 保護個體不被識別\n  MPC → 保護各方的輸入不被洩漏'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「多方合作計算 + 各方輸入保密」→ MPC。\n\n與聯邦學習的差別：\n- 聯邦學習 → 各方分別訓練，傳參數聚合\n- MPC → 各方共同計算，不洩漏任何輸入\n\n應用：隱私保護的聯合風控、薪資比較、選舉計票。'
+          }
+        ]
+      }
     }
   ]
 }

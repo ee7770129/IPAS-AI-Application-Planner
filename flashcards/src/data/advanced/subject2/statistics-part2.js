@@ -246,5 +246,150 @@ export default [
           }
         ]
       }
+    },
+    {
+      number: 23,
+      title: 'ANOVA 變異數分析',
+      engTitle: 'Analysis of Variance',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'functions',
+            content: '比較「三組以上」的平均值是否有顯著差異。t 檢定只能比兩組，ANOVA 可以比多組。核心原理：比較「組間變異」和「組內變異」的大小。'
+          },
+          {
+            label: '怎麼判斷',
+            icon: 'build',
+            code: 'F 統計量 = 組間變異 / 組內變異\n\n如果各組平均值差不多：\n  組間變異小 → F 值小 → 不顯著\n\n如果各組平均值差很多：\n  組間變異大 → F 值大 → 顯著\n\n判斷：p < 0.05 → 至少有一組不同\n但不知道哪一組！\n→ 需要事後檢定（Post-hoc Test）'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「比較三組以上的平均值」→ ANOVA（不是多次 t 檢定）。\n\n多次 t 檢定會讓型一錯誤膨脹。\n\n常用事後檢定：Tukey HSD、Bonferroni 校正。\n\nt 檢定 → 兩組。ANOVA → 三組以上。卡方 → 分佈。'
+          }
+        ]
+      }
+    },
+    {
+      number: 24,
+      title: '卡方檢定',
+      engTitle: 'Chi-Square Test',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'grid_on',
+            content: '用來檢定「類別型資料」的分佈是否符合預期，或兩個類別變數之間是否有關聯。跟 t 檢定不同，t 檢定比較的是平均數，卡方比較的是「出現次數/比例」。'
+          },
+          {
+            label: '兩種用途',
+            icon: 'compare',
+            code: '適合度檢定（Goodness of Fit）：\n  觀察的分佈 vs 預期的分佈\n  例：骰子六面出現次數是否均勻？\n\n獨立性檢定（Independence）：\n  兩個類別變數是否有關聯\n  例：性別跟購買偏好有沒有關？\n\n  都用列聯表（交叉表）進行'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「類別資料的分佈是否一致」→ 卡方適合度檢定。\n「兩個類別變數是否獨立」→ 卡方獨立性檢定。\n\n不是 t 檢定（t 比較平均值）。\n不是 ANOVA（ANOVA 也是比較平均值）。\n不是相關係數（相關係數看連續變數）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 25,
+      title: '貝氏定理',
+      engTitle: 'Bayes\' Theorem',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'psychology',
+            content: '在已知「新證據」的情況下，更新原來的信念（機率）。核心公式：P(A|B) = P(B|A) * P(A) / P(B)。'
+          },
+          {
+            label: '白話範例',
+            icon: 'lightbulb',
+            code: '情境：1% 的人有病，檢測準確率 99%\n\n已知：\n  P(有病) = 0.01（先驗機率）\n  P(陽性|有病) = 0.99\n  P(陽性|沒病) = 0.01（偽陽性）\n\nP(有病|陽性) = ?\n  = 0.99 * 0.01 / (0.99*0.01 + 0.01*0.99)\n  = 0.0099 / 0.0198\n  = 50%\n\n即使檢測 99% 準確，陽性也只有 50% 真的有病！\n→ 因為「有病」的先驗機率太低了'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '三個關鍵機率：\n- 先驗機率 P(A) → 看到證據前的信念\n- 似然 P(B|A) → 假設 A 成立，看到 B 的機率\n- 後驗機率 P(A|B) → 看到證據後更新的信念\n\n「低盛行率 + 高準確率檢測」→ 陽性預測值可能很低（貝氏定理的經典應用）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 26,
+      title: '條件機率',
+      engTitle: 'Conditional Probability',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'functions',
+            content: '在已知事件 B 發生的前提下，事件 A 發生的機率。寫作 P(A|B)，讀作「在 B 的條件下 A 的機率」。'
+          },
+          {
+            label: '公式與範例',
+            icon: 'calculate',
+            code: 'P(A|B) = P(A 且 B) / P(B)\n\n例：一副撲克牌\n  P(紅心|紅色) = ?\n  P(紅心 且 紅色) = 13/52（紅心本身就是紅色）\n  P(紅色) = 26/52\n  P(紅心|紅色) = (13/52) / (26/52) = 1/2\n\n獨立事件：\n  P(A|B) = P(A) → B 的發生不影響 A\n  例：丟兩次硬幣，第一次正面不影響第二次'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: 'P(A|B) ≠ P(B|A)（常見混淆！）\n\n例：P(下雨|烏雲) ≠ P(烏雲|下雨)\n有烏雲不一定下雨，但下雨幾乎都有烏雲。\n\n條件機率是貝氏定理、朴素貝氏分類器的基礎。'
+          }
+        ]
+      }
+    },
+    {
+      number: 27,
+      title: '共變異數 vs 相關係數',
+      engTitle: 'Covariance vs Correlation',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '兩者差別',
+            icon: 'compare',
+            code: '共變異數（Covariance）：\n  衡量兩個變數是否「一起變大或一起變小」\n  Cov > 0 → 正向關係\n  Cov < 0 → 反向關係\n  Cov = 0 → 無線性關係\n  缺點：沒有固定範圍，受量級影響\n\n相關係數（Correlation）：\n  = 共變異數 / (標準差A * 標準差B)\n  範圍固定在 [-1, +1]\n  r = +1 → 完美正相關\n  r = -1 → 完美負相關\n  r = 0  → 無線性關係\n  → 就是「標準化」的共變異數'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「衡量線性關係的強度和方向」→ 相關係數（而非共變異數）。\n\n因為相關係數有固定範圍 [-1,1]，可以比較不同變數對之間的關係強度。共變異數沒有固定範圍，無法直接比較。\n\n注意：只能捕捉線性關係，非線性關係可能 r=0 但其實有關。'
+          }
+        ]
+      }
+    },
+    {
+      number: 28,
+      title: '型一錯誤 vs 型二錯誤',
+      engTitle: 'Type I Error vs Type II Error',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '兩種錯誤',
+            icon: 'error',
+            code: '型一錯誤（False Positive）：\n  H0 是對的，但你拒絕了它\n  = 沒病說有病 = 誤報\n  機率 = α（顯著水準，通常 0.05）\n\n型二錯誤（False Negative）：\n  H0 是錯的，但你沒拒絕它\n  = 有病說沒病 = 漏報\n  機率 = β\n\n檢定力（Power）= 1 - β\n  = 正確拒絕錯誤 H0 的能力'
+          },
+          {
+            label: '跟 ML 的連結',
+            icon: 'link',
+            code: '假設檢定          機器學習\n型一錯誤(FP)  =  假陽性（沒病判有病）\n型二錯誤(FN)  =  假陰性（有病判沒病）\nα             ≈  1 - Precision\nβ             ≈  1 - Recall\n檢定力         ≈  Recall（TPR）'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「型一錯誤」= 拒絕了正確的 H0 = 假陽性。\n「型二錯誤」= 沒拒絕錯誤的 H0 = 假陰性。\n\nα 和 β 是蹺蹺板：\n降低 α（更嚴格）→ β 會上升（更容易漏）。\n\n「降低型一錯誤」→ 提高顯著水準門檻（如 α=0.01）。'
+          }
+        ]
+      }
     }
 ]

@@ -81,6 +81,106 @@ export default {
           }
         ]
       }
+    },
+    {
+      number: 4,
+      title: 'VQA 視覺問答',
+      engTitle: 'Visual Question Answering',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'question_answer',
+            content: '給模型一張圖片和一個自然語言問題，模型要根據圖片內容回答。是典型的多模態任務，同時需要「看懂圖」和「理解問題」。\n\n例：圖片是一個公園 + 問題「有幾個人在跑步？」→ 模型回答「3」。'
+          },
+          {
+            label: '技術架構',
+            icon: 'build',
+            code: '影像編碼器（CNN / ViT）\n  → 提取圖片特徵\n\n文字編碼器（BERT / LSTM）\n  → 理解問題語意\n\n融合模組（Attention / Cross-attention）\n  → 讓文字「關注」圖片的相關區域\n\n答案生成\n  → 分類（從候選答案中選）\n  → 或生成式（直接生成文字答案）'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「圖片+自然語言問題→回答」→ VQA。\n\nVQA 是多模態 AI 的經典應用，需要影像理解 + 語言理解 + 推理能力。\n\n與 Image Captioning 的差別：\n- VQA = 針對特定問題回答\n- Captioning = 自動描述整張圖片'
+          }
+        ]
+      }
+    },
+    {
+      number: 5,
+      title: 'Image Captioning 影像描述',
+      engTitle: 'Image Captioning',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'image',
+            content: '讓模型自動為一張圖片生成一段自然語言描述。例如：看到一張海灘照片，模型輸出「一個女孩在沙灘上放風箏」。'
+          },
+          {
+            label: '怎麼做',
+            icon: 'build',
+            code: '經典方法：Encoder-Decoder\n  CNN（編碼器）→ 提取圖片特徵向量\n  RNN/LSTM（解碼器）→ 逐字生成描述\n\n現代方法：\n  ViT + Transformer Decoder\n  或 BLIP / BLIP-2 等專用多模態模型\n\n評估指標：\n  BLEU → 精確率導向（生成詞有多少對）\n  CIDEr → 共識導向（跟多個人工描述的共識度）\n  METEOR → 同時考慮同義詞'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「自動為圖片生成文字描述」→ Image Captioning。\n\n屬於多模態任務（影像→文字）。\n\n跟 OCR 的差別：\n- OCR = 辨識圖片中的「文字」\n- Captioning = 描述圖片中的「場景」'
+          }
+        ]
+      }
+    },
+    {
+      number: 6,
+      title: 'DALL-E / 文生圖技術',
+      engTitle: 'Text-to-Image Generation',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'brush',
+            content: '輸入一段文字描述，AI 自動生成對應的圖片。代表技術包括 DALL-E（OpenAI）、Stable Diffusion（Stability AI）、Midjourney。'
+          },
+          {
+            label: '技術原理',
+            icon: 'build',
+            code: 'DALL-E 2/3：\n  文字 → CLIP 文字編碼器 → 語意向量\n  → Diffusion 模型從噪音逐步去噪生成圖片\n  → 文字引導去噪方向\n\nStable Diffusion：\n  在「潛在空間」做去噪（不是像素空間）\n  → 計算成本大幅降低\n  → 開源，可本地運行\n\nMidjourney：\n  商業化產品，強調藝術風格\n  → 偏向美學呈現'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '文生圖 = 多模態生成式 AI 的核心應用。\n\n技術基礎：CLIP（文圖對齊） + Diffusion（圖像生成）。\n\n風險：Deepfake、著作權、有害內容生成。\n\n「在潛在空間做去噪」→ Stable Diffusion（比像素空間快）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 7,
+      title: '跨模態檢索',
+      engTitle: 'Cross-modal Retrieval',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'search',
+            content: '用一種模態的資料去搜尋另一種模態的結果。例如：用文字搜圖片（以文搜圖）、用圖片搜文字（以圖搜文）、用哼歌搜歌曲。'
+          },
+          {
+            label: '技術原理',
+            icon: 'build',
+            code: '核心：共同嵌入空間\n  文字和圖片映射到同一個向量空間\n  → 語意相近的文字和圖片，向量距離近\n\n代表模型：CLIP\n  對比學習訓練：\n    配對的圖文 → 向量拉近\n    不配對的圖文 → 向量推遠\n\n檢索流程：\n  查詢文字 → 編碼成向量\n  → 在圖片向量庫中找最近的\n  → 回傳最相似的圖片'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「以文搜圖 / 以圖搜文」→ 跨模態檢索。\n核心技術 → 共同嵌入空間 + 對比學習。\n\n與 RAG 的關係：RAG 檢索的是文字文件，跨模態檢索可以檢索圖片、影片等多種模態。'
+          }
+        ]
+      }
     }
   ]
 }

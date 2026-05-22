@@ -290,6 +290,121 @@ export default {
           }
         ]
       }
+    },
+    {
+      number: 17,
+      title: '缺失值填補方法',
+      engTitle: 'Missing Value Imputation',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '五種方法',
+            icon: 'healing',
+            code: '1. 刪除（Deletion）\n   整列或整欄刪掉 → 最簡單但浪費資料\n\n2. 平均/中位數填補\n   數值型用平均或中位數填 → 簡單但忽略分佈\n   有偏態/極端值 → 用中位數\n\n3. 眾數填補\n   類別型用出現最多的值填 → 簡單\n\n4. KNN 填補\n   找最相似的 K 個樣本，用其值的平均填\n   → 效果好但計算量大\n\n5. 多重填補（Multiple Imputation）\n   產生多組填補值 → 取平均\n   → 最嚴謹，考慮了填補的不確定性'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「資料有偏態 + 缺失值」→ 用中位數填補（不是平均）。\n「類別型缺失」→ 眾數填補。\n「最精確的填補」→ KNN 或多重填補。\n\n注意：填補前要判斷缺失是「隨機」還是「系統性」。系統性缺失不能隨便填。'
+          }
+        ]
+      }
+    },
+    {
+      number: 18,
+      title: '離群值偵測方法',
+      engTitle: 'Outlier Detection Methods',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '四種方法',
+            icon: 'report_problem',
+            code: '1. Z-score 法\n   |Z| > 3 → 離群值\n   → 假設常態分佈，受偏態影響\n\n2. IQR 法（箱型圖）\n   下界 = Q1 - 1.5*IQR\n   上界 = Q3 + 1.5*IQR\n   超出範圍 → 離群值\n   → 不受分佈假設限制\n\n3. Isolation Forest\n   用隨機森林隔離樣本\n   離群值更容易被隔離（切割次數少）\n   → 適合高維資料\n\n4. LOF（Local Outlier Factor）\n   比較每個點跟鄰居的密度\n   密度比鄰居低很多 → 離群值\n   → 適合密度不均的資料'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「簡單快速的離群值偵測」→ IQR 或 Z-score。\n「高維資料的離群值偵測」→ Isolation Forest。\n\n發現離群值後的處理：\n- 刪除（可能丟失資訊）\n- 截尾（Winsorize，用上下界取代）\n- 保留但標記（讓模型自己處理）'
+          }
+        ]
+      }
+    },
+    {
+      number: 19,
+      title: '特徵重要性',
+      engTitle: 'Feature Importance',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'sort',
+            content: '衡量每個特徵對模型預測結果的貢獻度。幫助理解「模型覺得什麼最重要」，也可用於特徵選擇。'
+          },
+          {
+            label: '常見方法',
+            icon: 'build',
+            code: '樹模型內建（Gini / Information Gain）：\n  隨機森林、XGBoost 直接提供\n  → 最方便，但只適用於樹模型\n\nPermutation Importance：\n  隨機打亂一個特徵的值\n  → 效能下降越多 = 越重要\n  → 適用任何模型\n\nSHAP（博弈論方法）：\n  計算每個特徵對每筆預測的貢獻\n  → 全局 + 局部解釋\n  → 最精確但計算量大'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「找出最重要的特徵」→ 特徵重要性分析。\n「模型可解釋性」→ SHAP / LIME。\n\n特徵重要性 ≠ 因果關係。高重要性只代表相關性強，不代表是原因。'
+          }
+        ]
+      }
+    },
+    {
+      number: 20,
+      title: '維度災難',
+      engTitle: 'Curse of Dimensionality',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'all_out',
+            content: '當特徵維度很高時，資料點之間的距離會變得越來越接近（距離趨同），導致基於距離的演算法（KNN、DBSCAN、K-means）效能大幅下降。'
+          },
+          {
+            label: '為什麼',
+            icon: 'lightbulb',
+            code: '低維（2D）：近的很近，遠的很遠\n  → 距離有區分度\n\n高維（500D）：所有點的距離都差不多\n  → 距離失去意義\n\n需要的資料量隨維度指數成長：\n  2D → 100 筆可能就夠\n  10D → 可能需要 10^10 筆\n  → 現實中不可能有這麼多資料'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「DBSCAN 高維全部判為雜訊」→ 維度災難導致距離趨同。\n「KNN 高維效果差」→ 維度災難。\n\n解法：PCA / UMAP / t-SNE 降維後再做。\n\n不是「模型太簡單」。不是「資料太少」（資料少是結果不是原因）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 21,
+      title: 'ETL 流程',
+      engTitle: 'Extract, Transform, Load',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '三個步驟',
+            icon: 'swap_horiz',
+            code: 'Extract（擷取）：\n  從各種來源抽取原始資料\n  來源：資料庫、API、CSV、日誌、IoT\n\nTransform（轉換）：\n  清洗、格式統一、特徵計算\n  例：日期格式統一、缺失值處理、型別轉換\n\nLoad（載入）：\n  載入到目標系統\n  目標：資料倉儲、資料湖、Feature Store'
+          },
+          {
+            label: 'ETL vs ELT',
+            icon: 'compare',
+            content: 'ETL：先轉換再載入（傳統方式）\n→ 載入前資料已整理好\n\nELT：先載入再轉換（現代方式）\n→ 先全部丟進資料湖，需要時再轉換\n→ 雲端時代更常見（儲存便宜、運算彈性大）'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「資料從多個來源整合到統一平台」→ ETL。\n「先存原始資料再處理」→ ELT + 資料湖。\n\nETL 是大數據管線的基礎流程。\n常見工具：Apache Airflow、Spark、dbt。'
+          }
+        ]
+      }
     }
   ]
 }

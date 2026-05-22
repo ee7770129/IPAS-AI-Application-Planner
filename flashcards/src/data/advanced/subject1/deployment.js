@@ -297,6 +297,126 @@ export default {
           }
         ]
       }
+    },
+    {
+      number: 13,
+      title: 'A/B 測試',
+      engTitle: 'A/B Testing',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'science',
+            content: '同時部署兩個版本（A 版和 B 版），隨機把使用者分成兩組，各用一個版本，比較哪個版本的效果更好。是最嚴謹的線上實驗方法。'
+          },
+          {
+            label: '在 AI 中怎麼用',
+            icon: 'build',
+            code: '場景：上線新的推薦模型\n\nA 組（對照組）→ 用舊模型\nB 組（實驗組）→ 用新模型\n\n隨機分配 50%/50% 的流量\n持續觀察 1-2 週\n\n比較指標：\n  點擊率、轉換率、停留時間\n  用統計檢定判斷差異是否顯著'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「驗證新模型是否比舊模型好」→ A/B 測試。\n「隨機分組 + 對照組 + 統計檢定」→ A/B 測試的核心。\n\n與 POC 的差別：\n- POC = 導入前驗證可行性\n- A/B 測試 = 上線後驗證效果\n\n注意：測試期間要足夠長，避免「新奇效應」。'
+          }
+        ]
+      }
+    },
+    {
+      number: 14,
+      title: 'Canary 部署',
+      engTitle: 'Canary Deployment',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'pest_control',
+            content: '先把新版本部署到一小部分流量（如 5%），觀察是否正常，沒問題再逐步擴大到全部流量。名稱來自「礦坑裡的金絲雀」-- 先讓少量使用者試水溫。'
+          },
+          {
+            label: '跟其他部署的差別',
+            icon: 'compare',
+            code: 'Canary 部署：\n  5% → 20% → 50% → 100% 逐步擴大\n  新舊版本同時運行\n  → 風險最低，但部署時間最長\n\n藍綠部署（Blue-Green）：\n  兩套完整環境（藍=舊、綠=新）\n  一次性切換全部流量\n  → 切換快，但需要雙倍資源\n\n滾動更新（Rolling Update）：\n  逐台機器更新\n  → Kubernetes 預設方式'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「最小化上線風險 + 逐步擴大」→ Canary 部署。\n「一次性切換 + 快速回滾」→ 藍綠部署。\n\nCanary vs A/B 測試：\n- Canary = 新版本的安全上線策略\n- A/B 測試 = 比較兩個版本的效果\n（可以搭配使用）'
+          }
+        ]
+      }
+    },
+    {
+      number: 15,
+      title: '模型壓縮技術',
+      engTitle: 'Model Compression',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '三大壓縮方法',
+            icon: 'compress',
+            code: '剪枝（Pruning）：\n  移除不重要的神經元或連接\n  → 模型變小、推論變快\n  → 結構化剪枝 vs 非結構化剪枝\n\n量化（Quantization）：\n  降低參數精度（FP32 → INT8）\n  → 模型大小減少 4 倍\n  → 推論速度提升 2-4 倍\n  → 精度損失很小\n\n知識蒸餾（Knowledge Distillation）：\n  大模型（Teacher）教小模型（Student）\n  → 小模型學大模型的「軟標籤」\n  → 小模型效果接近大模型\n  → DistilBERT = BERT 蒸餾版（小 40%、快 60%）'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「邊緣裝置部署」→ 模型壓縮（量化 + 剪枝）。\n「用小模型達到大模型效果」→ 知識蒸餾。\n「降低推論延遲」→ 量化最直接有效。\n\n三者可以組合使用：先蒸餾 → 再剪枝 → 最後量化。'
+          }
+        ]
+      }
+    },
+    {
+      number: 16,
+      title: 'Feature Store 特徵庫',
+      engTitle: 'Feature Store',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'inventory_2',
+            content: '集中管理和儲存機器學習特徵的平台。讓不同團隊、不同模型可以共用同一套已計算好的特徵，避免重複計算和特徵不一致。'
+          },
+          {
+            label: '解決什麼問題',
+            icon: 'build',
+            code: '沒有 Feature Store：\n  團隊 A 自己算特徵 → 存在自己的資料庫\n  團隊 B 也算同樣的特徵 → 邏輯不同\n  → 重複工作 + 特徵不一致\n\n有 Feature Store：\n  統一計算 + 統一儲存 + 統一版本管理\n  → 訓練和推論用同一套特徵\n  → 避免 Train-Serve Skew\n\n常見工具：Feast、Tecton、SageMaker Feature Store'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「特徵重用 + 訓練/推論一致性」→ Feature Store。\n\n不是 Model Registry（那是管模型版本）。\n不是 Data Lake（那是管原始資料）。\n\nMLOps 生態中的角色：\nData Lake → Feature Store → Model Training → Model Registry → Deployment'
+          }
+        ]
+      }
+    },
+    {
+      number: 17,
+      title: '藍綠部署',
+      engTitle: 'Blue-Green Deployment',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'swap_horiz',
+            content: '維護兩套完全相同的生產環境：藍色（目前運行的舊版本）和綠色（準備上線的新版本）。新版本準備好後，一次性把流量從藍色切換到綠色。'
+          },
+          {
+            label: '優缺點',
+            icon: 'compare',
+            code: '優點：\n  切換瞬間完成（改負載平衡器指向）\n  回滾超快（切回藍色就好）\n  零停機時間\n\n缺點：\n  需要雙倍的基礎設施資源\n  兩套環境的同步維護成本高\n  一次性全量切換，風險比 Canary 大'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '部署策略比較：\n- 藍綠 → 雙環境 + 一次切換 + 快速回滾\n- Canary → 漸進式流量切換 + 風險最低\n- 滾動更新 → 逐台更新 + 不需額外資源\n\n「需要快速回滾能力」→ 藍綠部署。\n「需要最低風險上線」→ Canary 部署。'
+          }
+        ]
+      }
     }
   ]
 }

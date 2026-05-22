@@ -113,6 +113,126 @@ export default {
           }
         ]
       }
+    },
+    {
+      number: 13,
+      title: '混淆矩陣',
+      engTitle: 'Confusion Matrix',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '四個格子',
+            icon: 'grid_on',
+            code: '              預測正   預測負\n實際正    TP（真正） FN（假負）\n實際負    FP（假正） TN（真負）\n\nTP = 有病判有病（正確）\nFP = 沒病判有病（誤報）\nFN = 有病判沒病（漏報）\nTN = 沒病判沒病（正確）'
+          },
+          {
+            label: '衍生指標',
+            icon: 'functions',
+            code: 'Accuracy  = (TP+TN) / 全部\nPrecision = TP / (TP+FP)  → 預測正的有多準\nRecall    = TP / (TP+FN)  → 真正正的找到多少\nF1        = 2*P*R / (P+R) → P和R的調和平均\n\nSpecificity = TN / (TN+FP) → 真負的判對多少\nFPR = FP / (FP+TN) = 1 - Specificity'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '混淆矩陣是所有分類指標的基礎。\n\n「漏診風險高」→ 重視 Recall（降低 FN）。\n「誤報成本高」→ 重視 Precision（降低 FP）。\n「類別不平衡」→ 不看 Accuracy，看 F1。'
+          }
+        ]
+      }
+    },
+    {
+      number: 14,
+      title: '迴歸評估指標',
+      engTitle: 'Regression Metrics: RMSE, MAE, R-squared',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '三大指標',
+            icon: 'functions',
+            code: 'MAE（平均絕對誤差）：\n  每筆誤差取絕對值再平均\n  → 直觀，單位跟原始資料相同\n  → 對極端值不敏感\n\nRMSE（均方根誤差）：\n  每筆誤差平方 → 平均 → 開根號\n  → 對極端值更敏感（平方放大大誤差）\n  → 最常用的迴歸指標\n\nR-squared（決定係數）：\n  模型解釋了多少比例的變異\n  R2 = 1 → 完美擬合\n  R2 = 0 → 跟用平均值猜一樣\n  R2 < 0 → 比用平均值猜還差'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「預測連續數值的準確度」→ RMSE / MAE / R2。\n\n注意：RMSE/MAE 是「迴歸」指標，不能用在分類！\nF1/Precision/Recall 是「分類」指標，不能用在迴歸！\n\n「極端值影響大」→ RMSE > MAE。\n「模型解釋力」→ R-squared。'
+          }
+        ]
+      }
+    },
+    {
+      number: 15,
+      title: '輪廓係數',
+      engTitle: 'Silhouette Coefficient',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'bubble_chart',
+            content: '評估分群品質的指標。衡量每個點「跟自己群的凝聚度」和「跟最近鄰群的分離度」。不需要真實標籤（非監督式評估）。'
+          },
+          {
+            label: '怎麼算',
+            icon: 'calculate',
+            code: '對每個點 i：\n  a(i) = 跟同群其他點的平均距離（凝聚度）\n  b(i) = 跟最近鄰群所有點的平均距離（分離度）\n\n  s(i) = (b(i) - a(i)) / max(a(i), b(i))\n\ns = +1 → 完美分群（離自己群近、離別群遠）\ns =  0 → 在邊界（不太確定屬於哪群）\ns = -1 → 分錯了（離別群比自己群還近）\n\n整體：所有點的平均輪廓係數'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「評估分群品質（無真實標籤）」→ 輪廓係數。\n「選擇最佳 K 值」→ 比較不同 K 的輪廓係數。\n\n輪廓係數越接近 1 越好。\n\n另一個方法：手肘法（Elbow Method）看 SSE 下降的拐點。'
+          }
+        ]
+      }
+    },
+    {
+      number: 16,
+      title: 't-SNE / UMAP 降維可視化',
+      engTitle: 't-SNE / UMAP',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '兩種方法',
+            icon: 'scatter_plot',
+            code: 't-SNE：\n  保留「局部鄰居關係」的非線性降維\n  → 高維中靠近的點，降維後仍靠近\n  → 適合視覺化（降到 2D/3D）\n  → 缺點：慢、不保留全局結構\n\nUMAP：\n  t-SNE 的改良版\n  → 更快（大資料集可用）\n  → 同時保留局部和全局結構\n  → 結果更穩定'
+          },
+          {
+            label: '跟 PCA 的差別',
+            icon: 'compare',
+            content: 'PCA → 線性降維，保留最大變異方向\n  → 適合特徵壓縮和前處理\n\nt-SNE/UMAP → 非線性降維，保留鄰居關係\n  → 適合高維資料的視覺化\n  → 不適合做特徵工程（結果不可逆）'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「高維資料視覺化」→ t-SNE 或 UMAP。\n「降維做特徵工程」→ PCA（不是 t-SNE）。\n\nt-SNE/UMAP 主要用於「看」資料的結構，不用於訓練模型。\nPCA 可用於訓練前的降維。'
+          }
+        ]
+      }
+    },
+    {
+      number: 17,
+      title: '時間序列分析',
+      engTitle: 'Time Series Analysis',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '四大組成',
+            icon: 'timeline',
+            code: '趨勢（Trend）：\n  長期上升或下降的走向\n  例：GDP 逐年成長\n\n季節性（Seasonality）：\n  固定週期的重複模式\n  例：冰淇淋夏天賣得多\n\n循環（Cycle）：\n  非固定週期的波動\n  例：景氣循環（不固定幾年一次）\n\n殘差（Residual）：\n  去掉以上三者後的隨機波動'
+          },
+          {
+            label: '常見模型',
+            icon: 'build',
+            code: '統計模型：\n  ARIMA → 經典，適合穩定序列\n  SARIMA → ARIMA + 季節性\n  Prophet → Facebook 開發，自動處理季節性\n\n深度學習：\n  LSTM → 適合複雜非線性序列\n  Transformer → 長距離依賴更好'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「分解時間序列的組成」→ 趨勢 + 季節性 + 循環 + 殘差。\n「穩定性檢定」→ ADF 檢定（Augmented Dickey-Fuller）。\n「非穩定序列」→ 差分讓它穩定後再用 ARIMA。\n\n注意：時間序列的訓練/測試集不能隨機分割，要按時間順序分。'
+          }
+        ]
+      }
     }
   ]
 }

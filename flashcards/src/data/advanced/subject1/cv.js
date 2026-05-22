@@ -196,6 +196,151 @@ export default {
           }
         ]
       }
+    },
+    {
+      number: 9,
+      title: '遷移學習',
+      engTitle: 'Transfer Learning',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'school',
+            content: '把在大型資料集（如 ImageNet）上訓練好的模型，搬到自己的小型任務上繼續使用。不用從零開始訓練，大幅節省時間和資料需求。'
+          },
+          {
+            label: '怎麼做',
+            icon: 'build',
+            code: '凍結策略（三種常見做法）：\n\n1. 只換最後幾層（Feature Extraction）\n   凍結前面所有卷積層，只訓練最後的分類層\n   → 資料極少時用這招\n\n2. 微調後半段（Fine-tuning）\n   凍結前面幾層，解凍後面幾層一起訓練\n   → 資料中等時用這招\n\n3. 全部微調（Full Fine-tuning）\n   所有層都參與訓練，但用很小的學習率\n   → 資料充足且任務差異大時用'
+          },
+          {
+            label: '為什麼有效',
+            icon: 'lightbulb',
+            content: 'CNN 前面的層學到的是通用特徵（邊緣、紋理、形狀），這些特徵在大多數影像任務中都有用。後面的層才學特定任務的特徵。所以前面的層可以直接搬過來用。'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「資料量少 + 要用深度學習」→ 遷移學習。\n「凍結前面的層」→ 保留通用特徵，只調整任務專屬層。\n\n不是「從零訓練小模型」（效果差）。\n不是「用 GAN 生成更多資料」（可以互補但不是替代）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 10,
+      title: 'Batch Normalization',
+      engTitle: 'Batch Normalization',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'tune',
+            content: '在神經網路的每一層之間加一個「標準化」步驟，讓每一層的輸入維持在穩定的分佈（平均=0、標準差=1），再透過可學習的參數做縮放和位移。'
+          },
+          {
+            label: '為什麼需要',
+            icon: 'lightbulb',
+            code: '問題：內部共變量偏移（Internal Covariate Shift）\n  每一層的輸入分佈會隨著前面層的參數更新而改變\n  → 後面的層一直在追趕變動的分佈\n  → 訓練變慢、容易不穩定\n\nBatch Norm 的效果：\n  穩定每層的輸入分佈\n  → 可以用更大的學習率（訓練更快）\n  → 減少對參數初始化的敏感度\n  → 有輕微的正則化效果（減少過擬合）'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: 'Batch Norm 放在卷積層或全連接層「之後」、激活函數「之前」。\n\n核心效果：「加速訓練收斂 + 穩定梯度」。\n不是「降維」（那是 Pooling）。\n不是「防止梯度消失的根本解法」（ResNet 的殘差連接才是）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 11,
+      title: 'Grad-CAM 可視化',
+      engTitle: 'Gradient-weighted Class Activation Mapping',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'visibility',
+            content: '一種模型可解釋性工具。用熱力圖顯示 CNN 在做分類決策時，「看的是圖片的哪個區域」。紅色區域 = 模型最關注的地方。'
+          },
+          {
+            label: '怎麼做',
+            icon: 'build',
+            code: '1. 模型對圖片做預測 → 得到類別分數\n2. 對類別分數反向傳播 → 得到最後一層卷積的梯度\n3. 用梯度當權重，加權平均特徵圖\n4. 疊加到原始圖片上 → 得到熱力圖\n\n結果：\n  紅色 = 模型最關注的區域\n  藍色 = 模型不在意的區域'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「CNN 模型的可解釋性」→ Grad-CAM。\n「XAI 在電腦視覺的應用」→ Grad-CAM 熱力圖。\n\n跟 SHAP/LIME 的差別：\n- SHAP/LIME → 表格資料的特徵重要性\n- Grad-CAM → 影像資料的注意力可視化'
+          }
+        ]
+      }
+    },
+    {
+      number: 12,
+      title: '資料標註方法',
+      engTitle: 'Data Annotation Methods',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '四種標註類型',
+            icon: 'edit',
+            code: '影像分類標註：\n  整張圖一個標籤（貓/狗/車）\n  → 最簡單、成本最低\n\n邊界框標註（Bounding Box）：\n  在物件周圍畫矩形框\n  → 用於物件偵測（YOLO、Faster R-CNN）\n\n多邊形標註（Polygon）：\n  沿物件邊緣畫多邊形\n  → 用於實例分割（Mask R-CNN）\n\n像素級標註（Pixel-level）：\n  每個像素都標類別\n  → 用於語意分割（FCN、U-Net）\n  → 成本最高'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '標註精度越高 → 成本越高：\n分類 < 邊界框 < 多邊形 < 像素級\n\n常考配對：\n- 「物件偵測」→ 邊界框標註\n- 「語意分割」→ 像素級標註\n- 「實例分割」→ 多邊形標註\n\n半監督式/自監督式學習的目標之一就是減少標註需求。'
+          }
+        ]
+      }
+    },
+    {
+      number: 13,
+      title: 'GAN 變體：CycleGAN / StyleGAN',
+      engTitle: 'CycleGAN / StyleGAN',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: 'CycleGAN',
+            icon: 'swap_horiz',
+            content: '不需要「配對資料」就能做風格轉換的 GAN。核心概念是「循環一致性」：圖片從 A 風格轉成 B 風格，再轉回 A，應該要跟原圖一樣。\n\n應用：照片 ↔ 油畫、馬 ↔ 斑馬、夏天 ↔ 冬天。\n\n關鍵：不需要一一對應的訓練資料，只要兩組不同風格的圖片即可。'
+          },
+          {
+            label: 'StyleGAN',
+            icon: 'face',
+            content: 'NVIDIA 開發的高品質人臉生成模型。核心創新是「風格注入」：在生成過程的不同層注入不同尺度的風格控制。\n\n粗粒度（低解析度層）→ 控制臉型、年齡、性別\n中粒度 → 控制五官、髮型\n細粒度（高解析度層）→ 控制膚色、毛孔、光影\n\n能生成幾乎以假亂真的人臉照片。'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: 'GAN 變體配對：\n- DCGAN = 深度卷積 GAN（基礎影像生成）\n- CycleGAN = 無配對風格轉換\n- StyleGAN = 高品質人臉生成\n- Pix2Pix = 有配對影像轉換\n\n「油畫↔照片風格轉換」→ CycleGAN。\n「高品質人臉生成」→ StyleGAN。'
+          }
+        ]
+      }
+    },
+    {
+      number: 14,
+      title: '影像前處理',
+      engTitle: 'Image Preprocessing',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '常見步驟',
+            icon: 'auto_fix_high',
+            code: '1. 尺寸調整（Resize）\n   統一輸入尺寸（如 224x224）\n   → CNN 固定輸入大小\n\n2. 像素標準化（Normalization）\n   除以 255 壓到 [0,1]\n   或用 ImageNet 的平均/標準差做 Z-score\n   → 加速收斂、穩定訓練\n\n3. 色彩空間轉換\n   RGB ↔ Grayscale ↔ HSV\n   → 依任務需求選擇\n\n4. 雜訊去除（Denoising）\n   高斯模糊、中值濾波\n   → 降低雜訊干擾\n\n5. 資料增強（Data Augmentation）\n   旋轉、翻轉、裁切、亮度調整\n   → 增加訓練資料多樣性'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「影像輸入 CNN 前」→ Resize + 標準化是必要步驟。\n「ImageNet 預訓練模型」→ 要用 ImageNet 的平均值和標準差做標準化。\n\n前處理不當（如未標準化）→ 訓練不收斂或效果差。'
+          }
+        ]
+      }
     }
   ]
 }

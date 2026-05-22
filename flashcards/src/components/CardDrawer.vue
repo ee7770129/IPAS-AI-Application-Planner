@@ -32,6 +32,7 @@
             >
               <span class="item-number">{{ card.number }}</span>
               <span class="item-title">{{ card.title }}</span>
+              <span v-if="card.supplementary" class="item-badge">補充</span>
               <span v-if="card.engTitle" class="item-eng">{{ card.engTitle }}</span>
             </li>
           </ul>
@@ -185,6 +186,16 @@ watch(() => activeRef.value, (el) => {
   font-weight: 600;
   color: var(--custard-brown);
   line-height: 1.4;
+}
+.item-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--custard-deep);
+  padding: 1px 6px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  line-height: 1.5;
 }
 .item-eng {
   font-size: 0.7rem;

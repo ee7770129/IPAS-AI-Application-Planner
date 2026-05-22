@@ -335,5 +335,105 @@ export default [
           }
         ]
       }
+    },
+    {
+      number: 32,
+      title: 'BPE 子詞分詞',
+      engTitle: 'Byte Pair Encoding',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'content_cut',
+            content: '一種子詞切分演算法，現代 LLM（GPT、LLaMA）的標準分詞方式。核心思路：先從字元開始，不斷合併最常出現的「字元對」，直到達到目標詞表大小。'
+          },
+          {
+            label: '怎麼做',
+            icon: 'build',
+            code: '初始：每個字元是一個 Token\n  [\"l\", \"o\", \"w\", \"e\", \"r\"]\n\n統計最常出現的相鄰字元對：\n  (\"l\", \"o\") 出現 500 次 → 合併為 \"lo\"\n  (\"lo\", \"w\") 出現 300 次 → 合併為 \"low\"\n  ...\n\n結果：高頻詞完整保留\n  \"the\" → [\"the\"]（一個 Token）\n  罕見詞拆成子詞\n  \"unhappiness\" → [\"un\", \"happi\", \"ness\"]'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「平衡詞表大小和處理能力」→ BPE。\n\n優勢：\n- 不會有 OOV（未見過的詞）問題\n- 高頻詞效率高（一個 Token）\n- 罕見詞也能處理（拆成子詞）\n\n變體：WordPiece（BERT 用）、SentencePiece（多語言）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 33,
+      title: '注意力機制 Q/K/V',
+      engTitle: 'Attention Mechanism: Query, Key, Value',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'center_focus_strong',
+            content: 'Transformer 的核心運算。每個詞同時扮演三個角色：Query（我要找什麼）、Key（我能提供什麼）、Value（我的實際內容）。透過 Q 和 K 的匹配度決定要「注意」哪些詞。'
+          },
+          {
+            label: '運作流程',
+            icon: 'build',
+            code: '1. 每個詞生成 Q, K, V 三個向量\n   透過三個可學習的權重矩陣\n\n2. 計算注意力分數\n   Score = Q * K^T / sqrt(d_k)\n   → Q 和 K 的內積除以縮放因子\n\n3. Softmax 轉成注意力權重\n   → 每個位置分配多少「注意力」\n\n4. 加權加總 Value\n   Output = 注意力權重 * V\n   → 產出融合了全局語境的表示'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '類比：圖書館找書\n- Query = 你想找的主題\n- Key = 每本書的標題/分類\n- Value = 書的實際內容\n- 注意力 = 用你的需求(Q)匹配書的標題(K)，選最相關的書讀內容(V)\n\n除以 sqrt(d_k) 是防止內積值過大導致 Softmax 過於集中。'
+          }
+        ]
+      }
+    },
+    {
+      number: 34,
+      title: '位置編碼',
+      engTitle: 'Positional Encoding',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'pin_drop',
+            content: 'Transformer 用注意力機制平行處理所有詞，但也因此「不知道詞的順序」。位置編碼就是把「位置資訊」加到每個詞的嵌入向量中，讓模型知道每個詞在句子中的位置。'
+          },
+          {
+            label: '兩種方式',
+            icon: 'compare',
+            code: '固定式位置編碼（原始 Transformer）：\n  用三角函數（sin/cos）產生位置向量\n  → 不需要學習，直接計算\n  → 理論上可推廣到更長的序列\n\n可學習位置編碼（BERT、GPT）：\n  每個位置有一個可訓練的向量\n  → 透過訓練學習最佳位置表示\n  → 效果通常更好但有最大長度限制\n\n旋轉位置編碼 RoPE（LLaMA）：\n  把位置資訊編碼為旋轉矩陣\n  → 更好的長序列外推能力'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「Transformer 為什麼需要位置編碼？」→ 因為自注意力機制不包含順序資訊，需要額外加入位置資訊。\n\n沒有位置編碼 → 「我愛你」和「你愛我」對模型來說一樣（只看詞不看順序）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 35,
+      title: 'Multi-head Attention',
+      engTitle: 'Multi-head Attention / 多頭注意力',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'view_carousel',
+            content: '把注意力計算分成多個「頭」，每個頭獨立學習不同的注意力模式，最後把所有頭的結果拼接起來。讓模型能同時關注不同類型的關係。'
+          },
+          {
+            label: '為什麼要多頭',
+            icon: 'lightbulb',
+            code: '單頭注意力：只能學一種關注模式\n  例：只學到「主詞找動詞」的關係\n\n多頭注意力（如 8 頭）：\n  頭 1 → 學主詞-動詞關係\n  頭 2 → 學形容詞-名詞關係\n  頭 3 → 學代名詞-指涉對象\n  頭 4 → 學長距離依賴\n  ...\n\n拼接所有頭 → 模型同時理解多種語法和語意關係'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「Transformer 使用多頭注意力的原因？」→ 讓模型在不同子空間中學習不同的注意力模式，捕捉多種語法和語意關係。\n\nBERT-base = 12 頭、GPT-3 = 96 頭。\n頭數越多 → 能捕捉的關係模式越多，但計算量也越大。'
+          }
+        ]
+      }
     }
   ]

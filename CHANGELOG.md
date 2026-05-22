@@ -4,6 +4,28 @@
 
 ---
 
+## [4.2.0] - 2026-05-22
+
+### 新增
+- 中級科目一新增 34 張補充知識卡片：
+  - 電腦視覺 +6：遷移學習、Batch Normalization、Grad-CAM、資料標註方法、CycleGAN/StyleGAN、影像前處理
+  - 多模態AI +4：VQA、Image Captioning、DALL-E/文生圖、跨模態檢索
+  - AI風險管理 +5：紅隊測試、AI公平性指標、EU AI Act風險分級、模型魯棒性、負責任AI框架
+  - 生成式AI +5：Prompt Injection、Chain-of-Thought、Temperature/Top-p/Top-k、Token/Tokenization、Constitutional AI
+  - NLP +4：BPE子詞分詞、QKV注意力機制、位置編碼、Multi-head Attention
+  - ML進階 +5：遷移學習、聯邦式學習、ROC-AUC、Stacking堆疊學習、主動式學習
+  - 部署運維 +5：A/B測試、Canary部署、模型壓縮(剪枝/量化/蒸餾)、Feature Store、藍綠部署
+- 中級科目二新增 26 張補充知識卡片：
+  - 機率統計 +6：ANOVA、卡方檢定、貝氏定理、條件機率、共變異數vs相關係數、型一/型二錯誤
+  - 數據處理 +5：缺失值填補法、離群值偵測、特徵重要性、維度災難、ETL流程
+  - 大數據技術 +6：Hadoop生態系、Apache Spark、NoSQL四大類型、CAP定理、MapReduce、資料湖倉
+  - 大數據分析 +5：混淆矩陣、迴歸指標(RMSE/MAE/R2)、輪廓係數、t-SNE/UMAP、時間序列分析
+  - 隱私安全 +4：GDPR重點、K-匿名/L-多樣性/T-接近性、聯邦式學習隱私應用、安全多方計算
+- CardDrawer 卡片目錄抽屜：補充卡片標題旁顯示「補充」標籤，方便區分原有卡片與新增補充知識
+- 卡片資料結構新增 supplementary 欄位，標記補充知識卡片
+
+---
+
 ## [4.1.4] - 2026-05-21
 
 ### 新增

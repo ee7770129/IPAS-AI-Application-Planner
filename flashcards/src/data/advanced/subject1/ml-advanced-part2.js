@@ -250,5 +250,130 @@ export default [
           }
         ]
       }
+    },
+    {
+      number: 21,
+      title: '遷移學習',
+      engTitle: 'Transfer Learning',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'swap_horiz',
+            content: '把在一個任務上學到的知識，搬到另一個相關任務上使用。核心思想：不用每個任務都從零開始，利用已有的知識加速學習。'
+          },
+          {
+            label: '三種策略',
+            icon: 'build',
+            code: '特徵提取（Feature Extraction）：\n  凍結預訓練模型，只訓練新的輸出層\n  → 資料極少（<1000 筆）時使用\n\n微調（Fine-tuning）：\n  在預訓練模型基礎上，用新資料調整部分或全部參數\n  → 資料中等（1000-10000 筆）時使用\n\n領域適應（Domain Adaptation）：\n  訓練和目標的資料分佈不同\n  → 需要對齊兩個領域的特徵分佈'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「小量資料 + 深度學習」→ 遷移學習（不是從零訓練）。\n\nBERT fine-tuning = NLP 的遷移學習。\nImageNet pre-trained CNN = CV 的遷移學習。\n\n遷移學習成功的前提：源任務和目標任務有一定相關性。完全無關的任務可能產生「負遷移」。'
+          }
+        ]
+      }
+    },
+    {
+      number: 22,
+      title: '聯邦式學習',
+      engTitle: 'Federated Learning',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'hub',
+            content: '多個機構合作訓練模型，但資料不出門。每個機構在自己的資料上訓練，只把模型參數（而不是資料）傳到中央伺服器聚合。兼顧模型效能和資料隱私。'
+          },
+          {
+            label: '怎麼做',
+            icon: 'build',
+            code: '1. 中央伺服器發送初始模型\n2. 各機構用自己的資料訓練一輪\n3. 各機構把更新後的參數傳回中央\n4. 中央聚合所有參數（如取平均）\n5. 把聚合後的模型發回各機構\n6. 重複 2-5 直到收斂\n\n資料始終留在各機構 → 不洩漏'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「多方合作訓練 + 資料不出境」→ 聯邦式學習。\n\n應用：醫院間共同訓練疾病預測模型、銀行間共同訓練風控模型。\n\n與差分隱私可搭配使用：在參數傳輸時加噪音，進一步防護。\n\n不是「把資料集中到一起」（那就沒隱私了）。'
+          }
+        ]
+      }
+    },
+    {
+      number: 23,
+      title: 'ROC-AUC 曲線',
+      engTitle: 'ROC Curve & AUC',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'ssid_chart',
+            content: 'ROC 曲線：以「假正率(FPR)」為 X 軸、「真正率(TPR/Recall)」為 Y 軸畫出的曲線。AUC 就是這條曲線下的面積，衡量模型整體分辨正負樣本的能力。'
+          },
+          {
+            label: '怎麼看',
+            icon: 'lightbulb',
+            code: 'AUC = 1.0 → 完美分類器\nAUC = 0.5 → 跟隨機猜一樣差\nAUC < 0.5 → 比隨機還差（模型反了）\n\n實務標準：\n  AUC > 0.9 → 非常好\n  AUC 0.8-0.9 → 好\n  AUC 0.7-0.8 → 普通\n  AUC < 0.7 → 需改善\n\n優點：不受分類閾值影響\n  → 在所有閾值下的綜合表現'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「整體模型分辨能力」→ ROC-AUC。\n「不受類別不平衡影響的評估」→ AUC 比 Accuracy 更可靠。\n\nF1 vs AUC：\n- F1 = 在特定閾值下的表現\n- AUC = 在所有閾值下的綜合表現\n\n「比較兩個模型的整體好壞」→ AUC。'
+          }
+        ]
+      }
+    },
+    {
+      number: 24,
+      title: 'Stacking 堆疊學習',
+      engTitle: 'Stacking Ensemble',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'layers',
+            content: '集成學習的第三種策略（前兩種是 Bagging 和 Boosting）。用多個不同的基礎模型做預測，再用一個「元模型」學習如何最佳地組合這些預測。'
+          },
+          {
+            label: '跟 Bagging/Boosting 的差別',
+            icon: 'compare',
+            code: 'Bagging（如隨機森林）：\n  同類型的多個模型 → 投票/平均\n  → 降低變異\n\nBoosting（如 XGBoost）：\n  同類型的多個模型 → 串聯修正\n  → 降低偏差\n\nStacking：\n  不同類型的多個模型\n  → 元模型學習最佳組合權重\n  → 同時降低偏差和變異\n\n例：SVM + 隨機森林 + XGBoost\n  → 三者預測結果餵給邏輯迴歸（元模型）\n  → 邏輯迴歸學習怎麼組合最好'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '集成學習三大策略：\n- Bagging → 平行（降變異）\n- Boosting → 串聯（降偏差）\n- Stacking → 異質模型組合（最靈活）\n\n「不同模型的預測結果作為新特徵」→ Stacking。'
+          }
+        ]
+      }
+    },
+    {
+      number: 25,
+      title: '主動式學習',
+      engTitle: 'Active Learning',
+      supplementary: true,
+      back: {
+        sections: [
+          {
+            label: '是什麼',
+            icon: 'touch_app',
+            content: '讓模型「主動選擇」最需要標註的樣本，而不是隨機標註。用最少的標註量達到最大的效能提升。適合標註成本很高的場景。'
+          },
+          {
+            label: '選樣策略',
+            icon: 'build',
+            code: '不確定性取樣（Uncertainty Sampling）：\n  選模型「最不確定」的樣本\n  → 接近決策邊界的樣本\n\n多樣性取樣（Diversity Sampling）：\n  選跟已標註樣本「最不像」的\n  → 探索未知區域\n\n預期模型變化（Expected Model Change）：\n  選能讓模型參數變化最大的樣本\n  → 最能改善模型的樣本'
+          },
+          {
+            label: '考試重點',
+            icon: 'school',
+            content: '「標註成本高 + 想用最少標註」→ 主動式學習。\n\n與半監督式的差別：\n- 半監督 → 自動利用未標註資料（不需人介入）\n- 主動式 → 智慧選擇哪些資料需要人標註\n\n應用：醫療影像標註（每張都要醫生看 → 成本極高）。'
+          }
+        ]
+      }
     }
 ]
