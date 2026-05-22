@@ -8,8 +8,9 @@
 
 import { ref, computed, watch } from 'vue'
 
-const QUIZ_COUNT = 15
+const DEFAULT_QUIZ_COUNT = 15
 const SESSION_PREFIX = 'ipas-exam-session-'
+const QUIZ_COUNT_KEY = 'ipas-quiz-count'
 
 /**
  * 考題練習邏輯 composable
@@ -24,6 +25,15 @@ export function useExamLogic(currentSubject) {
   const instantRevealed = ref(false)
   const questionCardRef = ref(null)
 
+  /** 使用者自訂題數（從 localStorage 讀取，預設 15） */
+  const customQuizCount = ref(
+    parseInt(localStorage.getItem(QUIZ_COUNT_KEY)) || DEFAULT_QUIZ_COUNT
+  )
+
+  watch(customQuizCount, (v) => {
+    try { localStorage.setItem(QUIZ_COUNT_KEY, String(v)) } catch {}
+  })
+
   /** 所有題目（合併該科目所有屆） */
   const allQuestions = computed(() => {
     if (!currentSubject.value) return []
@@ -36,8 +46,8 @@ export function useExamLogic(currentSubject) {
     return all
   })
 
-  /** 實際出題數 */
-  const quizCount = computed(() => Math.min(QUIZ_COUNT, allQuestions.value.length))
+  /** 實際出題數（取使用者設定值與題庫總量的較小值） */
+  const quizCount = computed(() => Math.min(customQuizCount.value, allQuestions.value.length))
 
   /** 已答題數 */
   const answeredCount = computed(() => Object.keys(answers.value).length)
@@ -211,7 +221,7 @@ export function useExamLogic(currentSubject) {
   return {
     phase, examType, quizQuestions, currentIdx, answers,
     instantRevealed, questionCardRef,
-    allQuestions, quizCount, answeredCount, progressPct,
+    allQuestions, quizCount, customQuizCount, answeredCount, progressPct,
     examResults, savedProgress,
     startExam, onAnswer, revealAnswer, nextInstant,
     pauseReview, finishExam, tryRestoreSession

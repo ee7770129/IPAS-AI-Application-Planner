@@ -30,6 +30,7 @@
     <ExamSetup
       v-if="phase === 'setup'"
       v-model="examType"
+      v-model:quizInput="customQuizCount"
       :subjectLabel="currentSubject.label"
       :totalCount="allQuestions.length"
       :quizCount="quizCount"
@@ -230,7 +231,7 @@ const currentSubject = computed(() => props.subjects[subjectIdx.value] || props.
 const {
   phase, examType, quizQuestions, currentIdx, answers,
   instantRevealed, questionCardRef,
-  allQuestions, quizCount, answeredCount, progressPct,
+  allQuestions, quizCount, customQuizCount, answeredCount, progressPct,
   examResults, savedProgress,
   startExam, onAnswer, revealAnswer, nextInstant,
   pauseReview, finishExam, tryRestoreSession

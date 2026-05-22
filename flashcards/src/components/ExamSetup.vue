@@ -13,7 +13,17 @@
       <p class="setup-info">
         題庫：{{ subjectLabel }}
         <br>
-        共 {{ totalCount }} 題，每次隨機抽 {{ quizCount }} 題
+        共 {{ totalCount }} 題，隨機抽
+        <input
+          type="tel"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          class="quiz-count-input"
+          :value="quizInput"
+          @input="$emit('update:quizInput', Math.max(1, Math.min(totalCount, parseInt($event.target.value) || 15)))"
+          @focus="$event.target.select()"
+        />
+        題
       </p>
 
       <!-- 模式選擇 -->
@@ -72,12 +82,13 @@ defineProps({
   subjectLabel: { type: String, required: true },
   totalCount: { type: Number, required: true },
   quizCount: { type: Number, required: true },
+  quizInput: { type: Number, default: 15 },
   modelValue: { type: String, required: true },
   /** localStorage 中的暫停記錄（null 表示無記錄） */
   savedProgress: { type: Object, default: null }
 })
 
-defineEmits(['update:modelValue', 'start'])
+defineEmits(['update:modelValue', 'update:quizInput', 'start'])
 </script>
 
 <style scoped>
@@ -119,6 +130,28 @@ defineEmits(['update:modelValue', 'start'])
   text-align: center;
   line-height: 1.6;
   margin-bottom: 20px;
+}
+.quiz-count-input {
+  width: 40px;
+  padding: 1px 2px;
+  border: none;
+  border-bottom: 1.5px solid var(--custard-deep);
+  border-radius: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--custard-deep);
+  text-align: center;
+  background: transparent;
+  outline: none;
+  -moz-appearance: textfield;
+}
+.quiz-count-input::-webkit-outer-spin-button,
+.quiz-count-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.quiz-count-input:focus {
+  border-bottom-color: var(--header-from);
 }
 
 /* 模式選擇 */
