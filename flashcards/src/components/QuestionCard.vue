@@ -47,6 +47,7 @@
         <div class="explain-meta">
           <span class="material-icons">folder</span>
           <span>章節：{{ question.chapter }}</span>
+          <span v-if="question._examLabel" class="exam-source-tag">{{ question._examLabel }}</span>
         </div>
         <div class="explain-body">{{ question.explanation }}</div>
 
@@ -285,6 +286,15 @@ defineExpose({ reveal, reset, selected })
 .explain-meta .material-icons {
   font-size: 16px;
   color: var(--custard-deep);
+}
+.exam-source-tag {
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: var(--custard-deep);
+  color: #fff;
 }
 
 .explain-body {

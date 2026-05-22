@@ -32,6 +32,7 @@
             >
               <span class="item-number" :class="statusClass(i)">{{ i + 1 }}</span>
               <span class="item-text">{{ truncate(q.question) }}</span>
+              <span v-if="q._examLabel && q._examLabel.startsWith('S')" class="item-source-tag">S</span>
             </li>
           </ul>
         </div>
@@ -213,6 +214,15 @@ watch(() => activeRef.value, (el) => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.item-source-tag {
+  flex-shrink: 0;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: var(--custard-deep);
+  color: #fff;
 }
 
 /* 滑入動畫 */

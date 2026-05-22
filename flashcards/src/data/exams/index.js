@@ -12,6 +12,7 @@ import advS1_mock from './advanced/subject1-mock.js'
 import advS2_114 from './advanced/subject2-114.js'
 import advS2_textbook from './advanced/subject2-textbook.js'
 import advS2_mock from './advanced/subject2-mock.js'
+import advS2_stest from './advanced/subject2-stest.js'
 
 /**
  * 考題資料結構
@@ -33,7 +34,7 @@ export const EXAM_DATA = {
       {
         id: 'adv-subject2',
         label: '科目二 大數據處理分析與應用',
-        exams: [advS2_114, advS2_textbook, advS2_mock]
+        exams: [advS2_114, advS2_textbook, advS2_mock, advS2_stest]
       }
     ]
   }
