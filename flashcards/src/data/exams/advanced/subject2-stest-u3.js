@@ -20,7 +20,7 @@ export default [
     answer: 'A',
     chapter: '機器學習基礎',
     explanation: 'k-means 是非監督式集群演算法，不能用於監督式的多分類問題。分類需要有標籤的監督式學習方法。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: 'CNN 擅長擷取影像空間特徵，是影像辨識的主流方法，應用適當。', C: 'Autoencoder 透過編碼器將高維資料壓縮到低維潛在空間，本身就是經典的降維方法。', D: 'RNN 擅長處理序列資料，適合用於文字翻譯等自然語言處理任務。' }
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ export default [
     answer: 'A',
     chapter: '大數據分析方法',
     explanation: '類別標籤是「外部」核驗準則，需要已知的真實標籤。內部核驗準則不需要外部標籤，僅根據資料本身的結構來評估。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: '各群到中心距離平方和（SSE/WCSS）是常見的內部核驗指標，用於衡量群內緊密程度。', C: '側影係數（Silhouette Coefficient）結合群內與群間距離評估分群品質，屬於內部核驗準則。', D: '群內距離相對於群間距離的比值是內部核驗指標，比值越小表示分群效果越好。' }
   },
   {
     id: 3,
@@ -48,7 +48,7 @@ export default [
     answer: 'A',
     chapter: '大數據分析方法',
     explanation: '題目描述的是分裂式階層集群（Divisive Hierarchical Clustering），從一個大群不斷分裂為小群。階層式集群包含凝聚式（由下而上）和分裂式（由上而下）兩種。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: 'k-means 需事先指定群數 k，透過迭代更新中心點分群，不使用樹狀結構也不是由大群分裂。', C: '密度集群（如 DBSCAN）根據密度連通性分群，不使用樹狀結構，也非由整體分裂。', D: 'k-medoids 與 k-means 類似，以實際資料點為中心，需事先指定群數，不使用樹狀分裂方式。' }
   },
   {
     id: 4,
@@ -62,7 +62,7 @@ export default [
     answer: 'B',
     chapter: '機器學習基礎',
     explanation: '支援向量的數目是模型訓練後自動決定的結果，不需要也不能事先指定。需要事先設定的超參數是 C 值和核函數類型。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'C 值越高對錯誤分類的懲罰越大，模型會更貼合訓練資料，確實容易導致過度配適。', B: null, C: '網格搜尋（Grid Search）是系統化搜尋超參數組合的常用方法，敘述正確。', D: '核函數（如 RBF、線性、多項式）屬於超參數，需要在訓練前事先選定。' }
   },
   {
     id: 5,
@@ -76,7 +76,7 @@ export default [
     answer: 'D',
     chapter: '機器學習基礎',
     explanation: '最簡單的類神經網路（如感知機）只需要投入層和「輸出層」，不一定要有隱藏層。隱藏層是選用的，輸出層才負責產出預測。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'ReLU 和 hard tanh 解決了 Sigmoid/tanh 的梯度消失問題，確實更適合訓練深層網路。', B: '除投入層外，隱藏層和輸出層都需要活化函數來引入非線性，敘述正確。', C: '感知機是最簡單的類神經網路，只有投入層和輸出層，屬於線性分類模型，敘述正確。', D: null }
   },
   {
     id: 6,
@@ -90,7 +90,7 @@ export default [
     answer: 'B',
     chapter: '機器學習基礎',
     explanation: '特徵值（eigenvalue）是線性代數中用於矩陣分解（如 PCA）的數學概念，不是模型驗證指標。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'MSE（均方誤差）是迴歸模型常用的驗證指標，衡量預測值與實際值的差異。', B: null, C: '混淆矩陣呈現分類結果的 TP/FP/TN/FN，敏感度衡量正例的召回率，都是分類模型的驗證指標。', D: 'ROC 曲線描繪不同閾值下的 TPR 與 FPR，AUC 量化整體分類效能，是常用的驗證指標。' }
   },
   {
     id: 7,
@@ -104,7 +104,7 @@ export default [
     answer: 'D',
     chapter: '機器學習基礎',
     explanation: '隨機森林使用 Bagging（Bootstrap Aggregating），不是 Boosting。Boosting 是 AdaBoost、XGBoost 等方法的特徵。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '隨機森林可計算各特徵的重要度分數（如 Gini 重要性或排列重要性），敘述正確。', B: '隨機森林可用於分類任務，透過多棵樹的投票決定最終類別，敘述正確。', C: '隨機森林能自然處理遺缺值，透過替代分裂（surrogate split）等機制應對缺失資料。', D: null }
   },
   {
     id: 8,
@@ -118,7 +118,7 @@ export default [
     answer: 'D',
     chapter: '統計基礎',
     explanation: '當自變數之間的相關程度高於自變數與因變數之間的相關程度時，表示存在嚴重的多重共線性問題，這會導致模型不穩定且係數估計不可靠，在良好的迴歸建模中不應出現此情況。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '簡單線性迴歸只有一個自變數，最小平方法（OLS）是其標準求解方式，敘述正確。', B: '多元迴歸可視為無隱藏層的神經網路，可以用 SGD 等梯度下降法求解，敘述正確。', C: '簡單線性迴歸需計算相關係數 r 確認自變數與因變數有顯著線性關係，敘述正確。', D: null }
   },
   {
     id: 9,
@@ -132,7 +132,7 @@ export default [
     answer: 'D',
     chapter: '機器學習基礎',
     explanation: 'AUC=0.8 代表「良好的鑑別力」。AUC=0.5 才代表無鑑別力（等同隨機猜測）。AUC 越接近 1 表示模型越好。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'ROC 曲線最常用於二元分類問題的模型效能評估，敘述正確。', B: 'ROC 曲線以偽陽性率（FPR）為 X 軸、真陽性率（TPR）為 Y 軸，敘述正確。', C: '曲線越靠近左上角表示 TPR 高且 FPR 低，即敏感度越高，敘述正確。', D: null }
   },
   {
     id: 10,
@@ -146,7 +146,7 @@ export default [
     answer: 'D',
     chapter: '大數據分析方法',
     explanation: 'FP-growth 的核心優勢就是不採用 Apriori 的 generate-and-test 策略，而是透過 FP-tree 直接挖掘頻繁項目集，大幅提升效率。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'FP-growth 確實透過建構 FP-tree 來壓縮原始交易資料，減少記憶體使用，敘述正確。', B: 'FP-growth 的核心特色就是不需要生成候選項目集，直接從 FP-tree 挖掘頻繁項目集。', C: 'FP-growth 著重頻繁項目的增長模式，避免了 Apriori 昂貴的候選生成過程，敘述正確。', D: null }
   },
   {
     id: 11,
@@ -160,7 +160,7 @@ export default [
     answer: 'C',
     chapter: '機器學習基礎',
     explanation: 'AdaBoost 中，分類錯誤率「低」的弱分類器表現好，應該在最終分類器中占的權重「較大」而非較小。表現越好的弱分類器影響力越大。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'AdaBoost 會提高被錯誤分類樣本的權重、降低正確分類樣本的權重，讓下一輪更關注難分的樣本。', B: '每個樣本的初始權值設為 1/M（M 為樣本總數），代表一開始每個樣本同等重要，敘述正確。', C: null, D: 'AdaBoost 的核心概念就是將多個弱分類器透過加權投票組合成強分類器，敘述正確。' }
   },
   {
     id: 12,
@@ -174,7 +174,7 @@ export default [
     answer: 'C',
     chapter: '機器學習基礎',
     explanation: '過度配適（Overfitting）的特徵就是訓練誤差低但測試誤差高，模型過度學習訓練資料的細節和雜訊。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '配適良好表示訓練誤差和測試誤差都低且接近，與題目描述的高測試誤差不符。', B: '配適狀況不明不是機器學習的標準術語，題目描述的模式明確對應過度配適。', C: null, D: '配適不足（Underfitting）是訓練誤差和測試誤差都高，與題目描述的低訓練誤差不符。' }
   },
   {
     id: 13,
@@ -188,7 +188,7 @@ export default [
     answer: 'D',
     chapter: '機器學習基礎',
     explanation: '隨機森林可以處理離散型和連續型資料。A 錯誤：兩者都是監督式。B 錯誤：隨機森林的樹之間是獨立的（bagging）。C 錯誤：決策樹是單一模型不屬於集成學習。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '決策樹和隨機森林都是監督式學習方法，需要標籤資料進行訓練，並非一個監督式一個非監督式。', B: '隨機森林採用 Bagging，每棵樹使用不同的隨機抽樣資料和特徵子集，樹與樹之間是獨立無關聯的。', C: '決策樹是單一模型，不屬於集成學習；只有隨機森林（多棵樹的集合）才屬於集成學習。', D: null }
   },
   {
     id: 14,
@@ -202,7 +202,7 @@ export default [
     answer: 'D',
     chapter: '機器學習基礎',
     explanation: 'k 摺交叉驗證重複 k 次（不是 k 次以上），每次用不同的 1 份做驗證，最後取全部 k 次結果的均值。不是取 k-1 次的均值。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '交叉驗證廣泛用於分類預測和 PLS 迴歸等模型的效能評估，敘述正確。', B: '保留法（Hold-out）和 k 摺驗證（k-Fold CV）都是常見的交叉驗證方法，敘述正確。', C: 'k=10 時將資料分成 10 份，每次取 9 份訓練、1 份驗證，輪流進行 10 次，敘述正確。', D: null }
   },
   {
     id: 15,
@@ -216,7 +216,7 @@ export default [
     answer: 'D',
     chapter: '機器學習基礎',
     explanation: '決策樹訓練速度通常最快，因為其分裂過程相對簡單。KNN 嚴格來說不需要訓練但預測時慢。MLP 和 SVM 的訓練通常較耗時。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'KNN 雖然訓練階段幾乎不耗時（懶惰學習），但預測時需計算所有樣本距離，整體效率不如決策樹。', B: '多層感知器需要透過反向傳播和多次迭代來訓練權重，訓練速度通常比決策樹慢很多。', C: '支援向量機需要求解二次最佳化問題，尤其在大資料集上訓練耗時較長。', D: null }
   },
   {
     id: 16,
@@ -230,7 +230,7 @@ export default [
     answer: 'B',
     chapter: '數據處理與特徵工程',
     explanation: '交叉驗證是模型評估方法，不是處理遺缺資料的方法。處理遺缺資料的方法包括刪除、均值/中位數填補、插值法等。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '用合理數字（如中位數、眾數或領域知識推估值）補上遺缺值是常見的填補方法。', B: null, C: '直接移除含遺缺值的樣本是最簡單的處理方式，適用於遺缺比例小的情況。', D: '以原始資料的平均值填補遺缺值是常用的均值填補法，屬於遺缺資料的標準處理方式。' }
   },
   {
     id: 17,
@@ -244,7 +244,7 @@ export default [
     answer: 'A',
     chapter: '機器學習基礎',
     explanation: 'k 摺交叉驗證相較於 LOOCV 等方法有較高的變異，但隨著訓練集增大此問題會緩解。B 混淆了模型選擇和評定的定義。C 混淆了模型優化和評定。D 把超參數和模型參數的定義弄反了。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: '模型評定（assessment）才是比較不同模型與不同參數的過程，此選項混淆了模型選擇與評定的定義。', C: '模型評定是估計最終模型的泛化效能，而非優化；此選項混淆了模型優化與評定的概念。', D: '超參數是不易從資料直接估計、需事先設定的參數；模型參數才是可由資料學習估計的，此選項定義弄反了。' }
   },
   {
     id: 18,
@@ -258,6 +258,6 @@ export default [
     answer: 'A',
     chapter: '機器學習基礎',
     explanation: 'KNN 是非參數方法（non-parametric），不需要假設資料服從任何特定分佈（如常態分佈）。這是 KNN 的優勢之一。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: 'KNN 在大量資料時計算距離非常耗時，使用 k-d tree 等空間索引結構可有效加速搜尋。', C: 'KNN 是非參數模型，沒有明確的函數形式，因此難以解釋預測變數與目標變數之間的關係。', D: 'KNN 基於距離計算，不同量綱的特徵和名目屬性需要額外做標準化或編碼處理。' }
   }
 ]

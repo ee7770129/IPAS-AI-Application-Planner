@@ -18,7 +18,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '語言模型專注於理解和生成文本，圖像分析屬於電腦視覺領域。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '理解自然語言是語言模型的基本功能之一，屬於其核心能力。', B: '生成自然語言文本是語言模型的主要應用，如文章撰寫、對話生成等。', C: null, D: '預測文字中的詞語是語言模型的基礎任務，如自動補全和下一個詞預測。' }
     },
     {
       id: 26,
@@ -32,7 +32,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '語音辨識將音訊信號轉換為文本，是NLP的重要應用。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '圖像信號屬於電腦視覺處理範疇，與語音辨識無關。', B: null, C: '觸覺信號屬於觸覺感測器領域，不是語音辨識的處理對象。', D: '溫度信號屬於環境感測數據，與語音辨識技術完全無關。' }
     },
     {
       id: 27,
@@ -46,7 +46,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '編碼器將輸入文本轉為語義表示，為後續解碼或任務提供基礎。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '生成目標語言序列是解碼器的功能，而非編碼器。', B: null, C: '評估和校正生成文本不是編碼器的職責，這通常由後處理或解碼策略完成。', D: '編碼器負責處理輸入表示，不負責連接不同的語言模型。' }
     },
     {
       id: 28,
@@ -60,7 +60,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '解碼器根據編碼器的語義表示生成目標序列，如翻譯或摘要。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '分析語法結構屬於語法解析器的功能，解碼器主要負責生成輸出序列。', B: null, C: '管理訓練數據是資料管線或資料工程的職責，與解碼器無關。', D: '優化運行速度屬於系統工程或模型壓縮的範疇，不是解碼器的功能。' }
     },
     {
       id: 29,
@@ -74,7 +74,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '設備監控主要依賴感測器和數據分析，NLP在醫療、金融和文本分析中應用更廣泛。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: 'NLP在醫療領域廣泛應用，如病歷分析、醫學文獻探勘等。', B: 'NLP在金融領域應用廣泛，如輿情分析、財報解讀、風險評估等。', C: null, D: '文本分析本身就是NLP的核心應用，如情感分析、摘要生成等。' }
     },
     {
       id: 30,
@@ -88,7 +88,7 @@ export default [
       answer: 'D',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '智慧文件處理依賴OCR、NLP和機器學習，區塊鏈技術與文件處理無直接關係。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: 'OCR是智慧文件處理的核心技術，負責將掃描文件轉為可編輯文字。', B: 'NLP是智慧文件處理的核心技術，用於理解和分析文件中的文本內容。', C: '機器學習是智慧文件處理的核心技術，用於分類、擷取和預測文件資訊。', D: null }
     },
     {
       id: 31,
@@ -102,7 +102,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '預生成模型針對常見文件類型預訓練，能快速識別關鍵字段，降低自訂成本。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '預生成模型針對特定文件類型訓練，無法處理任意格式和大小的文件。', B: null, C: '預生成模型的結構和參數已經預先設定，用戶無法完全自訂。', D: '預生成模型在訓練階段仍需要標註數據，只是使用者不需自行標註。' }
     },
     {
       id: 32,
@@ -116,7 +116,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '關鍵片語擷取識別文本中的主要概念，提升資訊提取效率。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '將文本分類到不同類別屬於「文本分類」任務，而非關鍵片語擷取。', B: '分析文本中的情感和態度屬於「情感分析」任務，與關鍵片語擷取不同。', C: null, D: '將文本翻譯成另一種語言屬於「機器翻譯」任務，與關鍵片語擷取無關。' }
     },
     {
       id: 33,
@@ -130,7 +130,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '編碼器將輸入文本轉為語義表示，為後續任務提供基礎。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '生成新的語言序列是解碼器的功能，編碼器只負責理解輸入。', B: null, C: '將語音信號轉換為文本屬於語音辨識模組，不是編碼器的職責。', D: '語彙基元化是預處理步驟（tokenization），在進入編碼器之前就已完成。' }
     },
     {
       id: 34,
@@ -144,7 +144,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'CRF的序列標註能識別商品描述中的結構化屬性，如品牌、型號、顏色。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '情感分析屬於文本分類任務，不是CRF序列標註的典型應用場景。', B: null, C: '促銷活動時間的識別更適合用規則匹配或時間實體擷取，非CRF的主要用途。', D: '物流配送方式屬於結構化資料庫欄位，不需要透過序列標註來識別。' }
     },
     {
       id: 35,
@@ -158,7 +158,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '自注意力機制是Transformer的核心，能捕捉序列中長距離的依賴關係。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '卷積運算是CNN的核心操作，主要用於處理空間特徵，非Transformer的機制。', B: '遞歸神經網路（RNN）是早期序列模型，Transformer正是為了取代RNN而設計的。', C: null, D: '池化操作用於降維和特徵壓縮，屬於CNN架構，不是Transformer的關鍵機制。' }
     },
     {
       id: 36,
@@ -172,7 +172,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'Transformer通過自注意力機制同時考慮整個句子，生成更準確的翻譯。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '逐字翻譯會忽略語境和語法結構，Transformer的優勢正是能理解整體語義。', B: null, C: 'Transformer不僅依賴詞典，而是透過大量語料訓練學習語義和語法規則。', D: 'Transformer需要大量的平行語料進行訓練，無法在沒有訓練數據的情況下翻譯。' }
     },
     {
       id: 37,
@@ -186,7 +186,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '編碼器將輸入文本轉換為語義表示，為後續處理提供基礎。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '生成目標語言序列是解碼器的職責，編碼器僅負責理解和表示輸入。', B: null, C: '評估和校正生成文本屬於後處理階段，不是編碼器的功能。', D: '連接不同語言模型屬於模型整合架構的範疇，與編碼器的角色無關。' }
     },
     {
       id: 38,
@@ -200,7 +200,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '解碼器基於編碼器的語義表示生成目標語言序列，如翻譯或文本生成。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '分析語法結構屬於語法解析的範疇，不是解碼器的主要功能。', B: null, C: '管理訓練數據屬於資料工程的職責，與解碼器的生成功能無關。', D: '優化運行速度是系統效能調校的工作，不屬於解碼器的角色。' }
     },
     {
       id: 39,
@@ -214,7 +214,7 @@ export default [
       answer: 'A',
       chapter: '3.2 電腦視覺技術與應用',
       explanation: 'YOLO（You Only Look Once）是一種高效的物件偵測模型，廣泛應用於計算機視覺。RNN和LSTM適用於序列數據處理，BERT則用於NLP。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: 'RNN是處理序列資料的模型，主要用於文本和時間序列，非物件偵測。', C: 'LSTM是RNN的改良版本，擅長處理長序列依賴問題，不用於物件偵測。', D: 'BERT是基於Transformer的語言模型，用於NLP任務，與物件偵測無關。' }
     },
     {
       id: 40,
@@ -228,7 +228,7 @@ export default [
       answer: 'A',
       chapter: '3.2 電腦視覺技術與應用',
       explanation: 'YOLO是一種高效的目標檢測技術，能快速識別圖像中的物體及其位置。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '影像分割是將圖像劃分為不同區域的技術，YOLO專注於偵測物體位置而非逐像素分割。', C: 'NLP處理的是文本和語言資料，與YOLO的圖像處理功能完全不同。', D: '強化學習是透過獎勵機制讓代理學習決策的方法，不是YOLO的應用領域。' }
     },
     {
       id: 41,
@@ -242,7 +242,7 @@ export default [
       answer: 'A',
       chapter: '3.2 電腦視覺技術與應用',
       explanation: 'CNN擅長處理非結構化數據（如圖像），通過卷積層提取空間特徵。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: 'CNN通常需要大量標註數據進行訓練，這不是使用CNN的主要原因。', C: 'CNN的運算量通常比MLP更大，其優勢在於特徵提取能力而非速度。', D: 'CNN廣泛用於物件偵測，此說法錯誤，不是使用CNN的原因。' }
     },
     {
       id: 42,
@@ -256,7 +256,7 @@ export default [
       answer: 'C',
       chapter: '3.2 電腦視覺技術與應用',
       explanation: '電腦視覺專注於讓電腦理解和處理圖像及影片數據，如物件識別和分割。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '理解自然語言文本屬於NLP領域，不是電腦視覺的定義。', B: '從非結構化數據中發現知識屬於資料探勘的範疇，不是電腦視覺的核心定義。', C: null, D: '自動化處理文件屬於智慧文件處理，涉及OCR和NLP，非電腦視覺的定義。' }
     },
     {
       id: 43,
@@ -270,7 +270,7 @@ export default [
       answer: 'C',
       chapter: '3.2 電腦視覺技術與應用',
       explanation: '文本生成屬於NLP領域，而圖像處理、特徵提取和物件檢測是電腦視覺核心技術。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '圖像處理是電腦視覺的基礎技術，包括濾波、增強、變換等操作。', B: '特徵提取是電腦視覺的核心步驟，用於從圖像中擷取有意義的資訊。', C: null, D: '物件檢測是電腦視覺的重要應用，用於識別和定位圖像中的物體。' }
     },
     {
       id: 44,
@@ -284,7 +284,7 @@ export default [
       answer: 'C',
       chapter: '3.2 電腦視覺技術與應用',
       explanation: '數位圖像由像素陣列組成，每個像素包含顏色和亮度資訊。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '語義單元是NLP中用於表示文本意義的概念，不是構成圖像的基本元素。', B: '特徵向量是經過模型處理後的抽象表示，不是圖像的原始組成結構。', C: null, D: '文本字串用於表示文字資料，與圖像的像素陣列組成無關。' }
     },
     {
       id: 45,
@@ -298,7 +298,7 @@ export default [
       answer: 'B',
       chapter: '3.2 電腦視覺技術與應用',
       explanation: 'RGB表示紅、綠、藍三個顏色通道，用於表示數位圖像的顏色。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '長度、寬度、深度是描述圖像尺寸的屬性，不是RGB三個通道的含義。', B: null, C: '解析度、幀率、位元深度是影像規格參數，與RGB顏色通道的定義無關。', D: '光照、陰影、色彩飽和度是影像視覺屬性，不是RGB通道所代表的意義。' }
     },
     {
       id: 46,
@@ -312,7 +312,7 @@ export default [
       answer: 'C',
       chapter: '3.2 電腦視覺技術與應用',
       explanation: '電腦視覺專注於讓電腦理解和處理圖像及影片數據，如物件識別。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '理解和生成自然語言文本是NLP的核心能力，不是電腦視覺的定義。', B: '從非結構化數據中發現知識屬於資料探勘領域，非電腦視覺的核心能力。', C: null, D: '自動化處理文件屬於智慧文件處理系統，結合OCR與NLP，非電腦視覺本身。' }
     },
     {
       id: 47,
@@ -326,6 +326,6 @@ export default [
       answer: 'B',
       chapter: '3.2 電腦視覺技術與應用',
       explanation: '數位圖像由多個顏色通道（如RGB）的像素陣列組成，作為影像分類的基礎。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '文本標籤是人為附加的描述資訊，不是數位圖像的本質結構。', B: null, C: '壓縮後的二進制檔案是圖像的儲存格式，不是圖像資料的本質組成。', D: '邊緣和輪廓資訊是經過特徵提取後的結果，不是圖像原始的本質結構。' }
     }
 ]

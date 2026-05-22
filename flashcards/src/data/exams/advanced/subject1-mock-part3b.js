@@ -18,7 +18,7 @@ export default [
       answer: 'A',
       chapter: '4.3 AI 風險管理',
       explanation: '邊緣運算受限於設備的記憶體和計算資源，需優化模型以適應低功耗環境。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '訓練數據的標註方式屬於模型開發階段的考量，與邊緣部署的硬體限制無直接關聯。', C: '邊緣部署的挑戰在於硬體資源限制，不論是否為深度學習模型都需考量資源約束。', D: '邊緣運算常因網路不穩定而需離線推論，網路頻寬的影響其實很大。' }
     },
     {
       id: 120,
@@ -32,7 +32,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: '選擇供應商時，首要考量是其AI服務是否符合企業的具體業務需求。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '模型參數是否公開屬於技術透明度問題，並非選擇供應商的首要考量。', B: null, C: '團隊規模大不代表服務品質好，重點應在服務是否能解決企業問題。', D: '行銷策略與AI服務的實際品質和適用性無關，不應作為優先考量。' }
     },
     {
       id: 121,
@@ -46,7 +46,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: '容器化和Kubernetes提供靈活的部署和管理，提升AI系統的可擴展性和彈性。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '單機運行無法彈性擴展，當負載增加時會遇到瓶頸，不具可擴展性。', B: null, C: '降低計算量是模型優化手段，但無法解決系統層面的彈性擴展需求。', D: '僅使用本地GPU限制了擴展能力，無法根據需求動態調配資源。' }
     },
     {
       id: 122,
@@ -60,7 +60,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: 'MLOps的核心是實現模型的快速迭代、部署和監控，確保持續更新和穩定性。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: 'MLOps不僅關注訓練效率，還涵蓋部署、監控、版本管理等完整生命週期。', B: null, C: '部署後的監控是MLOps的重要環節，不考慮監控會導致模型退化無法被發現。', D: 'AI模型需要人為監管與維護，完全自主學習可能產生偏差或安全風險。' }
     },
     {
       id: 123,
@@ -74,7 +74,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: '混合雲架構結合私有雲和公有雲，保護敏感數據同時提供擴展性。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '混合雲仍需重視資料安全，私有雲部分正是為了保護敏感資料而設計。', B: null, C: '混合雲不一定能減少所有成本，其優勢在於彈性配置而非全面降低費用。', D: '混合雲的重點在於雲端與本地的協作，並非確保所有模型都能離線運行。' }
     },
     {
       id: 124,
@@ -88,7 +88,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: '概念漂移指數據背後的模式變化，導致模型性能下降，需重新訓練或更新。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '概念漂移影響的是模型預測準確度，與訓練時間長短無直接關係。', B: null, C: '模型參數不會因概念漂移而自動更新，需要人為觸發重新訓練。', D: '概念漂移的定義就是資料分布改變導致準確度下降，不可能保持不變。' }
     },
     {
       id: 125,
@@ -102,7 +102,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: '批次請求可一次處理多個輸入，減少API調用次數，提升推論效率。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '增加請求頻率只會加重伺服器負擔，反而降低效能而非提升。', B: null, C: '降低運算能力會犧牲模型品質，不是提升處理效能的正確策略。', D: '只允許同步請求會造成阻塞，無法有效處理大量並發推論需求。' }
     },
     {
       id: 126,
@@ -116,7 +116,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: 'GDPR強調個人數據權利，包括要求刪除與AI相關的個人資訊，保護隱私。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: 'GDPR的核心是保護個人隱私，不是要求數據對公眾開放，恰恰相反。', B: null, C: 'GDPR並未限制AI在特定領域的應用，而是規範資料處理方式與個人權利。', D: 'GDPR要求涉及重大影響的自動化決策須提供人工介入機制，而非鼓勵完全自動化。' }
     },
     {
       id: 127,
@@ -130,7 +130,7 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '歷史偏見存在於訓練數據中，會被AI模型學習並放大，導致招聘決策不公。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '資料量不足可能影響模型泛化能力，但偏見的根源在於資料本身的偏差而非數量。', B: '參數數量影響模型容量，但偏見來自訓練資料中的歷史歧視模式，與參數多寡無關。', C: null, D: '框架只是開發工具，偏見是資料層面的問題，與使用哪個框架無關。' }
     },
     {
       id: 128,
@@ -144,7 +144,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: '公平性和透明性是AI倫理的核心，確保決策可被信任並符合社會規範。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '商業價值固然重要，但AI倫理規範強調的是公平與透明，而非利潤最大化。', B: null, C: '計算資源是技術層面的考量，與AI倫理規範中的公平性和透明度無直接關聯。', D: '降低成本是營運目標，AI倫理的核心在於確保決策不歧視且可被解釋。' }
     },
     {
       id: 129,
@@ -158,7 +158,7 @@ export default [
       answer: 'A',
       chapter: '4.3 AI 風險管理',
       explanation: '可解釋性AI技術（如SHAP、LIME）能揭示模型決策過程，提升透明度和信任。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '完全依賴AI決策反而降低透明度，缺乏人為審核會使決策過程更不可控。', C: '單純降低複雜度會犧牲性能，且低複雜度模型不一定就具有良好的可解釋性。', D: '隱藏運作邏輯與提高透明度完全背道而馳，無法讓利害關係人理解決策依據。' }
     },
     {
       id: 130,
@@ -172,7 +172,7 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '數據和技術基礎是評估AI導入可行性的核心，直接影響項目成功率。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '員工社交網絡屬於人際關係範疇，與AI導入的技術可行性評估無關。', B: '供應商合作關係是外部因素，評估AI導入應優先檢視內部的數據與技術準備度。', C: null, D: '競爭對手的策略僅供參考，企業應根據自身數據與技術基礎來評估導入可行性。' }
     },
     {
       id: 131,
@@ -186,7 +186,7 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '員工的AI知識水平直接影響導入的順利程度，需評估並提供培訓。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '硬體設施屬於基礎架構評估，不屬於員工技能和培訓需求的考量範圍。', B: '數據品質屬於數據準備階段的考量，與員工技能培訓需求是不同面向。', C: null, D: '預期效益分析屬於投資報酬率評估，非員工技能與培訓需求的考量。' }
     },
     {
       id: 132,
@@ -200,7 +200,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: '優先順序需平衡導入難易度和預期效益，確保資源分配合理。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '僅考量好處總和忽略了導入難易度，可能選到效益高但極難實現的方案。', B: null, C: '僅考量難易度低的項目可能忽略高效益方案，無法達到最佳資源配置。', D: '僅考量效益最大化而不評估可行性，容易選到難以實現的項目。' }
     },
     {
       id: 133,
@@ -214,7 +214,7 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '設計階段專注於明確AI應用需求和規格，為後續開發奠定基礎。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '持續發揮價值屬於營運與擴展階段的目標，不是設計階段的主要目的。', B: '確保人員適應變動屬於變革管理與導入階段的工作，非設計階段重點。', C: null, D: '監控模型效能與重新訓練頻率屬於實施/營運階段的任務。' }
     },
     {
       id: 134,
@@ -228,7 +228,7 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '監控模型效能並定期重新訓練是確保AI適應動態環境的關鍵步驟。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '闡明必要性和培訓屬於導入準備階段，不是確保長期適應動態環境的步驟。', B: '擴展應用規模屬於擴展階段的工作，與維持模型預測能力的持續監控不同。', C: null, D: '解決大規模應用衍生問題屬於組織層面的挑戰，非直接維持模型預測能力的步驟。' }
     },
     {
       id: 135,
@@ -242,7 +242,7 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '負責任AI專注於避免社會不公、歧視和隱私侵害，確保技術應用符合倫理。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '加速技術發展是產業目標，負責任AI的核心是確保發展過程中不造成社會危害。', B: '提高運算效能屬於技術優化範疇，與負責任AI強調的倫理和社會責任無關。', C: null, D: '商業價值最大化是企業經營目標，負責任AI著重於避免負面社會影響。' }
     },
     {
       id: 136,
@@ -256,7 +256,7 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '精確率差異指模型對正類樣本的預測正確率在不同群體間的差異，反映公平性問題。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '預測錯誤比例的差異屬於錯誤率差異的概念，不是精確率差異的定義。', B: '預測值與實際值的差距屬於誤差或偏差的概念，與精確率的定義不同。', C: null, D: '預測正確的整體比例屬於準確率(Accuracy)的概念，精確率(Precision)專指正類預測的正確比例。' }
     },
     {
       id: 137,
@@ -270,7 +270,7 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '模型註冊事件通知確保相關人員了解模型訓練、部署等關鍵階段，促進協作。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '監控應用程式操作問題屬於系統監控的範疇，非模型註冊事件通知的主要目的。', B: '探索訓練與推理間的差異屬於數據漂移監控，不是模型註冊事件的目的。', C: null, D: '基礎設施監控和警報是DevOps的職責，模型註冊事件專注於模型生命週期管理。' }
     },
     {
       id: 138,
@@ -284,7 +284,7 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '負責任AI儀表板提供統一介面，監控公平性、可解釋性等，確保倫理合規。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '自動化訓練和部署屬於MLOps工具的功能，非負責任AI儀表板的主要用途。', B: '提供雲端運算資源是雲端平台的功能，負責任AI儀表板專注於倫理監控與分析。', C: null, D: '監控硬體資源使用屬於基礎設施監控工具的職責，非負責任AI儀表板的設計目的。' }
     },
     {
       id: 139,
@@ -298,7 +298,7 @@ export default [
       answer: 'B',
       chapter: '4.3 AI 風險管理',
       explanation: '反事實分析通過模擬假設場景，探索特徵變化對結果的影響，提升模型解釋性。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '評估整體效能屬於模型評估的範疇，反事實分析專注於探索改變特徵後的假設結果。', B: null, C: '對數據進行小幅度變動觀察影響屬於微擾技術(Perturbation)的定義，非反事實分析。', D: '提供相反預測的最接近資料點是對比解釋(Contrastive Explanation)的概念，非反事實分析的主要目的。' }
     },
     {
       id: 140,
@@ -312,7 +312,7 @@ export default [
       answer: 'A',
       chapter: '4.3 AI 風險管理',
       explanation: '模擬收入變化屬於創建假設場景，探索不同條件下貸款結果的變化。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '敏感度分析是系統性地測試多個變數的影響程度，此案例僅模擬單一假設變化。', C: '識別偏見需要比較不同群體的待遇差異，此案例只是改變收入觀察結果變化。', D: '調整模型是修改模型參數或結構，此案例只是模擬輸入變化而未改變模型本身。' }
     },
     {
       id: 141,
@@ -326,6 +326,6 @@ export default [
       answer: 'C',
       chapter: '4.3 AI 風險管理',
       explanation: '微擾技術通過小幅度改變數據，觀察對模型預測的影響，評估模型穩定性。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '生成假設場景屬於反事實分析的定義，微擾技術著重於對現有數據做小幅度變動。', B: '提供相反預測的最接近資料點屬於對比解釋的概念，非微擾技術的主要目的。', C: null, D: '分析微擾如何影響預測是微擾技術的結果應用，而非其主要目的，目的是觀察小幅變動的影響。' }
     }
 ]

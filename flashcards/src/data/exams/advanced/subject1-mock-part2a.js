@@ -18,7 +18,7 @@ export default [
       answer: 'C',
       chapter: '3.3 生成式AI技術與應用',
       explanation: '生成對抗網路（GAN）是生成式AI的核心技術，通過生成器和判別器對抗學習生成新數據。強化學習和監督學習主要用於其他任務，PCA用於降維。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '強化學習主要用於決策優化（如遊戲、機器人控制），並非生成式AI的核心技術。', B: '監督學習用於分類與預測任務，屬於鑑別式AI的範疇，而非生成式AI。', C: null, D: '主成分分析（PCA）是一種降維技術，用於資料壓縮與特徵提取，與內容生成無關。' }
     },
     {
       id: 49,
@@ -32,7 +32,7 @@ export default [
       answer: 'A',
       chapter: '3.3 生成式AI技術與應用',
       explanation: 'GAN由生成器（生成數據）和判別器（判斷真偽）組成，通過對抗訓練生成逼真數據。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: 'RNN 與 CNN 是不同類型的神經網路架構，並非 GAN 的兩個組件。', C: 'Encoder 與 Decoder 是自編碼器（Autoencoder）或 Seq2Seq 模型的組件，不是 GAN 的結構。', D: '探索策略與獎勵機制屬於強化學習的核心概念，與 GAN 無關。' }
     },
     {
       id: 50,
@@ -46,7 +46,7 @@ export default [
       answer: 'C',
       chapter: '3.3 生成式AI技術與應用',
       explanation: '生成式AI主要用於生成新內容，如圖像、文本和語音，模型監管與審計屬於管理範疇。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '圖像生成是生成式AI的核心應用場景之一，例如 DALL-E、Stable Diffusion 等。', B: '文本摘要屬於自然語言生成任務，是生成式AI的典型應用。', C: null, D: '語音合成（如 TTS）是生成式AI的重要應用，可將文字轉為自然語音。' }
     },
     {
       id: 51,
@@ -60,7 +60,7 @@ export default [
       answer: 'B',
       chapter: '3.3 生成式AI技術與應用',
       explanation: 'GAN由生成器和判別器組成，通過對抗訓練生成逼真數據。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '編碼器與解碼器是自編碼器（Autoencoder）或 Transformer 的結構，並非 GAN 的主要組成。', B: null, C: '記憶體與控制器是神經圖靈機（NTM）等記憶增強模型的組件，與 GAN 無關。', D: '層級式貝葉斯模型屬於機率圖模型，是完全不同的統計建模方法。' }
     },
     {
       id: 52,
@@ -74,7 +74,7 @@ export default [
       answer: 'C',
       chapter: '3.3 生成式AI技術與應用',
       explanation: 'GAN通過生成器和判別器的對抗學習，廣泛用於影像風格轉換（如風格遷移）和生成逼真圖像。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '影像降噪雖可用深度學習處理，但並非 GAN 最廣泛的應用場景。', B: '類別分類屬於鑑別式AI的任務，GAN 的核心是生成而非分類。', C: null, D: '邊緣檢測是傳統電腦視覺技術（如 Canny、Sobel），不需要 GAN。' }
     },
     {
       id: 53,
@@ -88,7 +88,7 @@ export default [
       answer: 'A',
       chapter: '3.3 生成式AI技術與應用',
       explanation: '生成式AI可能因訓練數據偏見或錯誤生成不準確內容，需人工審核降低風險。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '生成式AI大幅降低了內容創作成本，高成本並非其主要風險。', C: '現代生成式AI已能創建圖片、音樂、影片等多種內容，不僅限於文字。', D: 'AI生成內容已廣泛應用於企業的行銷、客服、報告撰寫等場景。' }
     },
     {
       id: 54,
@@ -102,7 +102,7 @@ export default [
       answer: 'B',
       chapter: '3.3 生成式AI技術與應用',
       explanation: '生成式AI可生成社交媒體貼文和個人化內容，提升用戶參與度。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '自動化客服回覆屬於對話式AI應用，不屬於社交媒體內容生成的範疇。', B: null, C: '預測購買行為屬於預測分析（鑑別式AI），不是生成式AI在社交媒體的應用。', D: '分析競爭對手策略屬於商業智慧分析，並非生成式AI的社交媒體內容生成功能。' }
     },
     {
       id: 55,
@@ -116,7 +116,7 @@ export default [
       answer: 'B',
       chapter: '3.3 生成式AI技術與應用',
       explanation: '語音合成基於輸入文本和選定的聲音模型生成語音，與環境噪音無直接關係。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '語氣和情感是語音合成的輔助參數，但主要依賴的是文本內容與聲音模型。', B: null, C: '環境噪音影響的是語音辨識（輸入端），而非語音合成（輸出端）。', D: '語音輸入設備與語音辨識有關，語音合成是將文字轉為語音，不需要輸入設備。' }
     },
     {
       id: 56,
@@ -130,7 +130,7 @@ export default [
       answer: 'C',
       chapter: '3.3 生成式AI技術與應用',
       explanation: '生成式AI通過學習數據模式生成新內容，如文本、圖像或音訊。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '物件識別與定位屬於電腦視覺中的鑑別式AI任務，不是生成式AI的主要功能。', B: '情感分析屬於自然語言處理中的分類任務，是鑑別式AI的應用。', C: null, D: '關鍵詞提取屬於資訊擷取任務，是分析既有內容而非生成新內容。' }
     },
     {
       id: 57,
@@ -144,7 +144,7 @@ export default [
       answer: 'D',
       chapter: '3.3 生成式AI技術與應用',
       explanation: '遊戲物理引擎優化屬於數值計算領域，生成式AI主要用於場景、角色和劇情創作。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '遊戲場景生成是生成式AI的典型應用，可自動產生地圖、地形等內容。', B: '角色設計可透過生成式AI自動生成角色外觀、造型等視覺元素。', C: '故事情節創作是生成式AI在遊戲中的應用之一，可自動產生對話與劇情。', D: null }
     },
     {
       id: 58,
@@ -158,7 +158,7 @@ export default [
       answer: 'C',
       chapter: '3.3 生成式AI技術與應用',
       explanation: '鑑別式AI專注於分類和預測，生成式AI則生成新數據實例。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '兩者都可使用監督式或非監督式學習，學習方式並非兩者的主要區別。', B: '鑑別式與生成式AI都能處理結構化和非結構化數據，數據類型不是區分標準。', C: null, D: '兩者的運行環境取決於部署策略，與雲端或邊緣設備無必然關係。' }
     },
     {
       id: 59,
@@ -172,7 +172,7 @@ export default [
       answer: 'B',
       chapter: '3.3 生成式AI技術與應用',
       explanation: '人工審核能有效檢查生成內容，確保其準確性和適當性，降低錯誤或不當內容的風險。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '增加參數數量可能提升模型能力，但不能直接降低生成錯誤或不當內容的風險。', B: null, C: '使用更少的訓練數據反而會降低模型品質，增加生成錯誤內容的機率。', D: '關閉學習功能會使模型無法運作，這不是合理的風險管控方式。' }
     },
     {
       id: 60,
@@ -186,7 +186,7 @@ export default [
       answer: 'B',
       chapter: '3.4 多模態人工智慧應用',
       explanation: '多模態AI的核心是整合和分析多種數據類型（如文本、影像、音訊），以實現更全面的理解和應用。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '單一數據來源的處理屬於單模態AI，與多模態的核心概念相反。', B: null, C: '多模態AI通常需要多個專門的神經網路協作，而非單一網路解決所有問題。', D: '只關注影像數據屬於電腦視覺領域，多模態AI強調的是多種數據類型的結合。' }
     },
     {
       id: 61,
@@ -200,7 +200,7 @@ export default [
       answer: 'A',
       chapter: '3.4 多模態人工智慧應用',
       explanation: '醫療領域的AI應用需確保數據合規性和隱私保護，符合法規如HIPAA。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '程式語言的選擇是技術實作細節，不是醫療AI需要特別考量的核心問題。', C: '執行速度雖然重要，但在醫療領域中數據合規與隱私保護的優先級更高。', D: '能源消耗是一般性的IT考量，並非醫療AI應用需要特別關注的議題。' }
     },
     {
       id: 62,
@@ -214,7 +214,7 @@ export default [
       answer: 'A',
       chapter: '3.4 多模態人工智慧應用',
       explanation: 'AI在智慧城市中通過數據分析優化交通和能源管理，提升城市效率。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '地震預測主要依賴地質監測技術，AI目前在此領域的應用尚不成熟，非智慧城市的關鍵價值。', C: '減少建設成本更多取決於工程管理與材料技術，AI的主要價值在於營運優化而非降低建設成本。', D: 'AI是輔助決策工具，無法也不應完全取代人類進行城市治理決策。' }
     },
     {
       id: 63,
@@ -228,7 +228,7 @@ export default [
       answer: 'A',
       chapter: '3.4 多模態人工智慧應用',
       explanation: '自動駕駛需即時處理複雜環境數據，確保安全性和即時性是主要挑戰。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '減少運算成本是一般性的工程考量，自動駕駛的首要挑戰是即時性與安全性。', C: '增加耗能並非自動駕駛的挑戰目標，反而是要降低能耗、提升效率。', D: 'AI必須依靠大量數據學習才能安全駕駛，不可能不需要數據學習。' }
     },
     {
       id: 64,
@@ -242,7 +242,7 @@ export default [
       answer: 'B',
       chapter: '3.4 多模態人工智慧應用',
       explanation: '多模態AI需將文本、圖像等不同模態數據對齊和融合，是一大技術挑戰。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '多模態AI訓練完全可以使用GPU，GPU加速是深度學習的標準做法。', B: null, C: '多模態AI可以且經常與NLP結合使用，例如圖文理解任務。', D: '多模態AI的應用範圍廣泛，涵蓋語音、影像、文本等多種場景，不僅限於語音識別。' }
     },
     {
       id: 65,
@@ -256,7 +256,7 @@ export default [
       answer: 'B',
       chapter: '3.4 多模態人工智慧應用',
       explanation: '醫療領域的AI需透明且可解釋，以確保醫生和患者信任並符合倫理規範。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '準確性高於醫生並非倫理考量的重點，且AI目前仍需人類醫生監督與確認。', B: null, C: '讓AI自行決定治療方案違反醫療倫理，醫療決策應由醫生與患者共同參與。', D: '訓練數據的大小只是技術面向之一，倫理考量涵蓋透明度、公平性與隱私等更廣泛的議題。' }
     },
     {
       id: 66,
@@ -270,7 +270,7 @@ export default [
       answer: 'D',
       chapter: '3.4 多模態人工智慧應用',
       explanation: '自動駕駛事故的法律責任涉及製造商、模型準確性和算法決策等多方面因素。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '車輛製造商責任確實是爭議點之一，但不是唯一的爭議，答案應選「以上皆是」。', B: 'AI模型準確度是否達標確實是爭議點之一，但不是唯一的爭議，答案應選「以上皆是」。', C: '事故與AI演算法決策的關聯確實是爭議點之一，但不是唯一的爭議，答案應選「以上皆是」。', D: null }
     },
     {
       id: 67,
@@ -284,7 +284,7 @@ export default [
       answer: 'D',
       chapter: '3.4 多模態人工智慧應用',
       explanation: 'AI在零售業可應用於顧客行為分析、標籤生成和供應鏈優化，提升效率和體驗。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '顧客行為分析與預測確實是AI在零售業的應用之一，但不夠完整，答案應選「以上皆是」。', B: '產品標籤自動生成確實是AI在零售業的應用之一，但不夠完整，答案應選「以上皆是」。', C: '供應鏈管理最佳化確實是AI在零售業的應用之一，但不夠完整，答案應選「以上皆是」。', D: null }
     },
     {
       id: 68,
@@ -298,7 +298,7 @@ export default [
       answer: 'D',
       chapter: '3.4 多模態人工智慧應用',
       explanation: '金融業的AI應用涵蓋強化學習、區塊鏈風險分析和詐欺偵測等多種技術。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '強化學習確實應用於金融交易策略優化，但不是唯一涉及的技術，答案應選「以上皆是」。', B: '區塊鏈與AI結合的風險分析確實是金融AI應用之一，但不夠完整，答案應選「以上皆是」。', C: '機器學習詐欺偵測確實是金融AI的重要應用，但不夠完整，答案應選「以上皆是」。', D: null }
     },
     {
       id: 69,
@@ -312,7 +312,7 @@ export default [
       answer: 'C',
       chapter: '3.4 多模態人工智慧應用',
       explanation: '醫療AI的挑戰在於透明性、數據品質和法規合規，速度並非核心挑戰。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '確保模型透明度與可解釋性是醫療AI的重要挑戰之一，屬於核心議題。', B: '訓練數據的品質與代表性直接影響模型的公平性和準確性，是重大挑戰。', C: null, D: '確保AI符合醫療法規（如HIPAA、GDPR）是醫療AI應用的關鍵挑戰。' }
     },
     {
       id: 70,
@@ -326,7 +326,7 @@ export default [
       answer: 'A',
       chapter: '3.4 多模態人工智慧應用',
       explanation: 'AI在供應鏈管理中通過數據分析優化庫存和物流，提升效率和成本效益。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: 'AI的目標是提升供應鏈效率，而非減少AI技術的使用，這與應用目標矛盾。', C: '供應鏈管理需要大量數據支持決策，降低數據收集量會削弱AI的分析能力。', D: 'AI在供應鏈中的價值正是輔助人員做出更好的決策，而非避免影響決策。' }
     },
     {
       id: 71,
@@ -340,6 +340,6 @@ export default [
       answer: 'C',
       chapter: '3.4 多模態人工智慧應用',
       explanation: 'AI技術趨勢包括模型小型化、效率提升和自適應學習，應用範圍持續擴大而非減少。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '模型小型化（如模型蒸餾、量化）是當前AI的重要趨勢，便於邊緣部署。', B: '提升計算效率是AI技術發展的核心方向之一，包括硬體加速與演算法優化。', C: null, D: '自適應學習能力的提升（如遷移學習、持續學習）是AI技術的發展趨勢。' }
     }
 ]

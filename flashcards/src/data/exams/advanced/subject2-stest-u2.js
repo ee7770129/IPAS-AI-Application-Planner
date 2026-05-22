@@ -19,7 +19,7 @@ export default [
     answer: 'D',
     chapter: '數據處理與特徵工程',
     explanation: '屬性轉換可以揭示已存在的隱藏關係，但不能「使沒有關係變成有關係」。轉換不應該憑空製造不存在的關聯性。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '偏態分布經過轉換（如取 log）後可拉開差異，這是屬性轉換的正當目的之一。', B: '轉換後的資料更容易理解與比較，提高可讀性確實是轉換目的之一。', C: '許多模型假設資料呈常態分佈，透過轉換使資料符合假設是常見做法。', D: null }
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ export default [
     answer: 'C',
     chapter: '統計基礎',
     explanation: '盒鬚圖可顯示最小值、Q1、中位數、Q3、最大值（可算全距），但無法直接得知變異數。變異數需要計算每個數據點與平均值的偏差平方和。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '全距 = 最大值 - 最小值，盒鬚圖的兩端鬚線可直接讀取最大值與最小值，因此可算出全距。', B: '最小值是盒鬚圖下方鬚線的端點，可以直接讀取。', C: null, D: '中位數是盒鬚圖中間那條線，可以直接讀取。' }
   },
   {
     id: 3,
@@ -47,7 +47,7 @@ export default [
     answer: 'C',
     chapter: '數據分析工具',
     explanation: '折線圖以時間為 X 軸、數值為 Y 軸，最適合呈現趨勢變化。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '直方圖用於顯示資料的頻率分佈，不適合呈現時間序列的變化趨勢。', B: '圓餅圖用於顯示各部分佔整體的比例，無法表達隨時間的變化。', C: null, D: '盒鬚圖用於顯示資料的分佈與離群值，不適合呈現時間趨勢。' }
   },
   {
     id: 4,
@@ -61,7 +61,7 @@ export default [
     answer: 'C',
     chapter: '機器學習基礎',
     explanation: '邏輯斯迴歸使用最大概似估計法（MLE）求解迴歸係數。最小平方法用於線性迴歸，牛頓迭代法是 MLE 的數值求解方法之一但不是主要方法名稱。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '牛頓迭代法是數值優化的輔助工具，可用來加速 MLE 的求解，但本身不是求解迴歸係數的主要方法。', B: '馬可夫鏈演算法用於序列建模與隨機過程模擬，不是用來求解邏輯斯迴歸係數的方法。', C: null, D: '最小平方法是線性迴歸的求解方法，邏輯斯迴歸的輸出為機率值，需用最大概似估計法。' }
   },
   {
     id: 5,
@@ -75,7 +75,7 @@ export default [
     answer: 'C',
     chapter: '數據處理與特徵工程',
     explanation: '特徵個數越多，運算時間越「長」而非越短。更多特徵意味著更大的計算量和記憶體需求。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '特徵過多確實會導致維度災難，使模型過於複雜且容易過擬合，此敘述正確。', B: 'Random Forest 等模型可計算特徵重要性（Feature Importance），這是常見的特徵選擇方法。', C: null, D: '移除不相關特徵可降低雜訊干擾、減少運算量並提升模型效果，此敘述正確。' }
   },
   {
     id: 6,
@@ -89,7 +89,7 @@ export default [
     answer: 'D',
     chapter: '大數據處理技術',
     explanation: '巨量資料的核心理念是分散式處理和水平擴展。使用單一節點資料庫無法應對大量資料，與巨量資料技術架構的需求相反。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '高容錯性確保單一節點故障時系統仍可運作，是巨量資料架構的基本需求。', B: '平行擴充（水平擴展）可透過增加節點來應對資料量增長，是巨量資料架構的核心需求。', C: '分散式處理能將工作分配到多個節點同時執行，是巨量資料架構的關鍵特性。', D: null }
   },
   {
     id: 7,
@@ -103,7 +103,7 @@ export default [
     answer: 'B',
     chapter: '統計基礎',
     explanation: 'r=1 代表完美正線性關係，即 Y=aX+b 且 a>0。r=0 不代表在水平線上（可能有非線性關係）。r=-1 代表完美負線性關係而非無關。相關不等於因果。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'r=0 代表無線性相關，但資料點可能散佈各處或呈非線性關係，不一定落在水平線上。', B: null, C: 'r=-1 代表完美負線性關係（Y 隨 X 增加而減少），並非 X 與 Y 完全無關。', D: '相關不等於因果，r>0 只表示正向線性相關，不能推論兩者有因果關係。' }
   },
   {
     id: 8,
@@ -117,7 +117,7 @@ export default [
     answer: 'D',
     chapter: '機器學習基礎',
     explanation: '機器學習模型仍需考慮資料假設。例如線性迴歸假設常態分佈、同質變異等。忽略假設可能導致模型偏差或失效。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '重抽樣（如 Bootstrap）透過多次抽樣估計參數的不確定性，有助於避免過度配適，敘述正確。', B: '集成模型（如隨機森林、Boosting）結合多個弱學習器以提升整體預測效果，敘述正確。', C: '穩健統計方法（如中位數、截尾平均）對離群值不敏感，可降低雜訊影響，敘述正確。', D: null }
   },
   {
     id: 9,
@@ -131,7 +131,7 @@ export default [
     answer: 'C',
     chapter: '機器學習基礎',
     explanation: 'KNN（K 最近鄰）是監督式學習的分類/迴歸演算法，需要標籤資料。Word2Vec、關聯法則、K-Means 都屬於非監督式學習。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'Word2Vec 從大量文本中學習詞向量，不需要標籤資料，屬於非監督式學習。', B: '關聯法則從交易資料中挖掘項目間的關聯性，不需標籤，屬於非監督式學習。', C: null, D: 'K-Means 根據距離將資料分群，不需要標籤資料，屬於非監督式學習。' }
   },
   {
     id: 10,
@@ -145,7 +145,7 @@ export default [
     answer: 'A',
     chapter: '機器學習基礎',
     explanation: '根據已知的標籤（購買/不購買）來預測未知用戶的行為，這是典型的監督式學習預測模型（分類問題）。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: '關聯法則用於發現項目之間的共現關係（如購物籃分析），而非根據標籤預測行為。', C: '探索性分析是了解資料特性的初步分析，不涉及利用已知標籤進行預測。', D: '推薦系統著重根據使用者偏好推薦商品，本題情境是預測購買意願的分類問題。' }
   },
   {
     id: 11,
@@ -159,7 +159,7 @@ export default [
     answer: 'C',
     chapter: '數據處理與特徵工程',
     explanation: '資料特徵縮放（Feature Scaling）如 Min-Max Normalization，可將數值映射到 [0, 1] 區間，消除不同量綱的影響。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '資料組織是指資料的結構化與儲存方式，不涉及數值範圍的轉換。', B: '資料分析是從資料中提取有意義資訊的過程，不是將數值映射到特定區間的處理。', C: null, D: '資料清理是處理缺失值、重複值、錯誤值等問題，不是將數值縮放到 0 至 1 之間。' }
   },
   {
     id: 12,
@@ -173,7 +173,7 @@ export default [
     answer: 'A',
     chapter: '數據處理與特徵工程',
     explanation: '身高和體重都是連續數值型資料，可以直接用於線性模型。其他選項包含類別型變數（氣候、車款、性別），需要先進行編碼（如 One-Hot Encoding）才能輸入線性模型。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: '氣候（晴/陰/雨）是類別型變數，需先進行 One-Hot Encoding 等前處理才能用於線性模型。', C: '車款（車種型號）是類別型變數，無法直接輸入線性模型，需先進行編碼轉換。', D: '性別（男/女）是類別型變數，需先轉換為數值（如 0/1 編碼）才能用於線性模型。' }
   },
   {
     id: 13,
@@ -187,7 +187,7 @@ export default [
     answer: 'D',
     chapter: '機器學習基礎',
     explanation: '殘差的標準定義是「真實值減去預測值」（y - y_hat），而非「預測值減去真實值」。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: "Mallow's Cp 在計算中納入變數個數的懲罰項，適合比較不同變數數量的模型，敘述正確。", B: 'AIC 與 BIC 都對過多變數加以懲罰，但 BIC 的懲罰力度較大，兩者懲罰方式確實不同。', C: '迴歸模型的績效指標（如 MSE、RMSE、MAE）都是基於殘差計算的，敘述正確。', D: null }
   },
   {
     id: 14,
@@ -201,7 +201,7 @@ export default [
     answer: 'D',
     chapter: '機器學習基礎',
     explanation: '線性迴歸用於預測連續數值，不適合預測離散的詞彙。CRF、HMM、N-gram 都是處理序列資料和語言模型的方法。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'CRF（條件隨機場）可建模序列標註問題，考慮上下文資訊來預測序列中的下一個元素。', B: 'HMM（隱馬可夫模型）透過隱藏狀態的轉移機率來預測序列，適合語言建模。', C: 'N-gram 根據前 N-1 個詞的出現頻率來預測下一個詞，是經典的語言模型方法。', D: null }
   },
   {
     id: 15,
@@ -215,7 +215,7 @@ export default [
     answer: 'D',
     chapter: '數據處理與特徵工程',
     explanation: '資料的傳輸方式（電郵或隨身碟）不會影響資料的數值內容，不是極端值或雜訊的來源。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '人為故意謊報會產生與事實不符的異常數據，是極端值或雜訊的常見來源。', B: '數據輸入錯誤（如打錯數字、小數點位移）會直接產生錯誤的極端值或雜訊。', C: '測量儀器故障或精度不足會導致讀數異常，是產生雜訊與極端值的主要原因之一。', D: null }
   },
   {
     id: 16,
@@ -229,7 +229,7 @@ export default [
     answer: 'D',
     chapter: '統計基礎',
     explanation: '探索性資料分析（EDA）重點在了解資料特性（分佈、離群值、相關性等），模型的準確度是建模後的評估階段，不屬於 EDA。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '找出與應變數相關的自變數是 EDA 的重要任務，有助於後續的特徵選擇與建模。', B: '四分位數可了解資料的分佈狀況與集中趨勢，是 EDA 經常檢視的統計量。', C: '檢查離群值是 EDA 的核心工作之一，離群值會影響後續分析與建模結果。', D: null }
   },
   {
     id: 17,
@@ -243,7 +243,7 @@ export default [
     answer: 'A',
     chapter: '機器學習基礎',
     explanation: '多層感知器（MLP/深度神經網路）是黑箱模型，難以解釋其決策過程。邏輯迴歸、決策樹、關聯法則都具有較好的可解釋性。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: '邏輯迴歸的係數可直接解讀為各特徵對結果的影響方向與大小，具有高可解釋性。', C: '決策樹以樹狀規則呈現決策過程，人類可以輕易理解每個分支的判斷邏輯。', D: '關聯法則以「若 A 則 B」的形式呈現規則，直觀且容易被人類理解。' }
   },
   {
     id: 18,
@@ -257,6 +257,6 @@ export default [
     answer: 'D',
     chapter: '統計基礎',
     explanation: '相關係數為 0 只代表兩變數之間沒有「線性」關係，不代表統計獨立。兩變數可能存在非線性相依關係但相關係數為 0。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '數值變數之間的相依性確實以相關係數（如 Pearson 相關係數）來衡量，敘述正確。', B: '獨立與相依是描述兩個變數之間關係的基本概念，敘述正確。', C: '類別變數的相依性透過列聯表的頻次計算（如卡方檢定）來衡量，敘述正確。', D: null }
   }
 ]

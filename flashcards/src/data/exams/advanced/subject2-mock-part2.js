@@ -18,7 +18,7 @@ export default [
       answer: 'C',
       chapter: 'AI 產業應用',
       explanation: 'AI在少量多樣生產中優化人力配置和線平衡，提升效率而非僅取代人工。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '少量多樣產線仍需人工彈性操作，AI目的不是全面取代人工，而是優化配置。', B: '提升設備智能化只是手段之一，並非少量多樣產線導入AI的主要目的。', C: null, D: '收集數據是過程而非目的，AI導入的核心目標是優化生產效率。' }
     },
     {
       id: 20,
@@ -32,7 +32,7 @@ export default [
       answer: 'B',
       chapter: 'AI 產業應用',
       explanation: 'AI影像辨識可自動檢查插件動作，減少錯誤並提升品質控制效率。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '產品設計分析屬於研發階段的工作，與產線人工插件的即時監控無關。', B: null, C: '設備故障預測屬於預測性維護的範疇，並非影像辨識於人工插件的主要用途。', D: '物料流向追蹤屬於供應鏈管理，與人工插件動作的影像辨識無直接關聯。' }
     },
     {
       id: 21,
@@ -46,7 +46,7 @@ export default [
       answer: 'B',
       chapter: 'AI 產業應用',
       explanation: '現有MES/RMS/APS系統提供結構化數據，利於AI整合實現自動排程。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '現有系統資料仍需清洗與整合，不代表可以直接用於AI模型訓練而無需額外處理。', B: null, C: '是否使用GPU伺服器取決於模型複雜度，與既有數位系統的導入經驗無關。', D: 'AI技術小組的工作量取決於專案規模與複雜度，不會因既有系統而直接減少。' }
     },
     {
       id: 22,
@@ -60,7 +60,7 @@ export default [
       answer: 'A',
       chapter: 'AI 產業應用',
       explanation: '攝像頭架設的難易程度主要取決於現場環境的光線和線路佈設條件。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '標註與SOP的困難度屬於資料準備階段的考量，不是攝像頭架設本身的難易度。', C: '系統整合的複雜度是後續軟體層面的問題，與攝像頭實體架設的評分無關。', D: '排程演算法效能屬於AI智慧排程的評估項目，與攝像頭架設無關。' }
     },
     {
       id: 23,
@@ -74,7 +74,7 @@ export default [
       answer: 'A',
       chapter: 'AI 產業應用',
       explanation: '修正人力錯誤和提升良率直接對應企業的產品品質和良率目標。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '成本降低是間接效益，題目強調的是修正錯誤與提升良率，直接對應的是良率目標。', C: '效率提升偏向產能與速度的改善，而非品質與良率的提升。', D: '數位轉型是整體策略方向，非此項具體好處所直接呼應的經營目標。' }
     },
     {
       id: 24,
@@ -88,7 +88,7 @@ export default [
       answer: 'D',
       chapter: 'AI 產業應用',
       explanation: 'AI在產品設計階段通過模擬和分析提升產品創新性，創造更具競爭力的設計。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '縮短上市時間偏向生產與行銷流程的優化，不是設計階段導入AI的主要目的。', B: '確認需求規格是專案規劃階段的任務，並非AI在產品設計階段的主要貢獻。', C: '降低開發成本是附帶效益，AI在設計階段的核心價值是提升創新性。', D: null }
     },
     {
       id: 25,
@@ -102,7 +102,7 @@ export default [
       answer: 'A',
       chapter: 'AI 產業應用',
       explanation: '材料配方預測需依賴歷史材料性質和公式數據，作為AI模型的訓練基礎。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '營收數據屬於財務資訊，與材料配方的物理化學性質預測無直接關聯。', C: '傳統EIP系統多為行政管理用途，不含材料配方與性質的專業數據。', D: '技術資料與訓練素材偏向知識管理，缺乏可供AI建模的結構化配方數據。' }
     },
     {
       id: 26,
@@ -116,7 +116,7 @@ export default [
       answer: 'A',
       chapter: 'AI 產業應用',
       explanation: 'AI瑕疵檢測通過影像辨識自動檢查產品缺陷，降低漏檢率並提升效率。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '設備預測性維護針對的是設備故障預防，而非產品品質檢測的漏檢問題。', C: '智慧生產排程解決的是生產排程效率問題，與品質檢測的漏檢率無關。', D: '呆滯庫存管理屬於倉儲與供應鏈範疇，無法解決品質檢測耗時與漏檢的痛點。' }
     },
     {
       id: 27,
@@ -130,7 +130,7 @@ export default [
       answer: 'B',
       chapter: 'AI 產業應用',
       explanation: '急單插單導致排程混亂，增加加班成本，影響訂單達交率。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '品質檢測問題影響的是良率與退貨率，不會直接導致訂單達交率下降與加班成本增加。', B: null, C: '設備故障造成的是停機損失，與訂單達交率下降和加班人力成本增加的關聯較間接。', D: '呆滯庫存問題影響的是庫存成本與資金周轉，與訂單達交率及加班成本無直接關係。' }
     },
     {
       id: 28,
@@ -144,7 +144,7 @@ export default [
       answer: 'C',
       chapter: 'AI 產業應用',
       explanation: '溫度、電流等是結構化數據（表格形式），運行聲音屬非結構化數據（音訊）。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '僅涵蓋溫度、電流等數值型資料，忽略了運行聲音這類非結構化的音訊數據。', B: '僅涵蓋聲音等非結構化部分，忽略了溫度、電流、振動等可以表格化的結構化數據。', C: null, D: '題目所列數據確實包含結構化與非結構化兩種類型，並非以上皆非。' }
     },
     {
       id: 29,
@@ -158,7 +158,7 @@ export default [
       answer: 'A',
       chapter: 'AI 產業應用',
       explanation: '智慧排程需整合設備、訂單、排程和物料等結構化數據，確保全面優化。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '產品圖像屬於AI瑕疵檢測所需的非結構化數據，與產線排程優化無關。', C: '感測器數據與故障數據主要用於設備預測性維護，非排程優化的核心資料。', D: '庫存庫齡與進銷存數據偏向庫存管理應用，不是排程優化所需的主要資料。' }
     },
     {
       id: 30,
@@ -172,7 +172,7 @@ export default [
       answer: 'A',
       chapter: 'AI 產業應用',
       explanation: '停機時間通常以小時/次量化，反映故障對生產的具體影響。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '人月是衡量人力工作量的單位，不適合用來量化單次設備故障的停機時間。', C: '元是金額單位，雖然可以衡量停機損失，但題目問的是「停止生產的時間」而非成本。', D: '百分比適合衡量比率指標（如良率），不適合衡量每次故障的具體停機時長。' }
     },
     {
       id: 31,
@@ -186,7 +186,7 @@ export default [
       answer: 'B',
       chapter: 'AI 產業應用',
       explanation: '預測性維護依賴設備感測器數據（如溫度、振動）來預測設備故障。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '市場銷售數據用於需求預測與行銷分析，與設備運行狀態的預測無關。', B: null, C: '員工出勤數據屬於人力資源管理範疇，無法反映設備的健康狀態。', D: '財務報表數據用於經營績效分析，不包含設備運行的即時感測資訊。' }
     },
     {
       id: 32,
@@ -200,7 +200,7 @@ export default [
       answer: 'B',
       chapter: 'AI 產業應用',
       explanation: '圖像識別與異常檢測用於檢查產品瑕疵，是製造業品質控制的核心技術。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '語音識別用於語音助理或客服場景，與製造業產品外觀的品質檢測無關。', B: null, C: '文本生成用於內容創作或對話系統，無法對產品進行視覺化的品質檢測。', D: '強化學習主要用於決策優化（如機器人控制），不是品質檢測的主要技術。' }
     },
     {
       id: 33,
@@ -214,7 +214,7 @@ export default [
       answer: 'B',
       chapter: 'AI 產業應用',
       explanation: '時間序列分析適合分析和預測隨時間變化的需求數據，是供應鏈管理的核心技術。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '強化學習適合即時決策與控制場景，不是處理歷史需求趨勢預測的主要方法。', B: null, C: '圖像識別用於視覺辨識任務，與供應鏈的需求數量預測無關。', D: '文本分類用於文件歸類或情感分析，無法處理數值型的需求時間序列資料。' }
     },
     {
       id: 34,
@@ -228,7 +228,7 @@ export default [
       answer: 'A',
       chapter: 'AI 產業應用',
       explanation: '異常檢測用於識別金融交易中的異常模式，是詐欺偵測的核心技術。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: '圖像生成用於創建視覺內容，與金融交易的異常行為偵測完全無關。', C: '語音合成用於產生語音輸出，無法分析交易數據中的詐欺模式。', D: '文本生成用於產生文字內容，不具備偵測交易異常模式的能力。' }
     },
     {
       id: 35,
@@ -242,7 +242,7 @@ export default [
       answer: 'D',
       chapter: 'AI 產業應用',
       explanation: '智慧城市交通管理主要依賴即時數據分析、圖像識別和強化學習，文本生成與此無關。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '即時數據分析是交通管理的核心技術，用於即時監控與調度交通流量。', B: '圖像識別用於車牌辨識、車流偵測等交通監控場景，屬於常用技術。', C: '強化學習可用於最佳化紅綠燈控制策略，屬於智慧交通的應用技術之一。', D: null }
     },
     {
       id: 36,
@@ -256,6 +256,6 @@ export default [
       answer: 'C',
       chapter: 'AI 產業應用',
       explanation: 'CRM中的AI應用聚焦客戶行為預測、自動化服務和個人化推薦，產品設計不在此範疇。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '客戶行為預測是CRM的核心應用，透過AI分析客戶數據預測購買意向與流失風險。', B: '自動化客戶服務（如智能客服機器人）是CRM中AI的典型應用場景。', C: null, D: '個人化推薦透過AI分析客戶偏好提供客製化建議，是CRM的重要應用。' }
     },
 ]

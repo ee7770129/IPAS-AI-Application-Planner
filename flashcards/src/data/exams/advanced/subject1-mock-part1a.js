@@ -18,7 +18,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '分詞技術、命名實體識別（NER）和依存句法分析均為NLP的核心技術，用於處理文本數據。卷積神經網路（CNN）主要用於圖像處理，與NLP關聯較少。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '分詞技術是 NLP 的基礎步驟，用於將連續文字切分成有意義的詞語單元。', B: null, C: '命名實體識別（NER）是 NLP 的核心任務之一，用於辨識文本中的人名、地名等實體。', D: '依存句法分析是 NLP 中分析詞語間語法關係的重要技術。' }
     },
     {
       id: 2,
@@ -32,7 +32,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '注意力機制是Transformer的核心，允許模型捕捉序列中長距離依賴關係。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '卷積層是 CNN 的核心元件，用於提取局部特徵，並非 Transformer 的核心機制。', B: 'LSTM 是 RNN 的改良版本，用於處理序列資料，但 Transformer 刻意捨棄了遞歸結構。', C: null, D: '反向傳播是神經網路訓練的通用演算法，並非 Transformer 獨有的核心機制。' }
     },
     {
       id: 3,
@@ -46,7 +46,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'BERT通過雙向語境學習，同時考慮詞語前後的上下文，提升NLP任務表現。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: 'BERT 的名稱中 Bidirectional 即表示雙向，並非單向語言模型。', B: 'BERT 的預訓練使用的是自監督學習（遮罩語言模型），而非無監督學習。', C: null, D: 'BERT 是編碼器架構，主要用於理解任務（分類、NER 等），並非生成式模型。' }
     },
     {
       id: 4,
@@ -60,7 +60,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '詞嵌入將詞語轉為向量，捕捉詞語間的語義關係，適用於NLP任務。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '詞嵌入的目的是表示語義關係，而非壓縮文本資料量。', B: null, C: '語法分析樹由句法分析器產生，與詞嵌入的向量表示功能無關。', D: '詞嵌入是將詞語轉換為數值向量，而非轉換為圖片。' }
     },
     {
       id: 5,
@@ -74,7 +74,7 @@ export default [
       answer: 'A',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'Transformer通過注意力機制捕捉長距離依賴，解決了RNN記憶能力有限的問題。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: 'Transformer 的訓練速度比 RNN 快，因為可以平行處理，而非更慢。', C: 'Transformer 可以進行序列標註，例如 BERT 就常用於命名實體識別等序列標註任務。', D: 'Transformer 通常需要大規模數據集才能發揮優勢，並非特別適用於小規模數據集。' }
     },
     {
       id: 6,
@@ -88,7 +88,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'MFCC是一種用於語音識別的標準特徵提取方法，通過將語音信號轉換為頻譜特徵，捕捉人類聽覺系統的特性，提升模型識別準確性。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: 'MFCC 是頻譜特徵提取方法，時序關係由後續的模型（如 RNN）處理，而非 MFCC 本身。', B: null, C: 'MFCC 是特徵提取步驟，與減少訓練時間無關。', D: 'MFCC 是特徵提取技術，正則化是防止過擬合的訓練策略，兩者用途不同。' }
     },
     {
       id: 7,
@@ -102,7 +102,7 @@ export default [
       answer: 'D',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'Word2Vec依賴大量語料來學習詞語間的語義關係，若語料庫較小，模型難以捕捉有效的語義，導致詞向量質量差。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '語料庫較小時，Word2Vec 訓練反而更快，不會有訓練時間過長的問題。', B: '向量維度是人為設定的超參數，與語料庫大小無直接關係。', C: '過擬合雖然可能發生，但 Word2Vec 在小語料下最主要的問題是無法學到有意義的語義關係。', D: null }
     },
     {
       id: 8,
@@ -116,7 +116,7 @@ export default [
       answer: 'A',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'Self-Attention機制能捕捉序列中任意位置的依賴關係，適合長距離依賴，而CNN主要依賴局部感受野，適合空間數據。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: null, B: 'CNN 依賴局部感受野，處理長序列時需要多層堆疊，效率不如 Self-Attention。', C: 'Transformer 廣泛應用於語言建模，例如 GPT 系列就是基於 Transformer 的語言模型。', D: 'Self-Attention 不需要池化層，它直接透過注意力權重計算序列中各位置的關聯性。' }
     },
     {
       id: 9,
@@ -130,7 +130,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'NLP在金融領域用於分析文本數據，如財報或新聞，進行風險管理和市場預測。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '醫學影像分析屬於電腦視覺（CV）領域，而非自然語言處理。', B: '生產流程優化屬於工業工程或自動化控制領域，與 NLP 文本處理無直接關係。', C: null, D: '氣象預報主要依賴數值模擬與感測器數據，並非 NLP 在金融領域的應用。' }
     },
     {
       id: 10,
@@ -144,7 +144,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'IDP依賴OCR、NLP和機器學習處理文件，區塊鏈技術與文件處理無直接關係。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: 'OCR 是 IDP 的核心技術之一，負責將紙本或圖像中的文字轉為數位文字。', B: 'NLP 是 IDP 的核心技術之一，用於理解和提取文件中的語義資訊。', C: null, D: '機器學習是 IDP 的核心技術之一，用於訓練模型自動分類和提取文件資訊。' }
     },
     {
       id: 11,
@@ -158,7 +158,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '預生成模型針對常見文件類型進行預訓練，能快速識別關鍵字段，減少自訂訓練需求。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '預生成模型針對常見文件類型預訓練，無法處理「任何」格式的文件，仍有適用範圍限制。', B: null, C: '預生成模型的優勢正是減少自訂訓練數據的需求，而非需要大量自訂數據。', D: '預生成模型通常支援多語言文件辨識，並非只能識別單一語言。' }
     },
     {
       id: 12,
@@ -172,7 +172,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '預生成模型在文件辨識中擅長提取結構化資訊，如餐飲帳單的字段。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '基因序列分析屬於生物資訊學領域，需要專門的序列分析模型，非預生成文件辨識模型的應用。', B: '星體圖像分類屬於天文學的影像辨識領域，與文件辨識的預生成模型無關。', C: null, D: '股票市場預測屬於時間序列分析領域，並非預生成文件辨識模型的典型應用。' }
     },
     {
       id: 13,
@@ -186,7 +186,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '關鍵片語擷取旨在識別文本中的主要概念或主題，提升資訊提取效率。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '情感傾向分析是情感分析（Sentiment Analysis）的功能，而非關鍵片語擷取。', B: null, C: '字數統計是基本的文字處理功能，不需要關鍵片語擷取技術。', D: '語言種類判別屬於語言偵測技術，與關鍵片語擷取的功能不同。' }
     },
     {
       id: 14,
@@ -200,7 +200,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '實體是NLP中具有特定意義的詞或短語，如人名、地名，用於命名實體識別。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '實體恰恰是文本中重要且有意義的詞語，而非不重要的詞語。', B: null, C: '連接句子和段落的詞語屬於連接詞或過渡詞，並非 NLP 中「實體」的定義。', D: '表達情感的詞語屬於情感詞彙，情感分析會處理這類詞語，但它們不是「實體」。' }
     },
     {
       id: 15,
@@ -214,7 +214,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '自訂文字分類將文本分配到預定義的類別中，適用於結構化分析。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '文字分類需要有明確的類別定義，隨機生成的類別無法進行有意義的分類。', B: null, C: '文本長度不是分類的依據，自訂文字分類是根據內容語義進行分類。', D: '語法結構分析屬於句法分析的範疇，與文字分類的目的不同。' }
     },
     {
       id: 16,
@@ -228,7 +228,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'NER將文本中的實體（如人名、地名）分類到預定義類別，如「人」、「地點」等。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: 'NER 是根據語義類別分類實體，並非根據詞頻排序。', B: null, C: '字母順序是排列方式而非分類方式，NER 按語義類別（人、地、組織等）分類。', D: '情感極性分析屬於情感分析任務，NER 辨識的是實體類別而非情感。' }
     },
     {
       id: 17,
@@ -242,7 +242,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'PII偵測旨在識別和保護敏感資訊，如姓名、電話號碼，確保數據隱私。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '技術術語屬於專業詞彙範疇，並非 PII 偵測的目標。', B: null, C: '產品規格屬於商業資訊，不屬於個人識別資訊的範疇。', D: '歷史事件描述屬於一般文本內容，並非個人識別資訊。' }
     },
     {
       id: 18,
@@ -256,7 +256,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '語言偵測技術用於識別文本的語言類型，如英文、中文等。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '主要論點的識別屬於文本摘要或論點擷取技術，而非語言偵測。', B: '修辭手法分析屬於文體學或語言風格分析，非語言偵測的功能。', C: null, D: '作者風格辨識屬於作者歸屬分析（Authorship Attribution），與語言偵測不同。' }
     },
     {
       id: 19,
@@ -270,7 +270,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '基於統計的語言偵測分析文本特徵（如詞頻、N-gram），判斷語言模型。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '標點符號在不同語言中有部分差異，但並非統計方法進行語言偵測的主要依據。', B: null, C: '顏文字和表情符號是跨語言通用的，無法作為語言偵測的有效特徵。', D: '超連結和網址通常是語言無關的結構化資訊，不適合用於語言偵測。' }
     },
     {
       id: 20,
@@ -284,7 +284,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'CRF擅長處理上下文依賴的語言數據，如序列標註任務，考慮全局結構。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: 'CRF 的優勢在於建模標籤之間的依賴關係，獨立性假設反而是其他模型（如 Naive Bayes）的特點。', B: null, C: '結構化是 CRF 輸出的特性，但其核心優勢是處理上下文依賴性，而非僅因數據結構化。', D: '數據量小並非 CRF 特別擅長處理的特性，CRF 的優勢在於考慮序列的上下文關係。' }
     },
     {
       id: 21,
@@ -298,7 +298,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'CRF的序列標註用於提取商品描述中的結構化屬性，如品牌、型號，提升資訊提取效率。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '用戶評論的情感分析屬於情感分析任務，而非 CRF 序列標註在電商中的典型應用。', B: null, C: '促銷活動時間提取屬於事件時間抽取，非 CRF 在商品描述中序列標註的主要用途。', D: '物流配送方式是結構化的分類資訊，不需要使用序列標註技術來識別。' }
     },
     {
       id: 22,
@@ -312,7 +312,7 @@ export default [
       answer: 'C',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '自注意力機制是Transformer的核心，能捕捉序列中任意位置的依賴關係。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '卷積運算是 CNN 的核心操作，用於提取局部空間特徵，非 Transformer 的關鍵機制。', B: '遞歸神經網路（RNN）是另一種序列模型，Transformer 正是為了取代 RNN 的遞歸結構而設計。', C: null, D: '池化操作用於降維和提取主要特徵，常見於 CNN，並非 Transformer 的關鍵機制。' }
     },
     {
       id: 23,
@@ -326,7 +326,7 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: 'Transformer通過自注意力機制同時考慮句子的全局上下文，生成更準確的翻譯。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '逐字翻譯無法處理語序差異和語境，現代機器翻譯追求的是語義層面的翻譯。', B: null, C: '僅依賴詞典的翻譯是早期規則式翻譯的做法，Transformer 使用的是深度學習方法。', D: 'Transformer 需要大量平行語料進行訓練，無法在無訓練數據的情況下進行翻譯。' }
     },
     {
       id: 24,
@@ -340,6 +340,6 @@ export default [
       answer: 'B',
       chapter: '3.1 自然語言處理技術與應用',
       explanation: '擷取式摘要從原文中選取最具代表性的句子作為摘要，保留原始內容。',
-      optionExplanations: { A: null, B: null, C: null, D: null }
+      optionExplanations: { A: '生成全新句子來概括原文是「生成式摘要」（Abstractive Summarization）的做法，而非擷取式。', B: null, C: '翻譯成另一種語言再摘要並非擷取式摘要的方法，擷取式摘要直接從原文選取句子。', D: '同義詞替換屬於改寫（Paraphrase）技術，與擷取式摘要直接選取原句的方式不同。' }
     }
 ]

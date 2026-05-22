@@ -19,7 +19,7 @@ export default [
     answer: 'D',
     chapter: '程式語言基礎',
     explanation: '\\n 是換行符號（newline），\\t 是 Tab 定位字元，\\r 是回車符號（carriage return），\\s 不是標準跳脫字元（在正規表達式中代表空白字元，但不是跳脫序列）。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '\\t 是 Tab 定位字元，用於產生水平縮排，不是換行符號。', B: '\\s 不是標準跳脫序列，僅在正規表達式中代表空白字元。', C: '\\r 是回車符號（carriage return），會將游標移到行首，不是換行。', D: null }
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ export default [
     answer: 'B',
     chapter: '程式語言基礎',
     explanation: '多型（Polymorphism）允許同一介面有不同的實作，包括方法重載（overloading，參數不同）和覆寫（overriding，子類別重新定義）。封裝是隱藏內部實作，繼承是子類別取得父類別的屬性與方法，實例是類別的具體物件。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '封裝是將資料與方法包裝在一起並隱藏內部實作細節，與「參數不同產生不同行為」無關。', B: null, C: '實例是類別的具體物件，是物件導向的基本概念，不是描述「同名函式因參數不同而行為不同」的特性。', D: '繼承是子類別取得父類別的屬性與方法，重點在程式碼重用，不是「因參數屬性不同而出現不同行為」。' }
   },
   {
     id: 3,
@@ -47,7 +47,7 @@ export default [
     answer: 'B',
     chapter: '數據處理工具',
     explanation: "SQL 中 LIKE 用於模式比對，% 代表任意數量的任意字元。'%凱' 表示以「凱」結尾的字串；'%凱%' 則是包含「凱」的字串（不限結尾）。is 不能搭配萬用字元使用，is 用於比較 NULL 值。",
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'is 用於比較 NULL 值（如 IS NULL），不能搭配萬用字元 % 做模式比對。', B: null, C: "'%凱%' 表示「包含凱」的字串，不限定結尾，會找到「凱文」等非結尾的結果。", D: 'is 不能搭配萬用字元使用，且 \'%凱%\' 是包含而非結尾比對，兩個錯誤。' }
   },
   {
     id: 4,
@@ -61,7 +61,7 @@ export default [
     answer: 'B',
     chapter: '程式語言基礎',
     explanation: 'R 語言中，產生錯誤（Error）時會立即停止執行，不會繼續執行後續程式碼。警告（Warning）只是提醒潛在問題，程式仍會繼續執行。一般訊息（Message）用於輸出提示資訊。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '這是正確敘述，Warning 確實用於說明潛在問題。', B: null, C: '這是正確敘述，Message 確實用於說明輸出結果或提示資訊。', D: '這是正確敘述，產生 Warning 時程式仍可繼續執行。' }
   },
   {
     id: 5,
@@ -75,7 +75,7 @@ export default [
     answer: 'A',
     chapter: '程式語言基礎',
     explanation: 'system.time() 用於計算程式執行時間，屬於效能測量工具，不是例外處理函數。stop() 用於產生錯誤並停止執行，warning() 用於產生警告訊息，message() 用於輸出一般提示訊息，三者皆為例外/訊息處理函數。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: 'stop() 用於主動產生錯誤並停止執行，屬於例外處理函數。', C: 'warning() 用於產生警告訊息，屬於例外/訊息處理函數。', D: 'message() 用於輸出一般提示訊息，屬於訊息處理函數。' }
   },
   {
     id: 6,
@@ -89,7 +89,7 @@ export default [
     answer: 'A',
     chapter: '數據基礎概念',
     explanation: '結構化資料指有固定欄位格式、存放在關聯式資料庫（RDBMS）中的資料，如表格形式的營養成分資料集。JSON 和 XML 屬於半結構化資料（有標記但無固定表格結構），SHP 是地理資訊系統的向量圖資格式。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: 'JSON 屬於半結構化資料，有標記但無固定表格結構，不是結構化資料。', C: 'SHP 是地理資訊系統的向量圖資格式，屬於非結構化或半結構化資料。', D: 'XML 屬於半結構化資料，有自訂標記但不具備固定欄位的表格結構。' }
   },
   {
     id: 7,
@@ -103,7 +103,7 @@ export default [
     answer: 'B',
     chapter: '數學基礎',
     explanation: '矩陣的秩（Rank）等於矩陣中線性獨立的行向量（或列向量）的最大數量，用於衡量矩陣所包含的獨立資訊量。單位矩陣是對角線為 1 其餘為 0 的方陣，相關矩陣用於表示變數間的相關係數，反矩陣是使原矩陣相乘後得到單位矩陣的矩陣。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '單位矩陣是對角線為 1 其餘為 0 的方陣，與線性獨立向量的數量無關。', B: null, C: '相關矩陣用於表示變數間的相關係數，不是描述線性獨立向量數量的概念。', D: '反矩陣是使原矩陣相乘後得到單位矩陣的矩陣，與線性獨立向量無關。' }
   },
   {
     id: 8,
@@ -117,7 +117,7 @@ export default [
     answer: 'D',
     chapter: '程式語言基礎',
     explanation: 'supressMessages() 拼寫有誤（正確為 suppressMessages()），且其功能是抑制訊息輸出，不是例外處理函數。tryCatch() 是最常用的例外處理函數，try() 是簡化版的例外捕捉，withCallingHandlers() 則可在例外發生的呼叫環境中處理例外。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: 'tryCatch() 是 R 語言最常用的例外處理函數，可捕捉並處理錯誤。', B: 'withCallingHandlers() 是 R 語言的例外處理函數，可在例外發生的呼叫環境中處理。', C: 'try() 是 R 語言簡化版的例外捕捉函數，屬於例外處理函數。', D: null }
   },
   {
     id: 9,
@@ -131,7 +131,7 @@ export default [
     answer: 'D',
     chapter: '程式語言基礎',
     explanation: '在同一個類別中，public 方法可以存取同類別的 private 屬性，這是封裝的標準用法（透過 getter/setter 存取私有欄位）。private 屬性的存取限制是「僅限同類別內」，不論存取它的方法是 public 還是 private 都可以。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '這是正確敘述，public 函數可被其他物件呼叫，是封裝的基本存取控制。', B: '此敘述有爭議但題目問的是 D，private 方法無法被子類別覆寫，但此非本題最佳答案。', C: '這是正確敘述，private 函數僅限同類別內部存取，外部無法使用。', D: null }
   },
   {
     id: 10,
@@ -145,7 +145,7 @@ export default [
     answer: 'D',
     chapter: '數據基礎概念',
     explanation: 'NoSQL 的核心特性之一是不需要預先定義固定的 Schema（Schema-less 或 Schema-flexible），這是與關聯式資料庫（RDBMS）的主要區別。NoSQL 支援 Key-Value、文件、欄位族、圖形等多種資料模式，Google Bigtable 是典型的 NoSQL 資料庫。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '這是正確敘述，Key-Value 是 NoSQL 常見的資料模式之一。', B: '這是正確敘述，NoSQL 通常透過 API 進行資料查詢而非 SQL 語法。', C: '這是正確敘述，Google Bigtable 確實是典型的 NoSQL 資料庫。', D: null }
   },
   {
     id: 11,
@@ -159,7 +159,7 @@ export default [
     answer: 'C',
     chapter: '程式語言基礎',
     explanation: 'Java 物件建構流程：(4) 宣告變數型別 → (3) 實體化（使用 new 關鍵字配置記憶體） → (1) 初始化記憶體空間 → (5) 執行建構式（constructor）設定初始值 → (2) 將物件參考儲存到變數中。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '順序 41235 把儲存參考放在建構式之前，但應先執行建構式再儲存參考。', B: '順序 43125 把儲存參考放在最後之前，但初始化與建構式順序正確，錯在最終排列。', C: null, D: '順序 41253 把建構式放在儲存參考之後，但應先執行建構式再儲存物件參考。' }
   },
   {
     id: 12,
@@ -173,7 +173,7 @@ export default [
     answer: 'A',
     chapter: '程式語言基礎',
     explanation: 'pass 是 Python 的空操作語句（null operation），僅用於佔位，不會傳回任何值。def 用於定義函數，def A(n=10) 可設定預設參數值，return 用於傳回函數的執行結果。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: '這是正確敘述，def 確實用於定義自訂函數。', C: '這是正確敘述，def A(n=10) 的語法可以設定預設參數值。', D: '這是正確敘述，return 確實用於傳回函數的執行結果。' }
   },
   {
     id: 13,
@@ -187,7 +187,7 @@ export default [
     answer: 'D',
     chapter: '程式語言基礎',
     explanation: "Python open() 函數的 mode 參數：'r' 為讀取模式（read），'w' 為寫入模式（write，會覆蓋原檔案），'a' 為附加模式（append，在檔案末尾新增），'wb' 為二進位寫入模式（write binary）。僅讀取檔案應使用 'r'。",
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: "'wb' 是二進位寫入模式（write binary），用於寫入而非讀取。", B: "'a' 是附加模式（append），用於在檔案末尾新增內容，不是讀取。", C: "'w' 是寫入模式（write），會覆蓋原檔案內容，不是讀取。", D: null }
   },
   {
     id: 14,
@@ -201,7 +201,7 @@ export default [
     answer: 'B',
     chapter: '數學基礎',
     explanation: '稀疏矩陣的大部分元素為零，若用標準二維陣列儲存會浪費大量記憶體空間。應使用特殊的稀疏矩陣格式（如 CSR、CSC、COO）來有效率地儲存非零元素，大幅節省記憶體。稀疏矩陣常見於文字探勘（TF-IDF 矩陣）和推薦系統（使用者-物品矩陣）。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '這是正確敘述，稀疏矩陣的定義就是大部分元素為零。', B: null, C: '這是正確敘述，不同儲存方式（CSR、CSC、COO 等）確實會影響記憶體使用量。', D: '這是正確敘述，稀疏矩陣常用於文字探勘的 TF-IDF 矩陣和推薦系統的使用者-物品矩陣。' }
   },
   {
     id: 15,
@@ -215,7 +215,7 @@ export default [
     answer: 'B',
     chapter: '程式語言基礎',
     explanation: '在 Java 中，子類別繼承父類別的屬性和方法，但不繼承建構式（constructor）。子類別需透過 super() 明確呼叫父類別的建構式。Java 僅支援單一繼承（一個類別只能 extends 一個父類別），並使用 extends 關鍵字表示繼承關係。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '這是正確敘述，Java 僅支援單一繼承，一個類別只能 extends 一個父類別。', B: null, C: '這是正確敘述，Java 使用 extends 關鍵字來表示繼承關係。', D: '這是正確敘述，子類別變數可以用父類別建構子來建立物件（多型的向上轉型）。' }
   },
   {
     id: 16,
@@ -229,7 +229,7 @@ export default [
     answer: 'B',
     chapter: '程式語言基礎',
     explanation: '適當使用函式（尤其是內建函式）反而能提升效能，因為 Python 的內建函式通常以 C 語言實作，執行速度比自己寫的純 Python 迴圈更快。使用新版 Python、改進演算法、優化迴圈都是正確的效能提升方法。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '這是正確敘述，新版 Python 通常包含效能改進與最佳化。', B: null, C: '這是正確敘述，改進演算法（如降低時間複雜度）是提升效能的根本方法。', D: '這是正確敘述，優化迴圈（如減少不必要的計算、使用向量化操作）可有效提升效能。' }
   },
   {
     id: 17,
@@ -243,7 +243,7 @@ export default [
     answer: 'A',
     chapter: '程式語言基礎',
     explanation: '建立 c1 物件時，__init__ 方法將 self.i 初始化為 0。呼叫 c.add() 後，self.i += 2 使 self.i 從 0 變成 2。因此 print(c.i) 輸出結果為 2。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: '只呼叫了一次 add()，0 + 2 = 2，不會是 4。', C: '只呼叫了一次 add() 且每次加 2，0 + 2 = 2，不可能是 8。', D: '呼叫 add() 後 self.i 已從 0 變成 2，不再是初始值 0。' }
   },
   {
     id: 18,
@@ -257,7 +257,7 @@ export default [
     answer: 'C',
     chapter: '程式語言基礎',
     explanation: 'C2 繼承 C1，但在 C2 中重新定義了類別屬性 a = 20，覆蓋了父類別 C1 的 a = 10。因此 c2.a 的值為 20。Python 的屬性查找順序（MRO）會先找子類別，找到即返回。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: '10 是父類別 C1 的值，但 C2 已覆蓋為 20，MRO 會優先找到子類別的值。', B: '程式中沒有任何加法運算，不會出現 40 這個結果。', C: null, D: 'C2 中定義了 a = 20，不是 0，且 C1 的預設值也是 10。' }
   },
   {
     id: 19,
@@ -271,7 +271,7 @@ export default [
     answer: 'A',
     chapter: '程式語言基礎',
     explanation: 'Python 的內建資料型態包括 list（串列）、dict（字典）、tuple（元組）、set（集合）等，但 array 不是內建型態，需要匯入 array 模組或使用第三方套件 numpy 才能使用。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: 'list（串列）是 Python 內建的資料型態，可直接使用。', C: 'dict（字典）是 Python 內建的資料型態，可直接使用。', D: 'tuple（元組）是 Python 內建的資料型態，可直接使用。' }
   },
   {
     id: 20,
@@ -285,6 +285,6 @@ export default [
     answer: 'A',
     chapter: '數據基礎概念',
     explanation: '隔離性（Isolation）是指同一資料庫中「交易與交易之間」的隔離，確保並行交易互不干擾，而非「資料庫與資料庫之間」的隔離。原子性確保交易要麼全部完成要麼全部回滾，一致性確保交易前後資料庫狀態一致，持久性確保已提交的交易永久保存。',
-    optionExplanations: { A: null, B: null, C: null, D: null }
+    optionExplanations: { A: null, B: '這是正確敘述，一致性確保交易前後資料庫完整性不被破壞。', C: '這是正確敘述，原子性確保交易要麼全部完成要麼全部回滾。', D: '這是正確敘述，持久性確保交易結束後的修改會永久保存。' }
   }
 ]
