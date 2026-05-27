@@ -5,5 +5,8 @@
 .DS_Store
 Thumbs.db
 
+# S測驗題庫（不納入版控）
+flashcards/src/data/exams/advanced/subject2-stest*.js
+
 # Claude project files
 .claude/
